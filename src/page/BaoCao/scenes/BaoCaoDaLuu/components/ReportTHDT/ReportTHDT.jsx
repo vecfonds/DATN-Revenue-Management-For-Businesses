@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
     Table,
     Dropdown,
@@ -21,27 +21,23 @@ import { TfiReload } from "react-icons/tfi";
 import { Add } from "@mui/icons-material";
 import { MdOutlineSearch } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import {
-    banHangSelector,
-    getListChungTuBan,
-    hoaDonSelected,
-} from "../../../../store/features/banHangSlice";
 import moment from "moment/moment";
-import { doiTuongSelector, getListCustomer, getListProduct } from "../../../../store/features/doiTuongSilce";
-import { VND, formatDate } from "../../../../utils/func";
-import { baoCaoSelector, getListCongNo, getListReportDTBH, postReportDTBH, postReportDTBHRaw, clearState, resetData, getListSalesPerson } from './../../../../store/features/baoCaoSlice';
 import { useReactToPrint } from "react-to-print";
 import { FaRegFilePdf } from "react-icons/fa6";
-import InChiTietNoPhaiThu from "../../../../component/InChiTietNoPhaiThu/InChiTietNoPhaiThu";
 import { set } from "react-hook-form";
-import InTongHopDoanhThuNhanVien from "../../../../component/InTongHopDoanhThuNhanVien/InTongHopDoanhThuNhanVien";
+import { baoCaoSelector, clearState, getListSalesPerson, getReportDTBH, postReportDTBH, postReportDTBHRaw, resetData } from "../../../../../../store/features/baoCaoSlice";
+import { VND, formatDate } from "../../../../../../utils/func";
+import { hoaDonSelected } from "../../../../../../store/features/banHangSlice";
+import InTongHopDoanhThuNhanVien from "../../../../../../component/InTongHopDoanhThuNhanVien/InTongHopDoanhThuNhanVien";
 const { Text } = Typography;
 
 
 const { RangePicker } = DatePicker;
-const TongHopDoanhThuNhanVien = ({ checkbox = false }) => {
+const ReportTHDT = ({ checkbox = false }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const params = useParams();
+
     const [form] = Form.useForm();
     const [formAddReport] = Form.useForm();
     const [open, setOpen] = useState(false);
@@ -64,7 +60,8 @@ const TongHopDoanhThuNhanVien = ({ checkbox = false }) => {
         isSuccessPostReportDTBH,
         listCongNo,
         listReportDTBHData,
-        reportDTBHData
+        reportDTBHData,
+        description
     } = useSelector(baoCaoSelector);
 
 
@@ -445,6 +442,13 @@ const TongHopDoanhThuNhanVien = ({ checkbox = false }) => {
     }, []);
 
 
+    //
+
+    useEffect(() => {
+        dispatch(getReportDTBH({ id: params.id }));
+    }, []);
+
+
     const options = [];
     useEffect(() => {
         if (listSalesPersonData.length !== 0) {
@@ -496,99 +500,27 @@ const TongHopDoanhThuNhanVien = ({ checkbox = false }) => {
     return (
         <div className="m-4">
             <div className={`px-[20px] w-full flex justify-between pb-7 ${!checkbox && "bg-white py-7"}`}>
-                <div className="flex gap-[5px] items-center">
-                    <Form form={form} layout="inline" onFinish={onFinish}>
-                        <Form.Item name="rangePicker" className="w-[300px] !me-0"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Trường này là bắt buộc!',
-                                },
-                            ]}
-                        >
-                            {/* <RangePicker
-                value={valueRangepicker}
-                format='DD-MM-YYYY'
-                className="!me-[5px]"
-              /> */}
-                            <RangePicker
-                                onChange={(dates) => handleFilterday(dates)}
+            <div className="flex gap-[5px] items-center">
+                    <h1 className="text-[20px] font-bold">{description?.name} <span className="font-normal">(Từ {description?.startDate} đến {description?.endDate})</span></h1>
+                </div>
 
-                            />
-
-                        </Form.Item>
-                        <Form.Item name="listSalesperson" className="w-[300px] !me-0">
-                            {/* <Input
-                className="rounded-tr-none rounded-br-none"
-                placeholder="Nhập tên khách hàng"
-                value={searchText}
-                onChange={(e) => handleSearch(e.target.value)}
-              /> */}
-                            <Select
-                                mode="tags"
-                                style={{
-                                    width: '100%',
-                                    // height: '31.6px'
-                                }}
-                                {...sharedProps}
-                                tokenSeparators={[',']}
-                                onChange={(values) => setListSalesperson(values)}
-                            >
-                                {
-                                    listSalesPersonData.map(item => <Select.Option value={item.id} key={item.id}>{item.name}</Select.Option>)
-                                }
-                            </Select>
-                        </Form.Item>
-
-                        <Button
-                            className="!bg-[#FAFAFA] font-bold m-0 p-0 w-[32px] h-[32px] flex justify-center items-center rounded-tl-none rounded-bl-none rounded-tr-md rounded-br-md"
-                            htmlType="submit"
-                        >
-                            <MdOutlineSearch size={20} color="#898989" />
-                        </Button>
-                    </Form>
-
-                    {contextHolderMes}
-                    {contextHolder}
-
+                <div className="flex gap-4">
                     <FaRegFilePdf
                         title="Xuất file pdf"
                         onClick={handlePrint}
                         size={30}
                         className="p-2 bg-white border border-black cursor-pointer self-start"
                     />
-                    <TfiReload
-                        title="Cập nhật dữ liệu"
-                        size={30}
-                        className="p-2 bg-white border border-black cursor-pointer self-start"
-                        onClick={() => {
-                            // dispatch(getListChungTuBan());
-                            // messageApi.open({
-                            //   key: "updatable",
-                            //   type: "loading",
-                            //   content: "Loading...",
-                            // });
-                            form.resetFields();
-                            clearAll();
-                            // setValueRangepicker([]);
-                            // setFilterday([]);
-                            setSelectedRowKeys([]);
-                            setChungTuBan([]);
-                            // setSearchText("");
-                        }}
-                    />
+
+                    <Button
+                        className='bg-[#FF7742] font-bold text-white'
+                        type='link'
+                        onClick={() => navigate(-1)}
+                    >
+                        Thoát
+                    </Button>
                 </div>
 
-                <Button
-                    className="!bg-[#7A77DF] font-bold text-white flex items-center gap-1"
-                    type="link"
-                    disabled={chungTuBan.length === 0}
-                    onClick={() => {
-                        setOpen(true);
-                    }}
-                >
-                    Lưu báo cáo
-                </Button>
 
                 <Modal
                     title="LƯU BÁO CÁO"
@@ -704,4 +636,4 @@ const TongHopDoanhThuNhanVien = ({ checkbox = false }) => {
     );
 };
 
-export default TongHopDoanhThuNhanVien;
+export default ReportTHDT;

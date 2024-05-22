@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
     Table,
     Dropdown,
@@ -14,6 +14,7 @@ import {
     DatePicker,
     Typography,
     Tooltip,
+    Empty,
 } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 import { SiMicrosoftexcel } from "react-icons/si";
@@ -21,27 +22,23 @@ import { TfiReload } from "react-icons/tfi";
 import { Add } from "@mui/icons-material";
 import { MdOutlineSearch } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import {
-    banHangSelector,
-    getListChungTuBan,
-    hoaDonSelected,
-} from "../../../../store/features/banHangSlice";
-import moment from "moment/moment";
-import { doiTuongSelector, getListCustomer, getListProduct } from "../../../../store/features/doiTuongSilce";
-import { VND, formatDate } from "../../../../utils/func";
-import { baoCaoSelector, getListCongNo, getListReportDTBH, postReportDTBH, postReportDTBHRaw, clearState, resetData, getListSalesPerson } from './../../../../store/features/baoCaoSlice';
 import { useReactToPrint } from "react-to-print";
 import { FaRegFilePdf } from "react-icons/fa6";
-import InChiTietNoPhaiThu from "../../../../component/InChiTietNoPhaiThu/InChiTietNoPhaiThu";
 import { set } from "react-hook-form";
-import InTongHopDoanhThuNhanVien from "../../../../component/InTongHopDoanhThuNhanVien/InTongHopDoanhThuNhanVien";
+import { baoCaoSelector, clearState, getListSalesPerson, getReportDTBH, postReportDTBH, postReportDTBHRaw, resetData } from "../../../../../../store/features/baoCaoSlice";
+import moment from "moment";
+import { VND, formatDate } from "../../../../../../utils/func";
+import { hoaDonSelected } from "../../../../../../store/features/banHangSlice";
+import InChiTietDoanhThuNhanVien from "../../../../../../component/InChiTietDoanhThuNhanVien/InChiTietDoanhThuNhanVien";
 const { Text } = Typography;
 
 
 const { RangePicker } = DatePicker;
-const TongHopDoanhThuNhanVien = ({ checkbox = false }) => {
+const ReportCTDT = ({ checkbox = false }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const params = useParams();
+
     const [form] = Form.useForm();
     const [formAddReport] = Form.useForm();
     const [open, setOpen] = useState(false);
@@ -64,7 +61,8 @@ const TongHopDoanhThuNhanVien = ({ checkbox = false }) => {
         isSuccessPostReportDTBH,
         listCongNo,
         listReportDTBHData,
-        reportDTBHData
+        reportDTBHData,
+        description
     } = useSelector(baoCaoSelector);
 
 
@@ -94,26 +92,42 @@ const TongHopDoanhThuNhanVien = ({ checkbox = false }) => {
 
     console.log("reportDTBHData", reportDTBHData)
 
-    useEffect(() => {
-        dispatch(resetData());
-    }, []);
+    // useEffect(() => {
+    //     dispatch(resetData());
+    // }, []);
 
     useEffect(() => {
         if (reportDTBHData) {
-            const dataConvertCurrent = reportDTBHData?.map(salesperson => {
-                let tong = 0;
-                salesperson.ctbans?.forEach(chungTuBanData => {
-                    console.log("chungTuBanData", chungTuBanData)
-                    tong += chungTuBanData.totalProductValue - chungTuBanData.totalDiscountValue;
-                })
+            const dataConvertCurrent = reportDTBHData?.map(salesperson => salesperson?.ctbans?.map(chungTuBanData => {
+                console.log("chungTuBanData", chungTuBanData)
 
+                let tong = chungTuBanData.finalValue;
+
+                // let tong = 0;
+                // chungTuBanData.productOfCtban.forEach(productOfCt => {
+                //   tong += productOfCt.count * productOfCt.price;
+                //   tong += productOfCt.count * productOfCt.price * (productOfCt.product.productGroup.tax / 100);
+                // })
+                //continue ...
+                let dathu = chungTuBanData.collected;
+
+                let chuathu = chungTuBanData.notCollected;
+
+                let doanhthu = chungTuBanData.totalProductValue - chungTuBanData.totalDiscountValue;
+
+                console.log(salesperson)
 
                 return {
-                    id: salesperson?.salesperson?.id,
-                    name: salesperson?.salesperson?.name,
-                    tong
+                    ...chungTuBanData,
+                    sohoadon: chungTuBanData?.id,
+                    manhanvienbanhang: salesperson?.salesperson?.id,
+                    salesperson: salesperson?.salesperson?.name,
+                    tong,
+                    dathu,
+                    chuathu,
+                    doanhthu
                 }
-            })
+            }))
 
 
 
@@ -206,23 +220,49 @@ const TongHopDoanhThuNhanVien = ({ checkbox = false }) => {
         //   ellipsis: true,
         // },
         {
-            title: "ID",
-            dataIndex: "id",
-            key: "id",
-            sorter: (a, b) => a.id - b.id,
-            sortOrder: sortedInfo.columnKey === "id" ? sortedInfo.order : null,
+            title: "ID hóa đơn",
+            dataIndex: "sohoadon",
+            key: "sohoadon",
+            render: (val, record) => <span
+                onClick={() => {
+                    // navigate(`/ban-hang/thu-tien-theo-hoa-don/timkiem/thutien`, { state: { id: selectedRowKeys } });
+                    navigate(`/ban-hang/hoa-don-ban-hang/xem/${val}`, { state: { id: val } });
+                }}
+                className={`cursor-pointer font-medium text-[#1DA1F2] ${new Date(record.paymentTerm) < new Date() ? "" : ""}`}>{val}</span>,
+            sorter: (a, b) => a.sohoadon - b.sohoadon,
+            sortOrder: sortedInfo.columnKey === "sohoadon" ? sortedInfo.order : null,
             ellipsis: true,
+        },
+        {
+            title: "Ngày hóa đơn",
+            dataIndex: "createdAt",
+            key: "createdAt",
+            render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() ? "text-[#000]" : ""}`}>{new Date(val).toLocaleDateString("vi-VN")}</span>,
+            sorter: (a, b) =>
+                moment(a.createdAt, "DD-MM-YYYY") - moment(b.createdAt, "DD-MM-YYYY"),
+            sortOrder: sortedInfo.columnKey === "createdAt" ? sortedInfo.order : null,
+            // fixed: 'left',
         },
 
         {
-            title: "Nhân viên bán hàng",
-            dataIndex: "name",
-            key: "name",
-            ellipsis: true,
+            title: "Hạn thanh toán",
+            dataIndex: "paymentTerm",
+            key: "paymentTerm",
+            render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() ? "text-[#000]" : ""}`}>{new Date(val).toLocaleDateString("vi-VN")}</span>,
+            sorter: (a, b) =>
+                moment(a.paymentTerm, "DD-MM-YYYY") - moment(b.paymentTerm, "DD-MM-YYYY"),
+            sortOrder: sortedInfo.columnKey === "paymentTerm" ? sortedInfo.order : null,
+            // fixed: 'left',
         },
 
+        // {
+        //   title: "Nội dung",
+        //   dataIndex: "content",
+        //   key: "content",
+        //   ellipsis: true,
+        // },
         {
-            title: "Doanh thu (thuần)",
+            title: "Giá trị hóa đơn",
             dataIndex: "tong",
             key: "tong",
             render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() ? "text-[#000]" : ""}`}>{VND.format(val)}</span>,
@@ -230,6 +270,16 @@ const TongHopDoanhThuNhanVien = ({ checkbox = false }) => {
             // render: (val, record) => VND.format(val),
             sorter: (a, b) => a.tong - b.tong,
             sortOrder: sortedInfo.columnKey === "tong" ? sortedInfo.order : null,
+        },
+        {
+            title: "Doanh thu (thuần)",
+            dataIndex: "doanhthu",
+            key: "doanhthu",
+            render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() ? "text-[#000]" : ""}`}>{VND.format(val)}</span>,
+
+            // render: (val, record) => VND.format(val),
+            sorter: (a, b) => a.doanhthu - b.doanhthu,
+            sortOrder: sortedInfo.columnKey === "doanhthu" ? sortedInfo.order : null,
         },
         // {
         //   title: "Đã thu",
@@ -444,6 +494,13 @@ const TongHopDoanhThuNhanVien = ({ checkbox = false }) => {
         dispatch(getListSalesPerson());
     }, []);
 
+    //
+
+    useEffect(() => {
+        dispatch(getReportDTBH({ id: params.id }));
+    }, []);
+
+
 
     const options = [];
     useEffect(() => {
@@ -497,89 +554,27 @@ const TongHopDoanhThuNhanVien = ({ checkbox = false }) => {
         <div className="m-4">
             <div className={`px-[20px] w-full flex justify-between pb-7 ${!checkbox && "bg-white py-7"}`}>
                 <div className="flex gap-[5px] items-center">
-                    <Form form={form} layout="inline" onFinish={onFinish}>
-                        <Form.Item name="rangePicker" className="w-[300px] !me-0"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Trường này là bắt buộc!',
-                                },
-                            ]}
-                        >
-                            {/* <RangePicker
-                value={valueRangepicker}
-                format='DD-MM-YYYY'
-                className="!me-[5px]"
-              /> */}
-                            <RangePicker
-                                onChange={(dates) => handleFilterday(dates)}
+                    <h1 className="text-[20px] font-bold">{description?.name} <span className="font-normal">(Từ {description?.startDate} đến {description?.endDate})</span></h1>
+                </div>
 
-                            />
-
-                        </Form.Item>
-                        <Form.Item name="listSalesperson" className="w-[300px] !me-0">
-                            {/* <Input
-                className="rounded-tr-none rounded-br-none"
-                placeholder="Nhập tên khách hàng"
-                value={searchText}
-                onChange={(e) => handleSearch(e.target.value)}
-              /> */}
-                            <Select
-                                mode="tags"
-                                style={{
-                                    width: '100%',
-                                    // height: '31.6px'
-                                }}
-                                {...sharedProps}
-                                tokenSeparators={[',']}
-                                onChange={(values) => setListSalesperson(values)}
-                            >
-                                {
-                                    listSalesPersonData.map(item => <Select.Option value={item.id} key={item.id}>{item.name}</Select.Option>)
-                                }
-                            </Select>
-                        </Form.Item>
-
-                        <Button
-                            className="!bg-[#FAFAFA] font-bold m-0 p-0 w-[32px] h-[32px] flex justify-center items-center rounded-tl-none rounded-bl-none rounded-tr-md rounded-br-md"
-                            htmlType="submit"
-                        >
-                            <MdOutlineSearch size={20} color="#898989" />
-                        </Button>
-                    </Form>
-
-                    {contextHolderMes}
-                    {contextHolder}
-
+                <div className="flex gap-4">
                     <FaRegFilePdf
                         title="Xuất file pdf"
                         onClick={handlePrint}
                         size={30}
                         className="p-2 bg-white border border-black cursor-pointer self-start"
                     />
-                    <TfiReload
-                        title="Cập nhật dữ liệu"
-                        size={30}
-                        className="p-2 bg-white border border-black cursor-pointer self-start"
-                        onClick={() => {
-                            // dispatch(getListChungTuBan());
-                            // messageApi.open({
-                            //   key: "updatable",
-                            //   type: "loading",
-                            //   content: "Loading...",
-                            // });
-                            form.resetFields();
-                            clearAll();
-                            // setValueRangepicker([]);
-                            // setFilterday([]);
-                            setSelectedRowKeys([]);
-                            setChungTuBan([]);
-                            // setSearchText("");
-                        }}
-                    />
+
+                    <Button
+                        className='bg-[#FF7742] font-bold text-white'
+                        type='link'
+                        onClick={() => navigate(-1)}
+                    >
+                        Thoát
+                    </Button>
                 </div>
 
-                <Button
+                {/* <Button
                     className="!bg-[#7A77DF] font-bold text-white flex items-center gap-1"
                     type="link"
                     disabled={chungTuBan.length === 0}
@@ -588,7 +583,7 @@ const TongHopDoanhThuNhanVien = ({ checkbox = false }) => {
                     }}
                 >
                     Lưu báo cáo
-                </Button>
+                </Button> */}
 
                 <Modal
                     title="LƯU BÁO CÁO"
@@ -651,48 +646,54 @@ const TongHopDoanhThuNhanVien = ({ checkbox = false }) => {
                 </Modal>
             </div>
 
-            {chungTuBan.length !== 0 && <Table
-                columns={columns}
-                dataSource={chungTuBan}
-                onChange={onChange}
-                scroll={{
-                    x: 1300,
-                }}
-                className="overflow-x-visible	overflow-y-visible mb-3"
+            {chungTuBan.filter(ct => ct.length !== 0).map((ctb, index) =>
+                <Table
+                    locale={{ emptyText: <></> }}
+                    key={index}
+                    columns={columns}
+                    dataSource={ctb}
+                    onChange={onChange}
+                    scroll={{
+                        x: 1300,
+                    }}
+                    className="overflow-x-visible	overflow-y-visible mb-3"
 
-                pagination={false}
-                bordered
-                summary={(pageData) => {
-                    let totalTong = 0;
-                    let totalDoanhThu = 0;
-                    let totalChuaThu = 0;
-                    pageData.forEach(({ tong, doanhthu, chuathu }) => {
-                        totalTong += tong;
-                        totalDoanhThu += doanhthu;
-                        totalChuaThu += chuathu;
-                    });
-                    return (
-                        <>
-                            <Table.Summary.Row>
-                                <Table.Summary.Cell index={1} colSpan={2}>Tổng</Table.Summary.Cell>
-                                <Table.Summary.Cell index={2}>
-                                    <Text className="font-medium">{VND.format(totalTong)}</Text>
-                                </Table.Summary.Cell>
-                            </Table.Summary.Row>
-                        </>
-                    );
-                }}
-            />}
-
+                    pagination={false}
+                    bordered
+                    summary={(pageData) => {
+                        let totalTong = 0;
+                        let totalDoanhThu = 0;
+                        let totalChuaThu = 0;
+                        pageData.forEach(({ tong, doanhthu, chuathu }) => {
+                            totalTong += tong;
+                            totalDoanhThu += doanhthu;
+                            totalChuaThu += chuathu;
+                        });
+                        return (
+                            <>
+                                <Table.Summary.Row>
+                                    <Table.Summary.Cell index={0} colSpan={3} className="font-medium">Tên nhân viên bán hàng: {pageData[0]?.salesperson} - ID: {pageData[0]?.manhanvienbanhang}</Table.Summary.Cell>
+                                    <Table.Summary.Cell index={1}>
+                                        <Text className="font-medium">{VND.format(totalTong)}</Text>
+                                    </Table.Summary.Cell>
+                                    <Table.Summary.Cell index={2}>
+                                        <Text className="font-medium">{VND.format(totalDoanhThu)}</Text>
+                                    </Table.Summary.Cell>
+                                </Table.Summary.Row>
+                            </>
+                        );
+                    }}
+                />
+            )}
 
             <div
                 className='hidden'
             >
                 <div ref={componentRef}>
-                    <InTongHopDoanhThuNhanVien
+                    <InChiTietDoanhThuNhanVien
                         form={form}
                         // components={components}
-                        dataSource={chungTuBan}
+                        dataSource={chungTuBan.filter(ct => ct.length !== 0)}
                         columns={columns}
                         dates={valueRangepicker || [{ $d: new Date() }, { $d: new Date() }]}
                     // idHoaDon={chungTuBanData?.id}
@@ -704,4 +705,4 @@ const TongHopDoanhThuNhanVien = ({ checkbox = false }) => {
     );
 };
 
-export default TongHopDoanhThuNhanVien;
+export default ReportCTDT;

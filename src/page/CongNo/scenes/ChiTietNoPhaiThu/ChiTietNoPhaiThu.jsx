@@ -28,7 +28,7 @@ import {
 } from "../../../../store/features/banHangSlice";
 import moment from "moment/moment";
 import { doiTuongSelector, getListCustomer, getListProduct } from "../../../../store/features/doiTuongSilce";
-import { VND, formatDate } from "../../../../utils/func";
+import { VND, formatDate, selectTime } from "../../../../utils/func";
 import { congNoSelector, getListCongNo, getListReportDCCN, postReportDCCN, postReportDCCNRaw, clearState, resetData } from './../../../../store/features/congNoSlice';
 import { useReactToPrint } from "react-to-print";
 import { FaRegFilePdf } from "react-icons/fa6";
@@ -95,7 +95,7 @@ const ChiTietNoPhaiThu = ({ checkbox = false }) => {
 
   useEffect(() => {
     dispatch(resetData());
-}, []);
+  }, []);
 
   useEffect(() => {
     if (reportDCCNData) {
@@ -527,11 +527,98 @@ const ChiTietNoPhaiThu = ({ checkbox = false }) => {
     // formAddReport.resetFields();
   };
 
+  // console.log(Form.useWatch('rangePicker', form));
+  // const handleChange = (value) => {
+
+  //   const timeRange = selectTime(value);
+
+
+  //   // form.setFieldsValue({
+  //   //   rangePicker: { ...timeRange }
+  //   // });
+  //   // const dataConvert = {
+  //   //   // "startDate": formatDate(values.rangePicker[0].$d),
+  //   //   // "endDate": formatDate(values.rangePicker[1].$d),
+  //   //   // "startDate": "2020-01-01",
+  //   //   // "endDate": "2025-01-01",
+  //   //   ...timeRange,
+  //   //   "name": "xxx",
+  //   //   "description": "xxx",
+  //   //   "salespersonIds": []
+  //   // }
+
+  //   // console.log("dataConvert", dataConvert)
+  //   // dispatch(postReportDTBHRaw({ values: dataConvert }));
+
+
+  //   // console.log(data)
+  // };
+
+
 
   return (
     <div className="m-4">
       <div className={`px-[20px] w-full flex justify-between pb-7 ${!checkbox && "bg-white py-7"}`}>
         <div className="flex gap-[5px] items-center">
+          {/* <Select
+            defaultValue={'thisMonth'}
+            style={{
+              width: 120,
+
+            }}
+            className="bg-[#FFF6D8]"
+            onChange={handleChange}
+            options={[
+              {
+                value: 'thisWeek',
+                label: 'Tuần này',
+              },
+              {
+                value: 'lastWeek',
+                label: 'Tuần trước',
+              },
+              {
+                value: 'thisMonth',
+                label: 'Tháng này',
+              },
+              {
+                value: 'lastMonth',
+                label: 'Tháng trước',
+              },
+              {
+                value: 'thisQuarter',
+                label: 'Quý này',
+              },
+              {
+                value: 'lastQuarter',
+                label: 'Quý trước',
+              },
+              {
+                value: 'Q1',
+                label: 'Quý 1',
+              },
+              {
+                value: 'Q2',
+                label: 'Quý 2',
+              },
+              {
+                value: 'Q3',
+                label: 'Quý 3',
+              },
+              {
+                value: 'Q4',
+                label: 'Quý 4',
+              },
+              {
+                value: 'thisYear',
+                label: 'Năm này',
+              },
+              {
+                value: 'lastYear',
+                label: 'Năm trước',
+              },
+            ]}
+          /> */}
           <Form form={form} layout="inline" onFinish={onFinish}>
             <Form.Item name="rangePicker" className="w-[300px] !me-0"
               rules={[

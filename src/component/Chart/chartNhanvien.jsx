@@ -13,6 +13,8 @@ import {
   LabelList,
 } from "recharts";
 import { baoCaoSelector, postReportDTBHRaw } from "../../store/features/baoCaoSlice";
+import { Select } from "antd";
+import { selectTime } from "../../utils/func";
 
 // const data = [
 //   { name: "NV029", "Doanh thu": 18 },
@@ -57,11 +59,14 @@ const ChartNhanvien = () => {
   } = useSelector(baoCaoSelector);
 
   useEffect(() => {
+    const timeRange = selectTime('thisMonth');
+
     const dataConvert = {
       // "startDate": formatDate(values.rangePicker[0].$d),
       // "endDate": formatDate(values.rangePicker[1].$d),
-      "startDate": "2020-01-01",
-      "endDate": "2025-01-01",
+      // "startDate": "2020-01-01",
+      // "endDate": "2025-01-01",
+      ...timeRange,
       "name": "xxx",
       "description": "xxx",
       "salespersonIds": []
@@ -101,6 +106,28 @@ const ChartNhanvien = () => {
     }
   }, [reportDTBHData]);
 
+  const handleChange = (value) => {
+
+    const timeRange = selectTime(value);
+
+    const dataConvert = {
+      // "startDate": formatDate(values.rangePicker[0].$d),
+      // "endDate": formatDate(values.rangePicker[1].$d),
+      // "startDate": "2020-01-01",
+      // "endDate": "2025-01-01",
+      ...timeRange,
+      "name": "xxx",
+      "description": "xxx",
+      "salespersonIds": []
+    }
+
+    console.log("dataConvert", dataConvert)
+    dispatch(postReportDTBHRaw({ values: dataConvert }));
+
+
+    console.log(data)
+  };
+
 
   return (
     <div>
@@ -126,6 +153,65 @@ const ChartNhanvien = () => {
           </Bar>
         </BarChart>
       </ResponsiveContainer>
+      <Select
+        defaultValue={'thisMonth'}
+        style={{
+          width: 120,
+
+        }}
+        className="bg-[#FFF6D8]"
+        onChange={handleChange}
+        options={[
+          {
+            value: 'thisWeek',
+            label: 'Tuần này',
+          },
+          {
+            value: 'lastWeek',
+            label: 'Tuần trước',
+          },
+          {
+            value: 'thisMonth',
+            label: 'Tháng này',
+          },
+          {
+            value: 'lastMonth',
+            label: 'Tháng trước',
+          },
+          {
+            value: 'thisQuarter',
+            label: 'Quý này',
+          },
+          {
+            value: 'lastQuarter',
+            label: 'Quý trước',
+          },
+          {
+            value: 'Q1',
+            label: 'Quý 1',
+          },
+          {
+            value: 'Q2',
+            label: 'Quý 2',
+          },
+          {
+            value: 'Q3',
+            label: 'Quý 3',
+          },
+          {
+            value: 'Q4',
+            label: 'Quý 4',
+          },
+          {
+            value: 'thisYear',
+            label: 'Năm này',
+          },
+          {
+            value: 'lastYear',
+            label: 'Năm trước',
+          },
+        ]}
+      />
     </div>
   );
 };

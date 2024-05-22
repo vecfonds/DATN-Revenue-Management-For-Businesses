@@ -514,7 +514,7 @@ const ReportTHCN = ({ checkbox = false }) => {
         <div className="m-4">
             <div className={`px-[20px] w-full flex justify-between pb-7 ${!checkbox && "bg-white py-7"}`}>
                 <div className="flex gap-[5px] items-center">
-                    <h1 className="text-[20px] font-bold">{description?.description} <span className="font-normal">(Từ {description?.startDate} đến {description?.endDate})</span></h1>
+                    <h1 className="text-[20px] font-bold">{description?.name} <span className="font-normal">(Từ {description?.startDate} đến {description?.endDate})</span></h1>
 
                 </div>
 

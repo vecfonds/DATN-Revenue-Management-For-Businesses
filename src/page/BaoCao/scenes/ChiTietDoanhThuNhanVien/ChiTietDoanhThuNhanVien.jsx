@@ -240,7 +240,7 @@ const ChiTietDoanhThuNhanVien = ({ checkbox = false }) => {
       title: "Ngày hóa đơn",
       dataIndex: "createdAt",
       key: "createdAt",
-      render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() ? "text-[#d44950] font-medium" : ""}`}>{new Date(val).toLocaleDateString("vi-VN")}</span>,
+      render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() ? "text-[#000]" : ""}`}>{new Date(val).toLocaleDateString("vi-VN")}</span>,
       sorter: (a, b) =>
         moment(a.createdAt, "DD-MM-YYYY") - moment(b.createdAt, "DD-MM-YYYY"),
       sortOrder: sortedInfo.columnKey === "createdAt" ? sortedInfo.order : null,
@@ -251,7 +251,7 @@ const ChiTietDoanhThuNhanVien = ({ checkbox = false }) => {
       title: "Hạn thanh toán",
       dataIndex: "paymentTerm",
       key: "paymentTerm",
-      render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() ? "text-[#d44950] font-medium" : ""}`}>{new Date(val).toLocaleDateString("vi-VN")}</span>,
+      render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() ? "text-[#000]" : ""}`}>{new Date(val).toLocaleDateString("vi-VN")}</span>,
       sorter: (a, b) =>
         moment(a.paymentTerm, "DD-MM-YYYY") - moment(b.paymentTerm, "DD-MM-YYYY"),
       sortOrder: sortedInfo.columnKey === "paymentTerm" ? sortedInfo.order : null,
@@ -268,7 +268,7 @@ const ChiTietDoanhThuNhanVien = ({ checkbox = false }) => {
       title: "Giá trị hóa đơn",
       dataIndex: "tong",
       key: "tong",
-      render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() ? "text-[#d44950] font-medium" : ""}`}>{VND.format(val)}</span>,
+      render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() ? "text-[#000]" : ""}`}>{VND.format(val)}</span>,
 
       // render: (val, record) => VND.format(val),
       sorter: (a, b) => a.tong - b.tong,
@@ -278,7 +278,7 @@ const ChiTietDoanhThuNhanVien = ({ checkbox = false }) => {
       title: "Doanh thu (thuần)",
       dataIndex: "doanhthu",
       key: "doanhthu",
-      render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() ? "text-[#d44950] font-medium" : ""}`}>{VND.format(val)}</span>,
+      render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() ? "text-[#000]" : ""}`}>{VND.format(val)}</span>,
 
       // render: (val, record) => VND.format(val),
       sorter: (a, b) => a.doanhthu - b.doanhthu,
@@ -288,7 +288,7 @@ const ChiTietDoanhThuNhanVien = ({ checkbox = false }) => {
     //   title: "Đã thu",
     //   dataIndex: "dathu",
     //   key: "dathu",
-    //   render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() ? "text-[#d44950] font-medium" : ""}`}>{VND.format(val)}</span>,
+    //   render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() ? "text-[#000]" : ""}`}>{VND.format(val)}</span>,
 
     //   // render: (val, record) => VND.format(val),
     //   sorter: (a, b) => a.dathu - b.dathu,
@@ -298,7 +298,7 @@ const ChiTietDoanhThuNhanVien = ({ checkbox = false }) => {
     //   title: "Chưa thu",
     //   dataIndex: "chuathu",
     //   key: "chuathu",
-    //   render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() ? "text-[#d44950] font-medium" : ""}`}>{VND.format(val)}</span>,
+    //   render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() ? "text-[#000]" : ""}`}>{VND.format(val)}</span>,
 
     //   // render: (val, record) => VND.format(val),
     //   sorter: (a, b) => a.chuathu - b.chuathu,

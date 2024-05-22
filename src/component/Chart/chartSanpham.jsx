@@ -82,10 +82,10 @@ const ChartSanpham = () => {
   return (
     <div>
       <p className="font-bold text-xl mt-5 ml-10">Biều đồ top 10 sản phẩm bán chạy nhất</p>
-      <ResponsiveContainer width={900} height={400}>
+      <ResponsiveContainer width={800} height={400}>
         <BarChart
-          width={400}
-          height={300}
+          width={800}
+          height={400}
           data={data}
           margin={{
             top: 20,

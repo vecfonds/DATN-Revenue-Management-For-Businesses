@@ -70,6 +70,9 @@ import ReportDCCN from "./page/CongNo/scenes/BaoCaoCongNo/components/ReportDCCN/
 import ReportTHCN from "./page/CongNo/scenes/BaoCaoCongNo/components/ReportTHCN/ReportTHCN";
 import ChiTietDoanhThuNhanVien from "./page/BaoCao/scenes/ChiTietDoanhThuNhanVien/ChiTietDoanhThuNhanVien";
 import TongHopDoanhThuNhanVien from './page/BaoCao/scenes/TongHopDoanhThuNhanVien/TongHopDoanhThuNhanVien';
+import BaoCaoDaLuu from "./page/BaoCao/scenes/BaoCaoDaLuu/BaoCaoDaLuu";
+import ReportCTDT from "./page/BaoCao/scenes/BaoCaoDaLuu/components/ReportCTDT/ReportCTDT";
+import ReportTHDT from "./page/BaoCao/scenes/BaoCaoDaLuu/components/ReportTHDT/ReportTHDT";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -203,6 +206,9 @@ function App() {
                 <Route path="/bao-cao" element={<BaoCao />}>
                   <Route path="chi-tiet-doanh-thu-nhan-vien" element={<ChiTietDoanhThuNhanVien />} />
                   <Route path="tong-hop-doanh-thu-nhan-vien" element={<TongHopDoanhThuNhanVien />} />
+                  <Route path="bao-cao-da-luu" element={<BaoCaoDaLuu />} />
+                  <Route path="bao-cao-da-luu/DTBH/:id" element={<ReportCTDT />} />
+                  <Route path="bao-cao-da-luu/THDTBH/:id" element={<ReportTHDT />} />
                 </Route>
 
                 <Route path="/thong-bao" element={<ThongBao />} />

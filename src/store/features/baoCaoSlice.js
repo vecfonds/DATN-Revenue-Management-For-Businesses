@@ -141,7 +141,12 @@ export const baoCaoSlice = createSlice({
             state.isFetching = false;
             state.isSuccessGetListReportDTBH = true;
 
-            state.listReportDTBHData = action.payload.result.data.map(item => { return { ...item, key: item.id, type: "DTBH", time: `Từ ${item.startDate} đến ${item.endDate}` } });
+            state.listReportDTBHData = action.payload.result.data.map(item => {
+                if (item?.name?.split(" ")[0] === "Chi") {
+                    return { ...item, key: item.id, type: "DTBH", time: `Từ ${item.startDate} đến ${item.endDate}` }
+                }
+                return { ...item, key: item.id, type: "THDTBH", time: `Từ ${item.startDate} đến ${item.endDate}` }
+            });
             //   state.message = action.payload.message;
         })
 
@@ -161,9 +166,9 @@ export const baoCaoSlice = createSlice({
             console.log("getReportDTBH.fulfilled", action.payload)
             state.isFetching = false;
             state.isSuccessGetReportDTBH = true;
-            state.reportDTBHData = action.payload.result.data?.reportDccnDetails;
+            state.reportDTBHData = action.payload.result.data?.reportDtbhDetails;
             state.description = action.payload.result.data;
-            // key: action.payload.result.data.reportDccnDetails.id,
+            // key: action.payload.result.data.reportDtbhDetails.id,
 
 
             //   state.message = action.payload.message;
@@ -231,7 +236,7 @@ export const baoCaoSlice = createSlice({
             console.log("getListSalesPerson.fulfilled", action.payload)
             state.isFetching = false;
             state.isSuccessGetListSalesPerson = true;
-            state.listSalesPersonData = action.payload.result.data.map(item=>{return {...item, key: item.id}});
+            state.listSalesPersonData = action.payload.result.data.map(item => { return { ...item, key: item.id } });
             //   state.message = action.payload.message;
         })
 
