@@ -3,7 +3,7 @@ import { Form, Input, Flex, Table, Button, Select, Typography, InputNumber, Moda
 import { useNavigate, useParams } from 'react-router-dom';
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useDispatch, useSelector } from 'react-redux';
-import { doiTuongSelector, getListCustomerGroup, getCustomer, clearState, updateCustomer, postDieuKhoanThanhToan, postCktm, updateDieuKhoanThanhToan, updateCktm } from '../../../../../../store/features/doiTuongSilce';
+import { doiTuongSelector, getListCustomerGroup, getCustomer, clearState, updateCustomer, postDieuKhoanThanhToan, postCktm, updateDieuKhoanThanhToan, updateCktm, deleteCktm, deleteDieuKhoanThanhToan } from '../../../../../../store/features/doiTuongSilce';
 import { FaCheck } from "react-icons/fa";
 import { VND } from '../../../../../../utils/func';
 import { MdOutlineDelete } from "react-icons/md";
@@ -271,13 +271,15 @@ const EditKhachHang = ({ disabled = false }) => {
                             // handleDelete(record.key)
                             // console.log("record", record)
                             // const dataConvert = {
-                            //     "name": record.name,
-                            //     "description": record.description,
-                            //     "paymentPeriod": record.paymentPeriod,
-                            //     "minProductValue": record.minProductValue,
+                            //     // "name": record.name,
+                            //     // "description": record.description,
+                            //     // "paymentPeriod": record.paymentPeriod,
+                            //     // "minProductValue": record.minProductValue,
                             //     "id": record.id
                             // }
-                            // dispatch(updateDieuKhoanThanhToan({ values: dataConvert }));
+                            // dispatch(deleteDieuKhoanThanhToan({ values: dataConvert }));
+                            setDataSelected(record);
+                            setOpenDeleteDieuKhoanThanhToan(true);
                         }
 
                         }
@@ -356,13 +358,15 @@ const EditKhachHang = ({ disabled = false }) => {
                             // handleDelete(record.key)
                             // console.log("record", record)
                             // const dataConvert = {
-                            //     "name": record.name,
-                            //     "description": record.description,
-                            //     "paymentPeriod": record.paymentPeriod,
-                            //     "minProductValue": record.minProductValue,
+                            //     // "name": record.name,
+                            //     // "description": record.description,
+                            //     // "paymentPeriod": record.paymentPeriod,
+                            //     // "minProductValue": record.minProductValue,
                             //     "id": record.id
                             // }
-                            // dispatch(updateDieuKhoanThanhToan({ values: dataConvert }));
+                            // dispatch(deleteCktm({ values: dataConvert }));
+                            setDataSelected(record);
+                            setOpenDeleteChietKhauThuongMai(true);
                         }
 
                         }
@@ -489,7 +493,6 @@ const EditKhachHang = ({ disabled = false }) => {
         dispatch(postDieuKhoanThanhToan({ values: dataConvert }));
     };
 
-
     //add chiet khau thương mại
     const [openAddChietKhauThuongMai, setOpenAddChietKhauThuongMai] = useState(false);
     const [formAddChietKhauThuongMai] = Form.useForm();
@@ -508,6 +511,25 @@ const EditKhachHang = ({ disabled = false }) => {
         dispatch(postCktm({ values: dataConvert }));
         formAddChietKhauThuongMai.resetFields();
     };
+
+    //delete
+    const [dataSelected, setDataSelected] = useState({});
+
+    //delete ĐKTT
+    const [openDeleteDieuKhoanThanhToan, setOpenDeleteDieuKhoanThanhToan] = useState(false);
+
+    const handleCancelDeleteDieuKhoanThanhToan = () => {
+        setOpenDeleteDieuKhoanThanhToan(false);
+    };
+
+    //delete CKTT
+    const [openDeleteChietKhauThuongMai, setOpenDeleteChietKhauThuongMai] = useState(false);
+
+    const handleCancelDeleteChietKhauThuongMai = () => {
+        setOpenDeleteChietKhauThuongMai(false);
+    };
+
+
 
     return (
         <div className="m-6">
@@ -837,6 +859,92 @@ const EditKhachHang = ({ disabled = false }) => {
                                     </Button>
                                 </Form.Item>
                             </Form>
+                        </Modal>
+
+
+
+                        <Modal
+                            title=""
+                            centered
+                            open={openDeleteDieuKhoanThanhToan}
+                            width={500}
+                            footer=""
+                            onCancel={handleCancelDeleteDieuKhoanThanhToan}
+                        >
+                            <div className="m-8 mt-10 text-center">
+                                Bạn muốn xóa điều khoản thanh toán
+                                <br /> <strong>"{dataSelected.name}"</strong>?
+                            </div>
+
+                            <div className="flex justify-end gap-2 mb-0">
+                                <Button
+                                    className="bg-[#FF7742] font-bold text-white mr-2"
+                                    onClick={() => {
+                                        setDataSelected({});
+                                        setOpenDeleteDieuKhoanThanhToan(false);
+                                    }}
+                                >
+                                    Hủy
+                                </Button>
+                                <Button
+                                    className="!bg-[#67CDBB] font-bold text-white"
+                                    onClick={() => {
+                                        const dataConvert = {
+                                            "id": dataSelected.id
+                                        }
+                                        console.log("id", dataConvert)
+                                        // dispatch(deleteDieuKhoanThanhToan({ values: dataConvert }));
+                                        setDataSelected({});
+                                        setOpenDeleteDieuKhoanThanhToan(false);
+                                    }}
+                                >
+                                    Xác nhận
+                                </Button>
+                            </div>
+                        </Modal>
+
+
+
+
+
+                        <Modal
+                            title=""
+                            centered
+                            open={openDeleteChietKhauThuongMai}
+                            width={500}
+                            footer=""
+                            onCancel={handleCancelDeleteChietKhauThuongMai}
+                        >
+                            <div className="m-8 mt-10 text-center">
+                                Bạn muốn xóa chiết khấu thương mại
+                                <br /> <strong>"{dataSelected.name}"</strong>?
+                            </div>
+
+                            <div className="flex justify-end gap-2 mb-0">
+                                <Button
+                                    className="bg-[#FF7742] font-bold text-white mr-2"
+                                    onClick={() => {
+                                        setDataSelected({});
+                                        setOpenDeleteChietKhauThuongMai(false);
+                                    }}
+                                >
+                                    Hủy
+                                </Button>
+                                <Button
+                                    className="!bg-[#67CDBB] font-bold text-white"
+                                    onClick={() => {
+                                        const dataConvert = {
+                                            "id": dataSelected.id
+                                        }
+                                        console.log("id", dataConvert)
+                                        // dispatch(deleteCktm({ values: dataConvert }));
+                                        setDataSelected({});
+                                        setOpenDeleteChietKhauThuongMai(false);
+                                    }}
+                                >
+                                    Xác nhận
+                                </Button>
+                            </div>
                         </Modal>
 
                     </div>

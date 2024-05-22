@@ -58,7 +58,9 @@ const SanPham = () => {
   }, []);
 
   useEffect(() => {
-    setProductData(listProductData);
+    if (listProductData) {
+      setProductData(listProductData);
+    }
   }, [listProductData]);
 
 
@@ -71,8 +73,8 @@ const SanPham = () => {
       });
       dispatch(getListProduct());
       dispatch(clearState());
-    } 
-    else if(isSuccessUpdateProduct){
+    }
+    else if (isSuccessUpdateProduct) {
       api.success({
         message: 'Cập nhật dữ liệu thành công!',
         placement: 'bottomLeft',
@@ -159,6 +161,7 @@ const SanPham = () => {
       sorter: (a, b) => a.id - b.id,
       sortOrder: sortedInfo.columnKey === "id" ? sortedInfo.order : null,
       ellipsis: true,
+      fixed: "left",
     },
     {
       title: "Sản phẩm",
@@ -297,6 +300,15 @@ const SanPham = () => {
       // sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
+      title: "Tổng hàng trong kho",
+      dataIndex: "tonghangtrongkho",
+      key: "tonghangtrongkho",
+      sorter: (a, b) => a.tonghangtrongkho - b.tonghangtrongkho,
+      sortOrder: sortedInfo.columnKey === "tonghangtrongkho" ? sortedInfo.order : null,
+      // sorter: (a, b) => a.name.localeCompare(b.name),
+      ellipsis: true,
+    },
+    {
       title: "Mô tả",
       dataIndex: "description",
       key: "description",
@@ -306,6 +318,7 @@ const SanPham = () => {
       title: "Chức năng",
       dataIndex: "chucnang",
       width: "10%",
+      fixed: "right",
       render: (_, record) => (
         <Space size="middle">
           <Dropdown
@@ -461,6 +474,9 @@ const SanPham = () => {
           position: ["bottomRight"],
           showTotal: (total, range) =>
             `${range[0]}-${range[1]} of ${total} items`,
+        }}
+        scroll={{
+          x: 1300,
         }}
         onChange={onChange}
       />

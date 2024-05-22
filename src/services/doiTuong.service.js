@@ -371,6 +371,17 @@ const updateDieuKhoanThanhToan = ({ values }) => {
     );
 };
 
+const deleteDieuKhoanThanhToan = ({ values }) => {
+    let { id, ...newObj } = values;
+    return axios.delete(`${API_URL}/dieu-khoan/${id}`,
+        {
+            // ...newObj
+        },
+        {
+            // headers: authHeader()
+        },
+    );
+};
 
 
 
@@ -409,6 +420,18 @@ const updateCktm = ({ values }) => {
     return axios.patch(`${API_URL}/cktm/${id}`,
         {
             ...newObj
+        },
+        {
+            // headers: authHeader()
+        },
+    );
+};
+
+const deleteCktm = ({ values }) => {
+    let { id, ...newObj } = values;
+    return axios.delete(`${API_URL}/cktm/${id}`,
+        {
+            // ...newObj
         },
         {
             // headers: authHeader()
@@ -459,11 +482,13 @@ const doiTuongService = {
     getDieuKhoanThanhToan,
     postDieuKhoanThanhToan,
     updateDieuKhoanThanhToan,
+    deleteDieuKhoanThanhToan,
 
     getListCktm,
     getCktm,
     postCktm,
     updateCktm,
+    deleteCktm,
 };
 
 export default doiTuongService;
