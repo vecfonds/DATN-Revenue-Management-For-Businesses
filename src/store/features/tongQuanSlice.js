@@ -80,13 +80,103 @@ export const tongQuanSlice = createSlice({
             state.isFetching = false;
             state.isSuccessGetChartRevenue = true;
 
+
             state.chartRevenueData = action.payload.result.data.map(item => {
                 return {
                     name: `Tháng ${item.month}`,
                     "Doanh thu": item.totalProductValue - item.totalDiscountValue,
+                    key: item.month
                 }
             }
             ).reverse();
+
+
+            // const data = [
+            //     {
+            //       key: 1,
+            //       name: "Tháng 1",
+            //       "Doanh thu": 1000,
+            //       chiphi: 0,
+            //     },
+            //     {
+            //       key: 2,
+            //       name: "Tháng 2",
+            //       "Doanh thu": 2000,
+            //       chiphi: 0,
+            //     },
+            //     {
+            //       key: 3,
+            //       name: "Tháng 3",
+            //       "Doanh thu": 3000,
+            //       chiphi: 0,
+            //     },
+            //     {
+            //       key: 4,
+            //       name: "Tháng 4",
+            //       "Doanh thu": 4000,
+            //       chiphi: 0,
+            //     },
+            //     {
+            //       key: 5,
+            //       name: "Tháng 5",
+            //       "Doanh thu": 5000,
+            //       chiphi: 0,
+            //     },
+            //     {
+            //       key: 6,
+            //       name: "Tháng 6",
+            //       "Doanh thu": 0,
+            //       chiphi: 0,
+            //     },
+            //     {
+            //       key: 7,
+            //       name: "Tháng 7",
+            //       "Doanh thu": 7000,
+            //       chiphi: 0,
+            //     },
+            //     {
+            //       key: 8,
+            //       name: "Tháng 8",
+            //       "Doanh thu": 0,
+            //       chiphi: 0,
+            //     },
+            //     {
+            //       key: 9,
+            //       name: "Tháng 9",
+            //       "Doanh thu": 8000,
+            //       chiphi: 0,
+            //     },
+            //     {
+            //       key: 10,
+            //       name: "Tháng 10",
+            //       "Doanh thu": 0,
+            //       chiphi: 0,
+            //     },
+            //     {
+            //       key: 11,
+            //       name: "Tháng 11",
+            //       "Doanh thu": 0,
+            //       chiphi: 0,
+            //     },
+            //     {
+            //       key: 12,
+            //       name: "Tháng 12",
+            //       "Doanh thu": 0,
+            //       chiphi: 0,
+            //     },
+            //   ];
+
+            //   state.chartRevenueData = data;
+
+
+
+            // state.chartRevenueData = action.payload.result.data.map(item => {
+            //     return {
+            //         name: `Tháng ${item.month}`,
+            //         "Doanh thu": item.totalProductValue - item.totalDiscountValue,
+            //     }
+            // }
+            // ).reverse();
             //   state.message = action.payload.message;
         })
 
@@ -97,6 +187,41 @@ export const tongQuanSlice = createSlice({
             // state.message = action.error.message;
         })
 
+
+
+
+
+
+
+
+
+        builder.addCase(getChartProduct.pending, (state) => {
+            console.log("getChartProduct.pending", state)
+            state.isFetching = true;
+        })
+
+        builder.addCase(getChartProduct.fulfilled, (state, action) => {
+            console.log("getChartProduct.fulfilled", action.payload)
+            state.isFetching = false;
+            state.isSuccessGetChartProduct = true;
+
+
+            state.chartProductData = action.payload.result.data.map(item => {
+                return {
+                    name: `Tháng ${item.month}`,
+                    "Doanh thu": item.totalProductValue - item.totalDiscountValue,
+                    key: item.month
+                }
+            }
+            ).reverse();
+        })
+
+        builder.addCase(getChartProduct.rejected, (state, action) => {
+            console.log("getChartProduct.rejected", action)
+            state.isFetching = false;
+            state.isError = true;
+            // state.message = action.error.message;
+        })
 
     }
 });

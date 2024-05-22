@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   BarChart,
   Bar,
@@ -13,7 +13,7 @@ import {
   Line,
 } from "recharts";
 import { DownOutlined } from "@ant-design/icons";
-import { Dropdown, Space, Flex, Progress, Table } from "antd";
+import { Dropdown, Space, Flex, Progress, Table, Select } from "antd";
 import Countdocument from "../../component/Tongquan/count-document";
 import ChartNhanvien from "../../component/Chart/chartNhanvien";
 import ChartSanpham from "../../component/Chart/chartSanpham";
@@ -27,75 +27,83 @@ const items = [
     key: "0",
   },
   {
-    label: "2023",
+    label: "Năm trước",
     key: "1",
-  },
-  {
-    label: "2022",
-    key: "2",
   },
 ];
 
 const data = [
   {
+    key: 1,
     name: "Tháng 1",
-    doanhthu: 4000,
-    chiphi: 2400,
+    "Doanh thu": 0,
+    chiphi: 0,
   },
   {
+    key: 2,
     name: "Tháng 2",
-    doanhthu: 3000,
-    chiphi: 1398,
+    "Doanh thu": 0,
+    chiphi: 0,
   },
   {
+    key: 3,
     name: "Tháng 3",
-    doanhthu: 5000,
-    chiphi: 9800,
+    "Doanh thu": 0,
+    chiphi: 0,
   },
   {
+    key: 4,
     name: "Tháng 4",
-    doanhthu: 2780,
-    chiphi: 3908,
+    "Doanh thu": 0,
+    chiphi: 0,
   },
   {
+    key: 5,
     name: "Tháng 5",
-    doanhthu: 1890,
-    chiphi: 4800,
+    "Doanh thu": 0,
+    chiphi: 0,
   },
   {
+    key: 6,
     name: "Tháng 6",
-    // doanhthu: 2390,
-    // chiphi: 3800,
+    "Doanh thu": 0,
+    chiphi: 0,
   },
   {
+    key: 7,
     name: "Tháng 7",
-    // doanhthu: 3490,
-    // chiphi: 4300,
+    "Doanh thu": 0,
+    chiphi: 0,
   },
   {
+    key: 8,
     name: "Tháng 8",
-    // doanhthu: 3490,
-    // chiphi: 4300,
+    "Doanh thu": 0,
+    chiphi: 0,
   },
   {
+    key: 9,
     name: "Tháng 9",
-    // doanhthu: 3490,
-    // chiphi: 4300,
+    "Doanh thu": 0,
+    chiphi: 0,
   },
   {
+    key: 10,
     name: "Tháng 10",
-    // doanhthu: 3490,
-    // chiphi: 4300,
+    "Doanh thu": 0,
+    chiphi: 0,
   },
   {
+    key: 11,
     name: "Tháng 11",
-    // doanhthu: 3490,
-    // chiphi: 4300,
+    "Doanh thu": 0,
+    chiphi: 0,
   },
   {
+    key: 12,
     name: "Tháng 12",
-    // doanhthu: 3490,
-    // chiphi: 4300,
+    "Doanh thu": 0,
+    chiphi: 0,
   },
 ];
 
@@ -131,6 +139,34 @@ const TongQuan = () => {
   } = useSelector(tongQuanSelector);
 
   useEffect(() => {
+    if (chartRevenueData) {
+      // chartRevenueData?.forEach(item => {
+      //   if (item.key < 6) {
+      //     data[item.key - 1]["Doanh thu"] = item["Doanh thu"];
+      //   }
+      // })
+      for (let i = 0; i < 12; ++i) {
+        if (i < 6) {
+          chartRevenueData?.forEach(item => {
+            if (item.key - 1 === i) {
+              data[i]["Doanh thu"] = item["Doanh thu"];
+            }
+          })
+        }
+        else {
+          chartRevenueData?.forEach(item => {
+            if (item.key - 1 === i) {
+              data[i]["Doanh thu"] = 0;
+            }
+          })
+        }
+      }
+
+      setDataVenue(data);
+    }
+  }, [chartRevenueData]);
+
+  useEffect(() => {
     dispatch(getChartRevenue());
 
     const dataConvert = {
@@ -148,6 +184,123 @@ const TongQuan = () => {
     reportTHCNData
   } = useSelector(congNoSelector);
 
+  const [dataVenue, setDataVenue] = useState();
+
+  useEffect(() => {
+
+  }, [dataVenue]);
+
+  const handleChange = (value) => {
+    if (value === 0) {
+      for (let i = 0; i < 12; ++i) {
+        if (i < 6) {
+          chartRevenueData?.forEach(item => {
+            if (item.key - 1 === i) {
+              data[i]["Doanh thu"] = item["Doanh thu"];
+            }
+          })
+        }
+        else {
+          data[i]["Doanh thu"] = 0;
+        }
+      }
+      setDataVenue(data);
+    }
+
+    else if (value === 1) {
+      // for (let i = 0; i < 12; ++i) {
+      //   if (i >= 6) {
+      //     chartRevenueData?.forEach(item => {
+      //       if (item.key - 1 === i) {
+      //         data[i]["Doanh thu"] = item["Doanh thu"];
+      //       }
+      //     })
+      //   }
+      //   else {
+      //     data[i]["Doanh thu"] = 0;
+      //   }
+      // }
+      setDataVenue([
+        {
+          key: 1,
+          name: "Tháng 1",
+          "Doanh thu": 0,
+          chiphi: 0,
+        },
+        {
+          key: 2,
+          name: "Tháng 2",
+          "Doanh thu": 0,
+          chiphi: 0,
+        },
+        {
+          key: 3,
+          name: "Tháng 3",
+          "Doanh thu": 0,
+          chiphi: 0,
+        },
+        {
+          key: 4,
+          name: "Tháng 4",
+          "Doanh thu": 0,
+          chiphi: 0,
+        },
+        {
+          key: 5,
+          name: "Tháng 5",
+          "Doanh thu": 0,
+          chiphi: 0,
+        },
+        {
+          key: 6,
+          name: "Tháng 6",
+          "Doanh thu": 0,
+          chiphi: 0,
+        },
+        {
+          key: 7,
+          name: "Tháng 7",
+          "Doanh thu": 0,
+          chiphi: 0,
+        },
+        {
+          key: 8,
+          name: "Tháng 8",
+          "Doanh thu": 0,
+          chiphi: 0,
+        },
+        {
+          key: 9,
+          name: "Tháng 9",
+          "Doanh thu": 0,
+          chiphi: 0,
+        },
+        {
+          key: 10,
+          name: "Tháng 10",
+          "Doanh thu": 0,
+          chiphi: 0,
+        },
+        {
+          key: 11,
+          name: "Tháng 11",
+          "Doanh thu": 0,
+          chiphi: 0,
+        },
+        {
+          key: 12,
+          name: "Tháng 12",
+          "Doanh thu": 0,
+          chiphi: 0,
+        },
+      ]);
+    }
+
+
+    console.log(data)
+  };
+
+
 
   return (
     <div className="ml-5">
@@ -157,25 +310,49 @@ const TongQuan = () => {
       <Flex gap={50} className='mt-5 w-full'>
         <div>
           <p className="text-xl">Doanh thu</p>
-          <Dropdown
+          {/* <Dropdown
             menu={{
               items,
+              selectable: true,
+              defaultSelectedKeys: [0],
             }}
-            trigger={["click"]}
+          // trigger={["click"]}
           >
-            <a onClick={(e) => e.preventDefault()}>
+            <a onChange={(e) => {
+
+            }}>
               <Space>
                 Năm nay
                 <DownOutlined />
               </Space>
             </a>
-          </Dropdown>
+          </Dropdown> */}
+
+          <Select
+            defaultValue={0}
+            style={{
+              width: 120,
+
+            }}
+            className="bg-[#FFF6D8]"
+            onChange={handleChange}
+            options={[
+              {
+                value: 0,
+                label: 'Năm nay',
+              },
+              {
+                value: 1,
+                label: 'Năm trước',
+              },
+            ]}
+          />
 
           <ResponsiveContainer className="!w-[900px] !h-[300px] border border-gray-300 shadow-xl rounded-lg p-5">
             <BarChart
               width={700}
               height={300}
-              data={chartRevenueData}
+              data={dataVenue}
               margin={{
                 top: 5,
                 right: 30,
@@ -198,6 +375,7 @@ const TongQuan = () => {
             fill="#82ca9d"
             activeBar={<Rectangle fill="gold" stroke="purple" />}
           /> */}
+
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -243,9 +421,9 @@ const TongQuan = () => {
             percent={
               ((reportTHCNData?.map(pt => pt.outOfDate).reduce((total, currentValue) => {
                 return total + currentValue;
-              }, 0))*100)/((reportTHCNData?.map(pt => pt.outOfDate).reduce((total, currentValue) => {
+              }, 0)) * 100) / ((reportTHCNData?.map(pt => pt.outOfDate).reduce((total, currentValue) => {
                 return total + currentValue;
-              }, 0))+(reportTHCNData?.map(pt => pt.inOfDate).reduce((total, currentValue) => {
+              }, 0)) + (reportTHCNData?.map(pt => pt.inOfDate).reduce((total, currentValue) => {
                 return total + currentValue;
               }, 0)))
             }
@@ -273,7 +451,7 @@ const TongQuan = () => {
         </ResponsiveContainer>
       </div> */}
 
-      <Flex gap={40} className='!w-full mt-4'>
+      <Flex gap={0} className='mt-4 !max-w-[90%]'>
         <ChartNhanvien />
         <ChartSanpham />
       </Flex>

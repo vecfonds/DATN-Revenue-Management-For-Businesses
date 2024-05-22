@@ -330,7 +330,7 @@ const EditNhomSanPham = ({ disabled = false }) => {
             ...values,
             id: productGroupData.id
         }
-        dispatch(updateProductGroup({values: dataConvert}));
+        dispatch(updateProductGroup({ values: dataConvert }));
         navigate(-1);
     };
 
@@ -365,6 +365,25 @@ const EditNhomSanPham = ({ disabled = false }) => {
                             <Input
                                 disabled={disabled}
 
+                            />
+                        </Form.Item>
+
+                        <Form.Item
+                            label="% thuế GTGT"
+                            name="tax"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Trường này là bắt buộc!",
+                                },
+                            ]}
+                        >
+                            <InputNumber
+                                min={0}
+                                style={{
+                                    width: "100%",
+                                }}
+                                disabled={disabled}
                             />
                         </Form.Item>
                     </Flex>
