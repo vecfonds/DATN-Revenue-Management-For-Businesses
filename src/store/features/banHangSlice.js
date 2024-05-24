@@ -273,22 +273,37 @@ export const banHangSlice = createSlice({
 
             state.isSuccessGetListEmployeeWarehouseKeeper = false;
 
-            state.isSuccessGetListPhieuThuTienMat= false;
-            state.isSuccessGetPhieuThuTienMat= false;
-            state.isSuccessPostPhieuThuTienMat= false;
-        
-            state.isSuccessGetListPhieuThuTienGui= false;
-            state.isSuccessGetPhieuThuTienGui= false;
-            state.isSuccessPostPhieuThuTienGui= false;
+            state.isSuccessGetListPhieuThuTienMat = false;
+            state.isSuccessGetPhieuThuTienMat = false;
+            state.isSuccessPostPhieuThuTienMat = false;
+
+            state.isSuccessGetListPhieuThuTienGui = false;
+            state.isSuccessGetPhieuThuTienGui = false;
+            state.isSuccessPostPhieuThuTienGui = false;
 
             state.isFetching = false;
             state.message = "";
             return state;
         },
 
-        hoaDonSelected: (state, action) =>{
+        hoaDonSelected: (state, action) => {
             state.listHoaDonSelected = action.payload;
             return state;
+        },
+
+        donBanHangUploadFile: (state, action) => {
+            // state.donBanHangData = action.payload;
+            state.donBanHangData = {
+                ...action.payload,
+                key: action.payload.id,
+                salesperson: action.payload.salespersonId,
+                // address: action.payload.customer.address,
+                namecCustomer: action.payload.customerId,
+                // taxCode: action.payload.customer.taxCode
+            };
+
+            return state;
+
         }
     },
 
@@ -653,6 +668,6 @@ export const banHangSlice = createSlice({
     }
 });
 
-export const { clearState, hoaDonSelected } = banHangSlice.actions;
+export const { clearState, hoaDonSelected, donBanHangUploadFile } = banHangSlice.actions;
 
 export const banHangSelector = (state) => state.banHang;

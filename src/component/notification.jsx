@@ -10,10 +10,10 @@ function NotificationComponent(props) {
     try {
       const res = await notification.updateReadStatus(props.id);
       console.log(res);
-      message.success("Cập nhật thành công");
+      // message.success("Cập nhật thành công");
     } catch (err) {
       console.error(err);
-      message.error("Cập nhật thất bại");
+      // message.error("Cập nhật thất bại");
     }
   };
 

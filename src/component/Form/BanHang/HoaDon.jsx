@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Form, Input, DatePicker, Flex, Table, Select } from "antd";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { useNavigate } from 'react-router-dom';
+import { doiTuongSelector, getCktmCustomer, getDieuKhoanThanhToanCustomer } from '../../../store/features/doiTuongSilce';
+import { useDispatch, useSelector } from 'react-redux';
 
 const dateFormat = "YYYY-MM-DD";
 dayjs.extend(customParseFormat);
@@ -10,6 +12,28 @@ dayjs.extend(customParseFormat);
 
 const HoaDon = ({ components, dataSource, columns, form, disabled, onFinish, chungTuBanData, isHoaDon, isAddChungTu }) => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (chungTuBanData?.customerId) {
+            dispatch(getDieuKhoanThanhToanCustomer({ id: chungTuBanData?.customerId }));
+            dispatch(getCktmCustomer({ id: chungTuBanData?.customerId }));
+        }
+    }, [chungTuBanData]);
+
+    const {
+        listCustomerData,
+        isSuccessGetListCustomer,
+        isSuccessPostCustomer,
+        isError,
+        message,
+        isSuccessUpdateCustomer,
+        listSalespersonData,
+        listProductData,
+        isSuccessGetListProduct,
+        dieuKhoanThanhToanCustomerData,
+        cktmCustomerData,
+    } = useSelector(doiTuongSelector);
 
     const columsFilter = columns
     // .filter(item=> (item.dataIndex!=="phantramthuegtgt"&&item.dataIndex!=="tienthuegtgt"))
@@ -111,22 +135,28 @@ const HoaDon = ({ components, dataSource, columns, form, disabled, onFinish, chu
                 <Flex vertical gap={5} className='w-[50%]'>
                     <Form.Item
                         label="Điều khoản thanh toán"
-                        name='dieukhoanthanhtoan'
+                        name='paymentPeriod'
                     >
-                        <Input
+                        <Select
                             disabled={true}
-
-                        />
+                        >
+                            {
+                                dieuKhoanThanhToanCustomerData?.map(item => <Select.Option value={item?.paymentPeriod} key={item.id}>{item.name}</Select.Option>)
+                            }
+                        </Select>
                     </Form.Item>
 
                     <Form.Item
                         label="Chiết khấu thương mại"
-                        name='chietkhauthuongmai'
+                        name='discountRate'
                     >
-                        <Input
+                        <Select
                             disabled={true}
-
-                        />
+                        >
+                            {
+                                cktmCustomerData?.map(item => <Select.Option value={item?.discountRate} key={item.id}>{item.name}</Select.Option>)
+                            }
+                        </Select>
                     </Form.Item>
 
                     <Form.Item

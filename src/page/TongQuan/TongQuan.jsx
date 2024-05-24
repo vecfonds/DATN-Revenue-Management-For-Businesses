@@ -21,6 +21,7 @@ import { getChartRevenue, tongQuanSelector } from "../../store/features/tongQuan
 import { useDispatch, useSelector } from "react-redux";
 import { VND } from "../../utils/func";
 import { congNoSelector, getListCongNo, postReportTHCN, postReportTHCNRaw } from "../../store/features/congNoSlice";
+import TinhHinhTaiChinh from "../../component/Chart/TinhHinhTaiChinh";
 const items = [
   {
     label: "Năm nay",
@@ -306,10 +307,12 @@ const TongQuan = () => {
     <div className="ml-5 mb-4">
       <h1 className="font-bold text-3xl mb-5">Tổng quan</h1>
 
-      {/* <Countdocument /> */}
+      <Countdocument />
       <Flex gap={50} className='mt-5 w-full'>
         <div>
-          <p className="text-xl">Doanh thu</p>
+          {/* <p className="text-xl">Doanh thu</p> */}
+          <p className="font-bold text-xl">Doanh thu</p>
+
           {/* <Dropdown
             menu={{
               items,
@@ -455,6 +458,8 @@ const TongQuan = () => {
         <ChartNhanvien />
         <ChartSanpham />
       </Flex>
+
+      <TinhHinhTaiChinh />
       {/* <>
         <p className="text-xl">Hàng hóa tồn kho</p>
         <p>

@@ -329,6 +329,17 @@ const getListSalesperson = () => {
 
 
 
+
+const getDieuKhoanThanhToanCustomer = ({ id }) => {
+    return axios.get(`${API_URL}/dieu-khoan/customer/${id}`,
+        {
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
+};
+
+
 const getListDieuKhoanThanhToan = () => {
     return axios.get(`${API_URL}/dieu-khoan`,
         {
@@ -384,6 +395,19 @@ const deleteDieuKhoanThanhToan = ({ values }) => {
 };
 
 
+
+
+
+
+
+const getCktmCustomer = ({ id }) => {
+    return axios.get(`${API_URL}/cktm/customer/${id}`,
+        {
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
+};
 
 const getListCktm = () => {
     return axios.get(`${API_URL}/cktm`,
@@ -478,12 +502,14 @@ const doiTuongService = {
 
     getListSalesperson,
 
+    getDieuKhoanThanhToanCustomer,
     getListDieuKhoanThanhToan,
     getDieuKhoanThanhToan,
     postDieuKhoanThanhToan,
     updateDieuKhoanThanhToan,
     deleteDieuKhoanThanhToan,
 
+    getCktmCustomer,
     getListCktm,
     getCktm,
     postCktm,

@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { Form, Input, Flex, Table, Button, Select, Typography, InputNumber } from "antd";
+import { Form, Input, Flex, Table, Button, Select, Typography, InputNumber, notification } from "antd";
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useDispatch, useSelector } from 'react-redux';
-import { clearState, banHangSelector, getDonBanHang } from '../../../../../../store/features/banHangSlice';
+import { banHangSelector, getDonBanHang } from '../../../../../../store/features/banHangSlice';
 import { VND } from '../../../../../../utils/func';
-import { doiTuongSelector, getCktmCustomer, getDieuKhoanThanhToanCustomer } from '../../../../../../store/features/doiTuongSilce';
+import { doiTuongSelector, getListCustomer, getListProduct, getListSalesperson, clearState, getDieuKhoanThanhToanCustomer, getCktmCustomer } from '../../../../../../store/features/doiTuongSilce';
 
 const EditableContext = React.createContext(null);
 const EditableRow = ({ index, ...props }) => {
@@ -90,13 +90,16 @@ const EditableCell = ({
 };
 
 
-const EditDonDatHang = ({ disabled = false }) => {
+const ThemDonDatHang = ({ disabled = false }) => {
     const dispatch = useDispatch();
     const params = useParams();
     console.log("params", params)
     console.log("params.id", params.id)
     const navigate = useNavigate();
     const [form] = Form.useForm();
+
+    const [api, contextHolder] = notification.useNotification();
+
 
     const {
         donBanHangData,
@@ -105,17 +108,6 @@ const EditDonDatHang = ({ disabled = false }) => {
     } = useSelector(banHangSelector);
 
     console.log("donBanHangData", donBanHangData);
-
-    useEffect(() => {
-        dispatch(getDonBanHang({ id: params.id }));
-    }, []);
-
-    useEffect(() => {
-        if (donBanHangData?.customerId) {
-            dispatch(getDieuKhoanThanhToanCustomer({ id: donBanHangData?.customerId }));
-            dispatch(getCktmCustomer({ id: donBanHangData?.customerId }));
-        }
-    }, [donBanHangData]);
 
     const {
         listCustomerData,
@@ -132,12 +124,20 @@ const EditDonDatHang = ({ disabled = false }) => {
     } = useSelector(doiTuongSelector);
 
 
+
+    useEffect(() => {
+        dispatch(getListCustomer());
+        dispatch(getListSalesperson());
+        dispatch(getListProduct());
+    }, []);
+
+
     useEffect(() => {
         if (donBanHangData) {
             const data = {
                 ...donBanHangData,
-                // discountRate: donBanHangData?.dieuKhoan?.name,
-                // chietkhauthuongmai: donBanHangData?.cktm?.name
+                dieukhoanthanhtoan: donBanHangData?.dieuKhoan?.name,
+                chietkhauthuongmai: donBanHangData?.cktm?.name
             };
 
             switch (donBanHangData.documentStatus) {
@@ -178,38 +178,91 @@ const EditDonDatHang = ({ disabled = false }) => {
     }, [donBanHangData]);
 
 
+    useEffect(() => {
+        if (donBanHangData?.customerId && listCustomerData) {
+            dispatch(getDieuKhoanThanhToanCustomer({ id: donBanHangData?.customerId }));
+            dispatch(getCktmCustomer({ id: donBanHangData?.customerId }));
+
+            // listCustomerData.filter(item => item.id === donBanHangData?.customerId)[0]?.address
+
+            form.setFieldsValue({
+                address: listCustomerData.filter(item => item.id === donBanHangData?.customerId)[0]?.address,
+                namecCustomer: listCustomerData.filter(item => item.id === donBanHangData?.customerId)[0]?.name,
+            });
+
+        }
+    }, [listCustomerData, donBanHangData]);
+
+    useEffect(() => {
+        if (donBanHangData?.customerId) {
+            dispatch(getDieuKhoanThanhToanCustomer({ id: donBanHangData?.customerId }));
+            dispatch(getCktmCustomer({ id: donBanHangData?.customerId }));
+        }
+    }, [donBanHangData]);
+
+    useEffect(() => {
+        if (donBanHangData?.paymentPeriod && dieuKhoanThanhToanCustomerData) {
+            form.setFieldsValue({
+                paymentPeriod: dieuKhoanThanhToanCustomerData?.filter(item => item?.paymentPeriod === donBanHangData?.paymentPeriod)[0]?.paymentPeriod
+            });
+        }
+    }, [donBanHangData, dieuKhoanThanhToanCustomerData]);
+
+    useEffect(() => {
+        if (donBanHangData?.discountRate && cktmCustomerData) {
+            form.setFieldsValue({
+                discountRate: cktmCustomerData?.filter(item => item?.discountRate === donBanHangData?.discountRate)[0]?.discountRate
+            });
+        }
+    }, [donBanHangData, cktmCustomerData]);
+
+
     const [productOfDonBanHangs, setProductOfDonBanHangs] = useState([]);
 
-    // console.log("listProductData", listProductData);
     useEffect(() => {
-        if (isSuccessGetDonBanHang) {
-            const products = donBanHangData.productOfDonBanHangs.map(product => {
+        if (isSuccessGetListProduct) {
+            dispatch(clearState());
 
-                let soluongdaban = 0;
-                donBanHangData.ctban.forEach(chungtuban => {
-                    chungtuban.productOfCtban.forEach(productOfCtbanItem => {
-                        if (productOfCtbanItem.product.id === product.product.id) {
-                            console.log("...", productOfCtbanItem.count)
-                            soluongdaban += productOfCtbanItem.count;
-                        }
-                    })
-                })
+            const products = donBanHangData?.products?.map(product => {
+                const productCurrent = listProductData.filter(item => item.id === product.productId);
+
+                if (productCurrent.length === 0) {
+                    api.error({
+                        message: `${product.name} với id = ${product.productId} không tìm thấy dữ liệu!`,
+                        placement: "bottomLeft",
+                        duration: 100,
+                    });
+
+                    return {}
+                }
+
+                console.log("productCurrent", productCurrent)
+
+                // let soluongtonkho = 0;
+                // donBanHangData.ctban.forEach(chungtuban => {
+                //     chungtuban.productOfCtban.forEach(productOfCtbanItem => {
+                //         if (productOfCtbanItem.product.id === product.product.id) {
+                //             console.log("...", productOfCtbanItem.count)
+                //             soluongtonkho += productOfCtbanItem.count;
+                //         }
+                //     })
+                // })
 
                 return {
                     ...product,
-                    key: product.id,
-                    id: product.product.id,
-                    productName: product.product.name,
-                    unit: product.product.unit,
+                    key: product.productId,
+                    id: product.productId,
                     count: product.count,
-                    soluongdaban: soluongdaban,
+                    productName: productCurrent[0]?.name,
+                    unit: productCurrent[0]?.unit,
+                    soluongtonkho: productCurrent[0]?.category,
                     // soluongdaxuat: 1,
-                    price: product.price,
+                    price: productCurrent[0]?.priceDelivery,
                     phantramcktm: donBanHangData?.discountRate,
-                    tiencktm: product.count * product.price * (donBanHangData?.discountRate / 100),
-                    thanhtien: product.price * product.count,
-                    phantramthuegtgt: product.product.productGroup.tax,
-                    tienthuegtgt: product.count * product.price * (1 - donBanHangData?.discountRate / 100) * (product.product.productGroup.tax / 100)
+                    tiencktm: product.count * productCurrent[0]?.priceDelivery * (donBanHangData?.discountRate / 100),
+                    thanhtien: productCurrent[0]?.priceDelivery * product.count,
+                    phantramthuegtgt: productCurrent[0]?.productGroupInfo?.tax,
+                    tienthuegtgt: product.count * productCurrent[0]?.priceDelivery * (1 - donBanHangData?.discountRate / 100) * (productCurrent[0]?.productGroupInfo?.tax / 100)
                 }
             })
 
@@ -218,9 +271,22 @@ const EditDonDatHang = ({ disabled = false }) => {
             console.log("products", products)
 
             setProductOfDonBanHangs(products);
-            dispatch(clearState());
+
+
+
+            // listCustomerData.filter(item => item.id === donBanHangData?.customerId)[0]?.address
+
+            // form.setFieldsValue({
+            //     address: listCustomerData.filter(item => item.id === donBanHangData?.customerId)[0]?.address,
+            //     namecCustomer: listCustomerData.filter(item => item.id === donBanHangData?.customerId)[0]?.name,
+            // });
+
+
+
         }
-    }, [isSuccessGetDonBanHang]);
+    }, [isSuccessGetListProduct]);
+
+    // console.log("listProductData", listProductData);
 
 
     const nameValue = Form.useWatch('id', form);
@@ -296,8 +362,8 @@ const EditDonDatHang = ({ disabled = false }) => {
             editable: !disabled,
         },
         {
-            title: "Số lượng đã bán",
-            dataIndex: "soluongdaban",
+            title: "Số lượng tồn kho",
+            dataIndex: "soluongtonkho",
             editable: !disabled,
         },
         // {
@@ -412,6 +478,9 @@ const EditDonDatHang = ({ disabled = false }) => {
             <h1 className="font-bold text-[32px] mb-8">
                 Đơn đặt hàng {nameValue || donBanHangData.id}
             </h1>
+
+            {contextHolder}
+
             <Form
                 form={form}
                 // labelCol={{ span: 10 }}
@@ -427,7 +496,7 @@ const EditDonDatHang = ({ disabled = false }) => {
                     <Flex vertical gap={5} className='w-[50%]'>
                         <Form.Item
                             label="Tên khách hàng"
-                            name='namecCustomer'
+                            name='customerId'
                             rules={[
                                 {
                                     required: true,
@@ -435,10 +504,29 @@ const EditDonDatHang = ({ disabled = false }) => {
                                 },
                             ]}
                         >
-                            <Input
+                            <Select
                                 disabled={disabled}
+                                onChange={(value) => {
+                                    const dataFilter = listCustomerData.filter(item => item.id === value);
+                                    console.log("dataFilter", dataFilter)
 
-                            />
+                                    const data = {
+                                        address: dataFilter[0]?.address,
+                                        // customerId: dataFilter[0]?.name,
+                                        branch: dataFilter[0]?.branch
+                                    };
+
+                                    console.log("dataa", data)
+
+                                    form.setFieldsValue({
+                                        ...data
+                                    });
+                                }}
+                            >
+                                {
+                                    listCustomerData.map(item => <Select.Option value={item.id} key={item.id}>{item.name}</Select.Option>)
+                                }
+                            </Select>
                         </Form.Item>
 
                         <Form.Item
@@ -484,10 +572,30 @@ const EditDonDatHang = ({ disabled = false }) => {
                                 },
                             ]}
                         >
-                            <Input
+                            <Select
                                 disabled={disabled}
+                                onChange={(value) => {
+                                    const dataFilter = listSalespersonData.filter(item => item.id === value);
+                                    console.log("dataFilter", dataFilter)
 
-                            />
+                                    const data = {
+                                        salesperson: dataFilter[0]?.name,
+                                    };
+
+                                    console.log("dataa", data)
+
+                                    form.setFieldsValue({
+                                        ...data
+                                    });
+                                }}
+                            >
+                                {/* {
+                                        listAccountantData.map(item => <Select.Option value={item.id} key={item.id}>{item.name}</Select.Option>)
+                                    } */}
+                                {
+                                    listSalespersonData.map(item => <Select.Option value={item.id} key={item.id}>{item.name}</Select.Option>)
+                                }
+                            </Select>
                         </Form.Item>
 
                         <Form.Item
@@ -570,6 +678,19 @@ const EditDonDatHang = ({ disabled = false }) => {
                         >
                             <Select
                                 disabled={disabled}
+                                onChange={(value) => {
+                                    const data = productOfDonBanHangs?.map(product => {
+                                        return {
+                                            ...product,
+                                            phantramcktm: value,
+                                            tiencktm: product.count * product.price * (value / 100),
+                                            thanhtien: product.price * product.count,
+                                            tienthuegtgt: product.count * product.price * (1 - value / 100) * (product.phantramthuegtgt / 100)
+                                        }
+                                    })
+
+                                    setProductOfDonBanHangs(data);
+                                }}
                             >
                                 {
                                     cktmCustomerData?.map(item => <Select.Option value={item?.discountRate} key={item.id}>{item.name}</Select.Option>)
@@ -592,7 +713,7 @@ const EditDonDatHang = ({ disabled = false }) => {
                             name='deliveryStatus'
                         >
                             <Input
-                                disabled={disabled}
+                                disabled={true}
 
                             />
                         </Form.Item>
@@ -601,7 +722,7 @@ const EditDonDatHang = ({ disabled = false }) => {
                 </Flex>
 
 
-                <div className='flex justify-start'>
+                {/* <div className='flex justify-start'>
                     <div className='min-w-[300px] mb-8'>
                         {donBanHangData?.ctban?.length !== 0 && <div className='flex'>
                             <p>Tham chiếu đến chứng từ bán hàng:</p>
@@ -615,7 +736,7 @@ const EditDonDatHang = ({ disabled = false }) => {
                             </p>
                         </div>}
                     </div>
-                </div>
+                </div> */}
 
 
                 <div>
@@ -723,4 +844,4 @@ const EditDonDatHang = ({ disabled = false }) => {
     )
 }
 
-export default EditDonDatHang
+export default ThemDonDatHang

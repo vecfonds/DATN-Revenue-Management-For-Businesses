@@ -73,6 +73,7 @@ import TongHopDoanhThuNhanVien from './page/BaoCao/scenes/TongHopDoanhThuNhanVie
 import BaoCaoDaLuu from "./page/BaoCao/scenes/BaoCaoDaLuu/BaoCaoDaLuu";
 import ReportCTDT from "./page/BaoCao/scenes/BaoCaoDaLuu/components/ReportCTDT/ReportCTDT";
 import ReportTHDT from "./page/BaoCao/scenes/BaoCaoDaLuu/components/ReportTHDT/ReportTHDT";
+import ThemDonDatHang from "./page/BanHang/scenes/DonDatHang/scenes/ThemDonDatHang/ThemDonDatHang";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -175,6 +176,7 @@ function App() {
                 </Route>
 
                 <Route path="ban-hang/don-dat-hang/xem/:id" element={<EditDonDatHang disabled={true} />} />
+                <Route path="ban-hang/don-dat-hang/them" element={<ThemDonDatHang />} />
 
                 <Route path="ban-hang/chung-tu-ban-hang/xem/:id" element={<XemChungTuBanHang disabled={true} />} />
                 <Route path="ban-hang/chung-tu-ban-hang/chinh-sua/:id" element={<XemChungTuBanHang />} />

@@ -464,7 +464,19 @@ export const getListSalesperson = createAsyncThunk(
 
 
 
-
+export const getDieuKhoanThanhToanCustomer = createAsyncThunk(
+    "doiTuong/getDieuKhoanThanhToanCustomer",
+    async ({ id }, thunkAPI) => {
+        try {
+            const response = await doiTuongService.getDieuKhoanThanhToanCustomer({ id });
+            console.log("response", response);
+            return response.data;
+        } catch (error) {
+            console.log("error", error);
+            return thunkAPI.rejectWithValue(error.response.data);
+        }
+    }
+);
 
 
 export const getListDieuKhoanThanhToan = createAsyncThunk(
@@ -547,7 +559,19 @@ export const deleteDieuKhoanThanhToan = createAsyncThunk(
 
 
 
-
+export const getCktmCustomer = createAsyncThunk(
+    "doiTuong/getCktmCustomer",
+    async ({ id }, thunkAPI) => {
+        try {
+            const response = await doiTuongService.getCktmCustomer({ id });
+            console.log("response", response);
+            return response.data;
+        } catch (error) {
+            console.log("error", error);
+            return thunkAPI.rejectWithValue(error.response.data);
+        }
+    }
+);
 
 
 export const getListCktm = createAsyncThunk(
@@ -693,9 +717,11 @@ const initialState = {
 
     listDieuKhoanThanhToanData: [],
     dieuKhoanThanhToanData: {},
+    dieuKhoanThanhToanCustomerData: [],
 
     listCktmData: [],
     cktmData: {},
+    cktmCustomerData: [],
 };
 
 export const doiTuongSlice = createSlice({
@@ -1415,6 +1441,30 @@ export const doiTuongSlice = createSlice({
 
 
 
+
+
+        builder.addCase(getDieuKhoanThanhToanCustomer.pending, (state) => {
+            console.log("getDieuKhoanThanhToanCustomer.pending", state)
+            state.isFetching = true;
+        })
+
+        builder.addCase(getDieuKhoanThanhToanCustomer.fulfilled, (state, action) => {
+            console.log("getDieuKhoanThanhToanCustomer.fulfilled", action.payload)
+            state.isFetching = false;
+            state.isSuccess = true;
+            state.dieuKhoanThanhToanCustomerData = action.payload.result.data;
+
+            //   state.message = action.payload.message;
+        })
+
+        builder.addCase(getDieuKhoanThanhToanCustomer.rejected, (state, action) => {
+            console.log("getDieuKhoanThanhToanCustomer.rejected", action)
+            state.isFetching = false;
+            state.isError = true;
+            state.message = action.error.message;
+        })
+
+
         builder.addCase(getListDieuKhoanThanhToan.pending, (state) => {
             console.log("getListDieuKhoanThanhToan.pending", state)
             state.isFetching = true;
@@ -1526,6 +1576,28 @@ export const doiTuongSlice = createSlice({
 
 
 
+
+
+        builder.addCase(getCktmCustomer.pending, (state) => {
+            console.log("getCktmCustomer.pending", state)
+            state.isFetching = true;
+        })
+
+        builder.addCase(getCktmCustomer.fulfilled, (state, action) => {
+            console.log("getCktmCustomer.fulfilled", action.payload)
+            state.isFetching = false;
+            state.isSuccess = true;
+            state.cktmCustomerData = action.payload.result.data;
+
+            //   state.message = action.payload.message;
+        })
+
+        builder.addCase(getCktmCustomer.rejected, (state, action) => {
+            console.log("getCktmCustomer.rejected", action)
+            state.isFetching = false;
+            state.isError = true;
+            state.message = action.error.message;
+        })
 
 
         builder.addCase(getListCktm.pending, (state) => {

@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   banHangSelector,
   clearState,
+  donBanHangUploadFile,
   getListDonBanHang,
   postDonBanHang,
 } from "../../../../store/features/banHangSlice";
@@ -354,7 +355,7 @@ const DonDatHang = ({ radio = false }) => {
           case "DELIVERING":
             return <span className={`${new Date(record.deliveryTerm) < new Date() && record.deliveryStatus !== "DELIVERED" ? "text-[#d44950] font-medium" : ""}`}>{"Đang giao"}</span>;
           case "DELIVERED":
-            return <span className={`${new Date(record.deliveryTerm) < new Date() && record.deliveryStatus !== "DELIVERED"  ? "text-[#d44950] font-medium" : ""}`}>{"Đã giao đủ"}</span>;
+            return <span className={`${new Date(record.deliveryTerm) < new Date() && record.deliveryStatus !== "DELIVERED" ? "text-[#d44950] font-medium" : ""}`}>{"Đã giao đủ"}</span>;
           default:
             return "Lỗi";
         }
@@ -483,22 +484,36 @@ const DonDatHang = ({ radio = false }) => {
           "deliveryStatus": "NOT_DELIVERED",
           "documentStatus": "UNDOCUMENTED",
           "deliveryTerm": formatDate(ExcelDateToJSDate(json[0]["Hạn giao hàng"])),
-          "salespersonId": json[0]["Mã nhân viên bán hàng"],
-          "dieuKhoanId": json[0]["Mã điều khoản thanh toán"],
-          "cktmId": json[0]["Mã tỷ lệ chiết khấu"],
-          "customerId": json[0]["Mã khách hàng"],
+          "salespersonId": json[0]["ID nhân viên"],
+          "paymentPeriod": json[0]["Số ngày được nợ"],
+          "discountRate": json[0]["% chiết khấu"],
+          "customerId": json[0]["ID khách hàng"],
           "products": json.map(item => {
             return {
-              "productId": item["Mã hàng"],
-              "count": item["Số lượng"]
+              "productId": item["ID sản phẩm"],
+              "count": item["Số lượng"],
+              "price": item[" Đơn giá "],
+              "name": item["Tên sản phẩm"],
             }
           })
 
         }
 
-
         console.log("dataConvert", dataConvert)
-        dispatch(postDonBanHang({ values: dataConvert }));
+        dispatch(donBanHangUploadFile(dataConvert));
+
+        messageApi.open({
+          key: "updatable",
+          type: "loading",
+          content: "Loading...",
+        });
+
+        setTimeout(() => navigate(`/ban-hang/don-dat-hang/them`), 2000);
+
+        // navigate(`/ban-hang/don-dat-hang/them`);
+
+
+        // dispatch(postDonBanHang({ values: dataConvert }));
 
         document.getElementById('upload-photo').value = null;
       };

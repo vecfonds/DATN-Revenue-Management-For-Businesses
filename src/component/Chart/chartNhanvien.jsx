@@ -132,27 +132,6 @@ const ChartNhanvien = () => {
   return (
     <div>
       <p className="font-bold text-xl mt-5">Biều đồ top 10 nhân viên có doanh thu cao nhất</p>
-      <ResponsiveContainer width={600} height={400}>
-        <BarChart
-          layout="vertical"
-          width={600}
-          height={400}
-          data={data}
-          margin={{ top: 20, right: 70, left: 30, bottom: 5 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis type="number" unit="đ" />
-          <YAxis type="category" dataKey="name" fontSize={10} />
-          <Tooltip />
-          <Legend />
-          <Bar dataKey="Doanh thu">
-            {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={colors[index]} />
-            ))}
-            <LabelList dataKey="Doanh thu" position="right" />
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
       <Select
         defaultValue={'thisMonth'}
         style={{
@@ -212,6 +191,27 @@ const ChartNhanvien = () => {
           },
         ]}
       />
+      <ResponsiveContainer width={600} height={400}>
+        <BarChart
+          layout="vertical"
+          width={600}
+          height={400}
+          data={data}
+          margin={{ top: 20, right: 70, left: 30, bottom: 5 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis type="number" unit="đ" />
+          <YAxis type="category" dataKey="name" fontSize={10} />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="Doanh thu">
+            {data.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={colors[index]} />
+            ))}
+            <LabelList dataKey="Doanh thu" position="right" />
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer>
     </div>
   );
 };

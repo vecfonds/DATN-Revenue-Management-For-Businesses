@@ -319,7 +319,7 @@ const EditSanPham = ({ disabled = false }) => {
                         </Form.Item>
 
                         <Form.Item
-                            label="Số lượng"
+                            label="Số dư"
                             name='category'
                             rules={[
                                 {

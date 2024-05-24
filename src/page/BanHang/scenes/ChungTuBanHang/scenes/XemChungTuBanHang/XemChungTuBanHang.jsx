@@ -13,6 +13,7 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import InHoaDonBanHang from '../../../../../../component/InHoaDonBanHang/InHoaDonBanHang';
 import { useReactToPrint } from 'react-to-print';
 import InPhieuXuat from '../../../../../../component/InPhieuXuat/InPhieuXuat';
+import { doiTuongSelector, getCktmCustomer, getDieuKhoanThanhToanCustomer } from '../../../../../../store/features/doiTuongSilce';
 
 const dateFormat = "YYYY-MM-DD";
 dayjs.extend(customParseFormat);
@@ -495,8 +496,8 @@ const XemChungTuBanHang = ({ disabled = false }) => {
                 paymentTerm: dayjs(chungTuBanData.paymentTerm, dateFormat),
                 createdAt: dayjs(chungTuBanData.createdAt, dateFormat),
                 deliveryDate: dayjs(chungTuBanData.deliveryDate, dateFormat),
-                dieukhoanthanhtoan: chungTuBanData?.donBanHang?.dieuKhoan?.name,
-                chietkhauthuongmai: chungTuBanData?.donBanHang?.name
+                paymentPeriod: chungTuBanData?.donBanHang?.paymentPeriod,
+                discountRate: chungTuBanData?.donBanHang?.discountRate
             };
 
             switch (chungTuBanData.documentStatus) {
@@ -619,7 +620,7 @@ const XemChungTuBanHang = ({ disabled = false }) => {
                 />
 
                 <div className='flex justify-end'>
-                <div className='w-[300px] my-8'>
+                    <div className='w-[300px] my-8'>
                         <div className='flex justify-between'>
                             <p>Tổng tiền hàng</p>
                             <p>
@@ -632,8 +633,8 @@ const XemChungTuBanHang = ({ disabled = false }) => {
                         </div>
                         <div className='flex justify-between'>
                             <p>Tiền chiết khấu
-                                 {/* ({chungTuBanData?.donBanHang?.discountRate}%) */}
-                                 </p>
+                                {/* ({chungTuBanData?.donBanHang?.discountRate}%) */}
+                            </p>
                             <p>
                                 {
                                     VND.format(productOfChungTuBans.map(product => product.tiencktm).reduce((total, currentValue) => {
@@ -718,7 +719,7 @@ const XemChungTuBanHang = ({ disabled = false }) => {
             </Form>
 
             <div
-            className='hidden'
+                className='hidden'
             >
                 <div ref={componentRef}>
                     <InPhieuXuat
@@ -734,7 +735,7 @@ const XemChungTuBanHang = ({ disabled = false }) => {
             </div>
 
             <div
-            className='hidden'
+                className='hidden'
             >
                 <div ref={componentRef2}>
                     <InHoaDonBanHang
@@ -745,7 +746,7 @@ const XemChungTuBanHang = ({ disabled = false }) => {
                         idHoaDon={chungTuBanData?.id}
                         idCustomer={chungTuBanData?.donBanHang?.customer?.id}
                         tilechietkhau={chungTuBanData?.donBanHang?.discountRate}
-                        // hanthanhtoan={formatDate(dayjs(chungTuBanData?.paymentTerm, dateFormat))}
+                    // hanthanhtoan={formatDate(dayjs(chungTuBanData?.paymentTerm, dateFormat))}
                     />
                 </div>
             </div>
