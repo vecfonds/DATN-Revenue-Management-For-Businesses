@@ -154,7 +154,7 @@ export const baoCaoSlice = createSlice({
             console.log("getListReportDTBH.rejected", action)
             state.isFetching = false;
             state.isError = true;
-            // state.message = action.error.message;
+            // state.message = action.payload.message;
         })
 
         builder.addCase(getReportDTBH.pending, (state) => {
@@ -178,7 +178,7 @@ export const baoCaoSlice = createSlice({
             console.log("getReportDTBH.rejected", action)
             state.isFetching = false;
             state.isError = true;
-            state.message = action.error.message;
+            state.message = action.payload.message;
         })
 
         builder.addCase(postReportDTBH.pending, (state) => {
@@ -198,7 +198,7 @@ export const baoCaoSlice = createSlice({
             console.log("postReportDTBH.rejected", action)
             state.isFetching = false;
             state.isError = true;
-            state.message = action.error.message;
+            state.message = action.payload.message;
         })
 
 
@@ -220,7 +220,7 @@ export const baoCaoSlice = createSlice({
             console.log("postReportDTBHRaw.rejected", action)
             state.isFetching = false;
             state.isError = true;
-            state.message = action.error.message;
+            state.message = action.payload.message;
         })
 
 
@@ -244,7 +244,7 @@ export const baoCaoSlice = createSlice({
             console.log("getListSalesPerson.rejected", action)
             state.isFetching = false;
             state.isError = true;
-            // state.message = action.error.message;
+            // state.message = action.payload.message;
         })
     }
 });

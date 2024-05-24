@@ -1,10 +1,13 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './Login.css'
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FaCoins } from 'react-icons/fa';
+import { useDispatch, useSelector } from 'react-redux';
+import { authenticationSelector, clearState, setIsLogin } from '../../store/features/authenticationSlice';
+import { notification } from 'antd';
 
 const validationSchema = z
     .object({
@@ -17,8 +20,8 @@ const validationSchema = z
     ;
 
 const Login = () => {
-    // const navigate = useNavigate();
-    // const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [hiddenPwd, setHiddenPwd] = useState(false);
 
     const {
@@ -29,13 +32,44 @@ const Login = () => {
         resolver: zodResolver(validationSchema),
     });
 
+
+    const {
+        isSuccess,
+        isError,
+        message,
+    } = useSelector(authenticationSelector);
+
+    const [api, contextHolder] = notification.useNotification();
+
+
+    useEffect(() => {
+        if (isSuccess) {
+            navigate('/');
+            dispatch(clearState());
+        }
+        else if (isError) {
+            api.error({
+                message: message,
+                placement: "bottomLeft",
+                duration: 2,
+            });
+
+            dispatch(clearState());
+        }
+    }, [isSuccess,
+        isError,
+        message,]);
+
     const onSubmit = (data) => {
         console.log(data)
         //   const { email, password } = data;
         //   dispatch(loginUser({ email, password }));
+        navigate('/');
     };
     return (
         <div className="login-container">
+            {contextHolder}
+
             <div className="backgr">
                 <div className="container">
                     <div className="container_left active-left">

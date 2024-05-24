@@ -125,7 +125,6 @@ const ChartNhanvien = () => {
     dispatch(postReportDTBHRaw({ values: dataConvert }));
 
 
-    console.log(data)
   };
 
 
@@ -191,7 +190,7 @@ const ChartNhanvien = () => {
           },
         ]}
       />
-      <ResponsiveContainer width={600} height={400}>
+      <ResponsiveContainer width={600} height={400} className={"border border-gray-300 shadow-xl rounded-lg"}>
         <BarChart
           layout="vertical"
           width={600}

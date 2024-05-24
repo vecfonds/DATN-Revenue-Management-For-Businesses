@@ -278,7 +278,7 @@ export const congNoSlice = createSlice({
             console.log("getListCongNo.rejected", action)
             state.isFetching = false;
             state.isError = true;
-            // state.message = action.error.message;
+            // state.message = action.payload.message;
         })
 
 
@@ -310,7 +310,7 @@ export const congNoSlice = createSlice({
             console.log("getListReportDCCN.rejected", action)
             state.isFetching = false;
             state.isError = true;
-            // state.message = action.error.message;
+            // state.message = action.payload.message;
         })
 
         builder.addCase(getReportDCCN.pending, (state) => {
@@ -334,7 +334,7 @@ export const congNoSlice = createSlice({
             console.log("getReportDCCN.rejected", action)
             state.isFetching = false;
             state.isError = true;
-            state.message = action.error.message;
+            state.message = action.payload.message;
         })
 
         builder.addCase(postReportDCCN.pending, (state) => {
@@ -354,7 +354,7 @@ export const congNoSlice = createSlice({
             console.log("postReportDCCN.rejected", action)
             state.isFetching = false;
             state.isError = true;
-            state.message = action.error.message;
+            state.message = action.payload.message;
         })
 
 
@@ -376,7 +376,7 @@ export const congNoSlice = createSlice({
             console.log("postReportDCCNRaw.rejected", action)
             state.isFetching = false;
             state.isError = true;
-            state.message = action.error.message;
+            state.message = action.payload.message;
         })
 
 
@@ -407,7 +407,7 @@ export const congNoSlice = createSlice({
             console.log("getListReportTHCN.rejected", action)
             state.isFetching = false;
             state.isError = true;
-            // state.message = action.error.message;
+            // state.message = action.payload.message;
         })
 
         builder.addCase(getReportTHCN.pending, (state) => {
@@ -428,7 +428,7 @@ export const congNoSlice = createSlice({
             console.log("getReportTHCN.rejected", action)
             state.isFetching = false;
             state.isError = true;
-            state.message = action.error.message;
+            state.message = action.payload.message;
         })
 
         builder.addCase(postReportTHCN.pending, (state) => {
@@ -448,7 +448,7 @@ export const congNoSlice = createSlice({
             console.log("postReportTHCN.rejected", action)
             state.isFetching = false;
             state.isError = true;
-            state.message = action.error.message;
+            state.message = action.payload.message;
         })
 
 
@@ -470,7 +470,7 @@ export const congNoSlice = createSlice({
             console.log("postReportTHCNRaw.rejected", action)
             state.isFetching = false;
             state.isError = true;
-            state.message = action.error.message;
+            state.message = action.payload.message;
         })
 
     }

@@ -184,7 +184,7 @@ export const tongQuanSlice = createSlice({
             console.log("getChartRevenue.rejected", action)
             state.isFetching = false;
             state.isError = true;
-            // state.message = action.error.message;
+            // state.message = action.payload.message;
         })
 
 
@@ -220,7 +220,7 @@ export const tongQuanSlice = createSlice({
             console.log("getChartProduct.rejected", action)
             state.isFetching = false;
             state.isError = true;
-            // state.message = action.error.message;
+            // state.message = action.payload.message;
         })
 
     }

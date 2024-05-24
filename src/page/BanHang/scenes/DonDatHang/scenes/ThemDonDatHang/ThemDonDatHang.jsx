@@ -1,11 +1,17 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { Form, Input, Flex, Table, Button, Select, Typography, InputNumber, notification } from "antd";
+import { Form, Input, Flex, Table, Button, Select, Typography, InputNumber, notification, DatePicker } from "antd";
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useDispatch, useSelector } from 'react-redux';
-import { banHangSelector, getDonBanHang } from '../../../../../../store/features/banHangSlice';
-import { VND } from '../../../../../../utils/func';
-import { doiTuongSelector, getListCustomer, getListProduct, getListSalesperson, clearState, getDieuKhoanThanhToanCustomer, getCktmCustomer } from '../../../../../../store/features/doiTuongSilce';
+import { banHangSelector, clearState, getDonBanHang, postDonBanHang } from '../../../../../../store/features/banHangSlice';
+import { VND, formatDate } from '../../../../../../utils/func';
+import { doiTuongSelector, getListCustomer, getListProduct, getListSalesperson, getDieuKhoanThanhToanCustomer, getCktmCustomer } from '../../../../../../store/features/doiTuongSilce';
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+
+
+const dateFormat = "YYYY-MM-DD";
+dayjs.extend(customParseFormat);
 
 const EditableContext = React.createContext(null);
 const EditableRow = ({ index, ...props }) => {
@@ -56,7 +62,7 @@ const EditableCell = ({
         }
     };
     let childNode = children;
-    const inputNode = inputType === 'number' ? <InputNumber ref={inputRef} onPressEnter={save} onBlur={save} /> : <Input ref={inputRef} onPressEnter={save} onBlur={save} />;
+    const inputNode = inputType === 'number' ? <InputNumber ref={inputRef} onPressEnter={save} onBlur={save} min={0} max={record.soluongtonkho} /> : <Input ref={inputRef} onPressEnter={save} onBlur={save} />;
 
     if (editable) {
         childNode = editing ? (
@@ -103,8 +109,10 @@ const ThemDonDatHang = ({ disabled = false }) => {
 
     const {
         donBanHangData,
-        isSuccessGetDonBanHang
-
+        isSuccessGetDonBanHang,
+        isSuccessPostDonBanHang,
+        isError,
+        message,
     } = useSelector(banHangSelector);
 
     console.log("donBanHangData", donBanHangData);
@@ -113,8 +121,6 @@ const ThemDonDatHang = ({ disabled = false }) => {
         listCustomerData,
         isSuccessGetListCustomer,
         isSuccessPostCustomer,
-        isError,
-        message,
         isSuccessUpdateCustomer,
         listSalespersonData,
         listProductData,
@@ -131,13 +137,38 @@ const ThemDonDatHang = ({ disabled = false }) => {
         dispatch(getListProduct());
     }, []);
 
+    useEffect(() => {
+        if (isSuccessPostDonBanHang) {
+            // api.success({
+            //     message: "Thêm dữ liệu thành công!",
+            //     placement: "bottomLeft",
+            //     duration: 2,
+            // });
+            // dispatch(clearState());
+            navigate(-1);
+        }
+        else if (isError) {
+            api.error({
+                message: message,
+                placement: "bottomLeft",
+                duration: 2,
+            });
+
+            dispatch(clearState());
+        }
+    }, [isSuccessPostDonBanHang, isError]);
+
+
 
     useEffect(() => {
         if (donBanHangData) {
             const data = {
                 ...donBanHangData,
-                dieukhoanthanhtoan: donBanHangData?.dieuKhoan?.name,
-                chietkhauthuongmai: donBanHangData?.cktm?.name
+                // saleDate: new Date(donBanHangData?.saleDate),
+                // deliveryTerm: new Date(donBanHangData?.deliveryTerm),
+
+                saleDate: dayjs(new Date(donBanHangData?.saleDate).toISOString()?.slice(0, 10), dateFormat),
+                deliveryTerm: dayjs(new Date(donBanHangData?.deliveryTerm).toISOString()?.slice(0, 10), dateFormat),
             };
 
             switch (donBanHangData.documentStatus) {
@@ -220,21 +251,20 @@ const ThemDonDatHang = ({ disabled = false }) => {
     const [productOfDonBanHangs, setProductOfDonBanHangs] = useState([]);
 
     useEffect(() => {
-        if (isSuccessGetListProduct) {
-            dispatch(clearState());
+        if (listProductData) {
 
             const products = donBanHangData?.products?.map(product => {
-                const productCurrent = listProductData.filter(item => item.id === product.productId);
+                const productCurrent = listProductData?.filter(item => item.id === product.productId);
 
-                if (productCurrent.length === 0) {
-                    api.error({
-                        message: `${product.name} với id = ${product.productId} không tìm thấy dữ liệu!`,
-                        placement: "bottomLeft",
-                        duration: 100,
-                    });
+                // if (productCurrent.length === 0 && listProductData.length !== 0) {
+                //     api.error({
+                //         message: `${product.name} với id = ${product.productId} không tìm thấy dữ liệu!`,
+                //         placement: "bottomLeft",
+                //         duration: 100,
+                //     });
 
-                    return {}
-                }
+                //     return {}
+                // }
 
                 console.log("productCurrent", productCurrent)
 
@@ -284,7 +314,7 @@ const ThemDonDatHang = ({ disabled = false }) => {
 
 
         }
-    }, [isSuccessGetListProduct]);
+    }, [listProductData]);
 
     // console.log("listProductData", listProductData);
 
@@ -312,17 +342,17 @@ const ThemDonDatHang = ({ disabled = false }) => {
         {
             title: "Mã hàng",
             dataIndex: "id",
-            editable: !disabled,
+            editable: false,
         },
         {
             title: "Tên hàng",
             dataIndex: "productName",
-            editable: !disabled,
+            editable: false,
         },
         {
             title: "ĐVT",
             dataIndex: "unit",
-            editable: !disabled,
+            editable: false,
             render: (val, record) => {
                 switch (val) {
                     case "CAI":
@@ -362,9 +392,9 @@ const ThemDonDatHang = ({ disabled = false }) => {
             editable: !disabled,
         },
         {
-            title: "Số lượng tồn kho",
+            title: "Tồn kho chưa đặt",
             dataIndex: "soluongtonkho",
-            editable: !disabled,
+            editable: false,
         },
         // {
         //     title: "Số lượng đã xuất",
@@ -374,37 +404,37 @@ const ThemDonDatHang = ({ disabled = false }) => {
         {
             title: "Đơn giá",
             dataIndex: "price",
-            editable: !disabled,
+            editable: false,
             render: (val, record) => VND.format(val),
         },
         {
             title: "Thành tiền",
             dataIndex: "thanhtien",
-            editable: !disabled,
+            editable: false,
             render: (val, record) => VND.format(val),
         },
         {
             title: "% chiết khấu",
             dataIndex: "phantramcktm",
-            editable: !disabled,
+            editable: false,
             // render: (val, record) => VND.format(val),
         },
         {
             title: "Tiền chiết khấu",
             dataIndex: "tiencktm",
-            editable: !disabled,
+            editable: false,
             render: (val, record) => VND.format(val),
 
         },
         {
             title: "% thuế GTGT",
             dataIndex: "phantramthuegtgt",
-            editable: !disabled,
+            editable: false,
         },
         {
             title: "Tiền thuế GTGT",
             dataIndex: "tienthuegtgt",
-            editable: !disabled,
+            editable: false,
             render: (val, record) => VND.format(val),
         },
         // {
@@ -434,14 +464,17 @@ const ThemDonDatHang = ({ disabled = false }) => {
     };
 
     const handleSave = (row) => {
-        const newData = [...dataSource];
+        row.thanhtien = row.price * row.count;
+        row.tiencktm = row.price * row.count * (row.phantramcktm / 100);
+        row.tienthuegtgt = (row.thanhtien - row.tiencktm) * (row.phantramthuegtgt / 100);
+        const newData = [...productOfDonBanHangs];
         const index = newData.findIndex((item) => row.key === item.key);
         const item = newData[index];
         newData.splice(index, 1, {
             ...item,
             ...row,
         });
-        setDataSource(newData);
+        setProductOfDonBanHangs(newData);
     };
 
     const components = {
@@ -459,7 +492,7 @@ const ThemDonDatHang = ({ disabled = false }) => {
             ...col,
             onCell: (record) => ({
                 record,
-                inputType: ['songayduocno', 'songayhuongchietkhau', 'phantramchietkhau'].includes(col.dataIndex) ? 'number' : 'text',
+                inputType: ['count'].includes(col.dataIndex) ? 'number' : 'text',
                 editable: col.editable,
                 dataIndex: col.dataIndex,
                 title: col.title,
@@ -470,7 +503,29 @@ const ThemDonDatHang = ({ disabled = false }) => {
 
     const onFinish = (values) => {
         console.log('Received values of form: ', values);
-        console.log(dataSource);
+        console.log(productOfDonBanHangs);
+
+        let dataConvert = {
+            "saleDate": formatDate(values.saleDate.$d),
+            "content": values.content,
+            // "paymentStatus": values.paymentStatus,
+            "deliveryStatus": "NOT_DELIVERED",
+            // "documentStatus": values.documentStatus,
+            "deliveryTerm": formatDate(values.deliveryTerm.$d),
+            "salespersonId": values.salesperson,
+            "customerId": values.customerId,
+            "paymentPeriod": values.paymentPeriod,
+            "discountRate": values.discountRate,
+            "products": productOfDonBanHangs.map(product => {
+                return {
+                    productId: product.id,
+                    count: product.count
+                }
+            })
+        }
+
+        console.log("dataConvert", dataConvert)
+        dispatch(postDonBanHang({ values: dataConvert }));
     };
 
     return (
@@ -636,9 +691,10 @@ const ThemDonDatHang = ({ disabled = false }) => {
                                 },
                             ]}
                         >
-                            <Input
+                            <DatePicker
+                                className='!w-full'
                                 disabled={disabled}
-
+                            // format={dateFormat}
                             />
                         </Form.Item>
 
@@ -652,9 +708,10 @@ const ThemDonDatHang = ({ disabled = false }) => {
                                 },
                             ]}
                         >
-                            <Input
+                            <DatePicker
+                                className='!w-full'
                                 disabled={disabled}
-
+                            // format={dateFormat}
                             />
                         </Form.Item>
 

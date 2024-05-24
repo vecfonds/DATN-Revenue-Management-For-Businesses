@@ -19,16 +19,21 @@ const InPhieuThu = ({ components, dataSource, columns, form, disabled, onFinish,
             title: "STT",
             dataIndex: "stt",
             editable: false,
+            width: '8%',
+
+        },
+        {
+            title: "ID hóa đơn",
+            dataIndex: "id",
+            key: "id",
+            width: '15%',
+
         },
         {
             title: "Ngày hóa đơn",
             dataIndex: "createdAt",
             key: "createdAt",
             render: (val, record) => new Date(val).toLocaleDateString("vi-VN"),
-            sorter: (a, b) =>
-                moment(a.createdAt, "DD-MM-YYYY") - moment(b.createdAt, "DD-MM-YYYY"),
-            // fixed: 'left',
-            editable: false,
         },
         {
             title: "Khách hàng",
@@ -261,14 +266,14 @@ const InPhieuThu = ({ components, dataSource, columns, form, disabled, onFinish,
                             return (
                                 <>
                                     <Table.Summary.Row>
-                                        <Table.Summary.Cell index={0} className="font-medium text-center" colSpan={4}>Tổng tiền thanh toán</Table.Summary.Cell>
+                                        <Table.Summary.Cell index={0} className="font-medium text-center" colSpan={5}>Tổng tiền thanh toán</Table.Summary.Cell>
                                         <Table.Summary.Cell index={3}>
                                             <Text className="font-medium text-center">{VND.format(totalSoThanhToan)}</Text>
                                         </Table.Summary.Cell>
                                     </Table.Summary.Row>
 
                                     <Table.Summary.Row>
-                                        <Table.Summary.Cell index={0} className="font-medium text-center" colSpan={5}>Số tiền viết bằng chữ: {to_vietnamese(totalSoThanhToan)}</Table.Summary.Cell>
+                                        <Table.Summary.Cell index={0} className="font-medium text-center" colSpan={6}>Số tiền viết bằng chữ: {to_vietnamese(totalSoThanhToan)}</Table.Summary.Cell>
                                     </Table.Summary.Row>
                                 </>
                             );

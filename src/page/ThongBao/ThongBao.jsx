@@ -28,7 +28,7 @@ const ThongBao = () => {
     getAllNotification();
   }, [type, isResolved, isRead]);
   return (
-    <div className="ml-5 ">
+    <div className="ml-5 mt-5">
       <h1 className="font-bold text-3xl mb-3">Thông báo</h1>
       <Flex gap={30} className="mb-5">
         <Select

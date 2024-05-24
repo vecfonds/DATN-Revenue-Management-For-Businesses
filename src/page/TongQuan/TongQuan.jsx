@@ -304,7 +304,7 @@ const TongQuan = () => {
 
 
   return (
-    <div className="ml-5 mb-4">
+    <div className="ml-5 mb-5 mt-5">
       <h1 className="font-bold text-3xl mb-5">Tổng quan</h1>
 
       <Countdocument />
@@ -359,7 +359,7 @@ const TongQuan = () => {
               margin={{
                 top: 5,
                 right: 30,
-                left: 20,
+                left: 30,
                 bottom: 5,
               }}
             >

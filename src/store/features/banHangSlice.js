@@ -326,7 +326,7 @@ export const banHangSlice = createSlice({
             console.log("getListDonBanHang.rejected", action)
             state.isFetching = false;
             state.isError = true;
-            // state.message = action.error.message;
+            // state.message = action.payload.message;
         })
 
         builder.addCase(getDonBanHang.pending, (state) => {
@@ -355,7 +355,7 @@ export const banHangSlice = createSlice({
             console.log("getDonBanHang.rejected", action)
             state.isFetching = false;
             state.isError = true;
-            state.message = action.error.message;
+            state.message = action.payload.message;
         })
 
         builder.addCase(postDonBanHang.pending, (state) => {
@@ -367,7 +367,7 @@ export const banHangSlice = createSlice({
             console.log("postDonBanHang.fulfilled", action.payload)
             state.isFetching = false;
             state.isSuccessPostDonBanHang = true;
-            state.donBanHangData = action.payload;
+            // state.donBanHangData = action.payload;
             //   state.message = action.payload.message;
         })
 
@@ -375,7 +375,7 @@ export const banHangSlice = createSlice({
             console.log("postDonBanHang.rejected", action)
             state.isFetching = false;
             state.isError = true;
-            state.message = action.error.message;
+            state.message = action.payload.message;
         })
 
 
@@ -412,7 +412,7 @@ export const banHangSlice = createSlice({
             console.log("getListChungTuBan.rejected", action)
             state.isFetching = false;
             state.isError = true;
-            // state.message = action.error.message;
+            // state.message = action.payload.message;
         })
 
         builder.addCase(getChungTuBan.pending, (state) => {
@@ -445,7 +445,7 @@ export const banHangSlice = createSlice({
             console.log("getChungTuBan.rejected", action)
             state.isFetching = false;
             state.isError = true;
-            state.message = action.error.message;
+            state.message = action.payload.message;
         })
 
         builder.addCase(postChungTuBan.pending, (state) => {
@@ -465,7 +465,7 @@ export const banHangSlice = createSlice({
             console.log("postChungTuBan.rejected", action)
             state.isFetching = false;
             state.isError = true;
-            state.message = action.error.message;
+            state.message = action.payload.message;
         })
 
 
@@ -498,7 +498,7 @@ export const banHangSlice = createSlice({
             console.log("getListEmployeeWarehouseKeeper.rejected", action)
             state.isFetching = false;
             state.isError = true;
-            // state.message = action.error.message;
+            // state.message = action.payload.message;
         })
 
 
@@ -532,7 +532,7 @@ export const banHangSlice = createSlice({
             console.log("getListPhieuThuTienMat.rejected", action)
             state.isFetching = false;
             state.isError = true;
-            // state.message = action.error.message;
+            // state.message = action.payload.message;
         })
 
         builder.addCase(getPhieuThuTienMat.pending, (state) => {
@@ -558,7 +558,7 @@ export const banHangSlice = createSlice({
             console.log("getPhieuThuTienMat.rejected", action)
             state.isFetching = false;
             state.isError = true;
-            state.message = action.error.message;
+            state.message = action.payload.message;
         })
 
         builder.addCase(postPhieuThuTienMat.pending, (state) => {
@@ -578,7 +578,7 @@ export const banHangSlice = createSlice({
             console.log("postPhieuThuTienMat.rejected", action)
             state.isFetching = false;
             state.isError = true;
-            state.message = action.error.message;
+            state.message = action.payload.message;
         })
 
 
@@ -611,7 +611,7 @@ export const banHangSlice = createSlice({
             console.log("getListPhieuThuTienGui.rejected", action)
             state.isFetching = false;
             state.isError = true;
-            // state.message = action.error.message;
+            // state.message = action.payload.message;
         })
 
         builder.addCase(getPhieuThuTienGui.pending, (state) => {
@@ -642,7 +642,7 @@ export const banHangSlice = createSlice({
             console.log("getPhieuThuTienGui.rejected", action)
             state.isFetching = false;
             state.isError = true;
-            state.message = action.error.message;
+            state.message = action.payload.message;
         })
 
         builder.addCase(postPhieuThuTienGui.pending, (state) => {
@@ -662,7 +662,7 @@ export const banHangSlice = createSlice({
             console.log("postPhieuThuTienGui.rejected", action)
             state.isFetching = false;
             state.isError = true;
-            state.message = action.error.message;
+            state.message = action.payload.message;
         })
 
     }

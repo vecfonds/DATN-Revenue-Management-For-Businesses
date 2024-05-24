@@ -183,8 +183,8 @@ const TinhHinhTaiChinh = () => {
                     },
                 ]}
             />
-            <div className="border border-gray-300 w-[700px] p-5 text-xl">
-                <div className='w-[660px]'>
+            <div className="border border-gray-300 w-[600px] p-5 text-xl shadow-xl rounded-lg">
+                <div className='w-[560px]'>
                     <div className='flex justify-between'>
                         <p>Tổng tiền đã thu</p>
                         <p className="font-bold">

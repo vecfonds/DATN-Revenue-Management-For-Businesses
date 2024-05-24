@@ -95,7 +95,7 @@ export const authenticationSlice = createSlice({
       console.log("signupUser.rejected", action)
       state.isFetching = false;
       state.isError = true;
-      state.message = action.error.message;
+      state.message = action.payload.message;
     })
 
     builder.addCase(loginUser.pending, (state) => {
@@ -113,7 +113,7 @@ export const authenticationSlice = createSlice({
       console.log("loginUser.rejected", action)
       state.isFetching = false;
       state.isError = true;
-      state.message = action.error.message;
+      state.message = action.payload.message;
     })
 
     builder.addCase(logout.pending, (state) => {
@@ -130,11 +130,11 @@ export const authenticationSlice = createSlice({
       console.log("logout.rejected", action)
       state.isFetching = false;
       state.isError = true;
-      state.message = action.error.message;
+      state.message = action.payload.message;
     })
   },
 });
 
-export const { clearState } = authenticationSlice.actions;
+export const { clearState, setIsLogin } = authenticationSlice.actions;
 
 export const authenticationSelector = (state) => state.authentication;

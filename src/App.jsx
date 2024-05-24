@@ -1,7 +1,7 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import "./App.css";
 import Sidebar from "./layout/Sidebar/Sidebar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import React from "react";
 import { ColorModeContext, useMode } from "./utils/theme";
 import { CssBaseline, ThemeProvider } from "@mui/material";
@@ -80,6 +80,17 @@ function App() {
   const [toggled, setToggled] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [isLogin, setIsLogin] = useState(false);
+
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname === "/dang-nhap" || location.pathname === "/dang-ky") {
+      setIsLogin(true);
+    }
+    else {
+      setIsLogin(false);
+    }
+  }, [location.pathname]);
 
   const handleToggleSidebar = (value) => {
     setToggled(value);

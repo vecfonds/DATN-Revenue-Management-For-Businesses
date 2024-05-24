@@ -221,6 +221,20 @@ const XemPhieuThuTienMat = ({ disabled = false }) => {
     };
     const defaultColumns = [
         {
+            title: "ID hóa đơn",
+            dataIndex: "id",
+            key: "id",
+            sorter: (a, b) => a.id - b.id,
+            render: (val, record) => <span
+              onClick={() => {
+                // navigate(`/ban-hang/thu-tien-theo-hoa-don/timkiem/thutien`, { state: { id: selectedRowKeys } });
+                navigate(`/ban-hang/hoa-don-ban-hang/xem/${val}`, { state: { id: val } });
+              }}
+              className={`cursor-pointer font-medium text-[#1DA1F2] ${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "DELIVERED" ? "" : ""}`}>{val}</span>,
+            sortOrder: sortedInfo.columnKey === "id" ? sortedInfo.order : null,
+            ellipsis: true,
+          },
+        {
             title: "Ngày hóa đơn",
             dataIndex: "createdAt",
             key: "createdAt",
@@ -768,7 +782,7 @@ const XemPhieuThuTienMat = ({ disabled = false }) => {
                             return (
                                 <>
                                     <Table.Summary.Row>
-                                        <Table.Summary.Cell index={0} colSpan={2} className="font-bold">Tổng</Table.Summary.Cell>
+                                        <Table.Summary.Cell index={0} colSpan={3} className="font-bold">Tổng</Table.Summary.Cell>
                                         <Table.Summary.Cell index={1}>
                                             <Text className="font-bold">{VND.format(totalTong)}</Text>
                                         </Table.Summary.Cell>

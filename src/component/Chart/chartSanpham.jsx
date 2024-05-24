@@ -12,6 +12,8 @@ import {
   LabelList,
 } from "recharts";
 import { getChartProduct, tongQuanSelector } from "../../store/features/tongQuanSlice";
+import { Select } from "antd";
+import { selectTime } from "../../utils/func";
 
 const data = [
   { name: "Áo", revenue: 1 },
@@ -79,12 +81,93 @@ const ChartSanpham = () => {
 
     // dispatch(postReportTHCNRaw({ values: dataConvert }));
   }, []);
+
+
+  const handleChange = (value) => {
+
+    const timeRange = selectTime(value);
+
+    const dataConvert = {
+      // "startDate": formatDate(values.rangePicker[0].$d),
+      // "endDate": formatDate(values.rangePicker[1].$d),
+      // "startDate": "2020-01-01",
+      // "endDate": "2025-01-01",
+      ...timeRange,
+      "name": "xxx",
+      "description": "xxx",
+      "salespersonIds": []
+    }
+
+    console.log("dataConvert", dataConvert)
+    // dispatch(postReportDTBHRaw({ values: dataConvert }));
+
+
+  };
+
   return (
     <div>
       <p className="font-bold text-xl mt-5 ml-10">Biều đồ top 10 sản phẩm bán chạy nhất</p>
-      <ResponsiveContainer width={800} height={400}>
+      <Select
+        defaultValue={'thisMonth'}
+        style={{
+          width: 120,
+        }}
+        className="bg-[#FFF6D8]  ml-10"
+        onChange={handleChange}
+        options={[
+          {
+            value: 'thisWeek',
+            label: 'Tuần này',
+          },
+          {
+            value: 'lastWeek',
+            label: 'Tuần trước',
+          },
+          {
+            value: 'thisMonth',
+            label: 'Tháng này',
+          },
+          {
+            value: 'lastMonth',
+            label: 'Tháng trước',
+          },
+          {
+            value: 'thisQuarter',
+            label: 'Quý này',
+          },
+          {
+            value: 'lastQuarter',
+            label: 'Quý trước',
+          },
+          {
+            value: 'Q1',
+            label: 'Quý 1',
+          },
+          {
+            value: 'Q2',
+            label: 'Quý 2',
+          },
+          {
+            value: 'Q3',
+            label: 'Quý 3',
+          },
+          {
+            value: 'Q4',
+            label: 'Quý 4',
+          },
+          {
+            value: 'thisYear',
+            label: 'Năm này',
+          },
+          {
+            value: 'lastYear',
+            label: 'Năm trước',
+          },
+        ]}
+      />
+      <ResponsiveContainer width={750} height={400} className={"border border-gray-300 shadow-xl rounded-lg ml-10"}>
         <BarChart
-          width={800}
+          width={750}
           height={400}
           data={data}
           margin={{
