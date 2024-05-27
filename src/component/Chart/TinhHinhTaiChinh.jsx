@@ -175,7 +175,7 @@ const TinhHinhTaiChinh = () => {
                     },
                     {
                         value: 'thisYear',
-                        label: 'Năm này',
+                        label: 'Năm nay',
                     },
                     {
                         value: 'lastYear',

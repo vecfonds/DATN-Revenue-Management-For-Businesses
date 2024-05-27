@@ -115,7 +115,7 @@ const Sidebar = ({ toggled, handleToggleSidebar, isCollapsed, handleIsCollapsed 
 
             <Item
               title="Tổng quan"
-              to="/"
+              to="/tong-quan"
               icon={<MdOutlineDashboard size={20} />}
               selected={selected}
               setSelected={setSelected}

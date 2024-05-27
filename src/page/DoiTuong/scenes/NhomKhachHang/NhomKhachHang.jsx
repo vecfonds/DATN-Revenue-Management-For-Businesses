@@ -62,7 +62,7 @@ const NhomKhachHang = () => {
         duration: 2
       });
 
-      // dispatch(getListCustomerGroup());
+      dispatch(getListCustomerGroup());
       dispatch(clearState());
     }
     else if (isSuccessGetListCustomerGroup) {
@@ -166,14 +166,19 @@ const NhomKhachHang = () => {
       title: "Nhóm khách hàng",
       dataIndex: "name",
       sorter: (a, b) => a.name.localeCompare(b.name),
+      ellipsis: true,
+
     },
     {
       title: "Số khách hàng trong nhóm",
       dataIndex: "size",
+
     },
     {
       title: "Ghi chú",
       dataIndex: "note",
+      ellipsis: true,
+
     },
     {
       title: "Chức năng",

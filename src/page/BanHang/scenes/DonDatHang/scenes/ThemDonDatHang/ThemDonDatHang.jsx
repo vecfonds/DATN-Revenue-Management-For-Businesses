@@ -211,8 +211,8 @@ const ThemDonDatHang = ({ disabled = false }) => {
 
     useEffect(() => {
         if (donBanHangData?.customerId && listCustomerData) {
-            dispatch(getDieuKhoanThanhToanCustomer({ id: donBanHangData?.customerId }));
-            dispatch(getCktmCustomer({ id: donBanHangData?.customerId }));
+            // dispatch(getDieuKhoanThanhToanCustomer({ id: donBanHangData?.customerId }));
+            // dispatch(getCktmCustomer({ id: donBanHangData?.customerId }));
 
             // listCustomerData.filter(item => item.id === donBanHangData?.customerId)[0]?.address
 
@@ -229,20 +229,56 @@ const ThemDonDatHang = ({ disabled = false }) => {
             dispatch(getDieuKhoanThanhToanCustomer({ id: donBanHangData?.customerId }));
             dispatch(getCktmCustomer({ id: donBanHangData?.customerId }));
         }
-    }, [donBanHangData]);
+    }, [donBanHangData?.customerId]);
 
     useEffect(() => {
         if (donBanHangData?.paymentPeriod && dieuKhoanThanhToanCustomerData) {
+            const dktt = dieuKhoanThanhToanCustomerData?.filter(item => item?.paymentPeriod === donBanHangData?.paymentPeriod);
+            console.log("dkttdktt", dktt)
+
+            if (dktt.length === 0) {
+                form.setFields([
+                    {
+                        name: 'paymentPeriod',
+                        errors: ['Không tìm thấy dữ liệu!'],
+                    },
+                ]);
+            }
+
             form.setFieldsValue({
-                paymentPeriod: dieuKhoanThanhToanCustomerData?.filter(item => item?.paymentPeriod === donBanHangData?.paymentPeriod)[0]?.paymentPeriod
+                paymentPeriod: dktt[0]?.paymentPeriod
             });
         }
     }, [donBanHangData, dieuKhoanThanhToanCustomerData]);
 
     useEffect(() => {
         if (donBanHangData?.discountRate && cktmCustomerData) {
+            const cktm = cktmCustomerData?.filter(item => item?.discountRate === donBanHangData?.discountRate);
+            console.log("cktmcktm", cktm)
+            if (cktm.length === 0) {
+                form.setFields([
+                    {
+                        name: 'discountRate',
+                        errors: ['Không tìm thấy dữ liệu!'],
+                    },
+                ]);
+            }
+            // else {
+            //     let totalProduct = donBanHangData?.products?.map(item=>item.count)?.reduce((total, currentValue) => {
+            //         return total + currentValue;
+            //     }, 0)
+
+            //     if(totalProduct<cktm[0]?.minProductValue){
+            //         form.setFields([
+            //             {
+            //                 name: 'discountRate',
+            //                 errors: ['Số lượng sản phẩm không phù hợp với CKTM!'],
+            //             },
+            //         ]);
+            //     }
+            // }
             form.setFieldsValue({
-                discountRate: cktmCustomerData?.filter(item => item?.discountRate === donBanHangData?.discountRate)[0]?.discountRate
+                discountRate: cktm[0]?.discountRate
             });
         }
     }, [donBanHangData, cktmCustomerData]);
@@ -560,7 +596,7 @@ const ThemDonDatHang = ({ disabled = false }) => {
                             ]}
                         >
                             <Select
-                                disabled={disabled}
+                                disabled={true}
                                 onChange={(value) => {
                                     const dataFilter = listCustomerData.filter(item => item.id === value);
                                     console.log("dataFilter", dataFilter)
@@ -595,7 +631,7 @@ const ThemDonDatHang = ({ disabled = false }) => {
                             ]}
                         >
                             <Input
-                                disabled={disabled}
+                                disabled={true}
                             />
                         </Form.Item>
 
@@ -722,6 +758,38 @@ const ThemDonDatHang = ({ disabled = false }) => {
                         >
                             <Select
                                 disabled={disabled}
+                                onChange={(value) => {
+                                    if (value > -1) {
+                                        form.setFields([
+                                            {
+                                                name: 'paymentPeriod',
+                                                errors: [],
+                                            },
+                                        ]);
+                                    }
+                                    let totalProduct = donBanHangData?.products?.map(item => item?.count)?.reduce((total, currentValue) => {
+                                        return total + currentValue;
+                                    }, 0)
+
+                                    const dktt = dieuKhoanThanhToanCustomerData?.filter(item => item?.paymentPeriod === value);
+
+                                    if (totalProduct < dktt[0]?.minOrderQuantity) {
+                                        form.setFields([
+                                            {
+                                                name: 'discountRate',
+                                                errors: ['Số lượng sản phẩm không phù hợp với CKTM!'],
+                                            },
+                                        ]);
+                                    }
+                                    else {
+                                        form.setFields([
+                                            {
+                                                name: 'discountRate',
+                                                errors: ['cc'],
+                                            },
+                                        ]);
+                                    }
+                                }}
                             >
                                 {
                                     dieuKhoanThanhToanCustomerData?.map(item => <Select.Option value={item?.paymentPeriod} key={item.id}>{item.name}</Select.Option>)
@@ -736,6 +804,14 @@ const ThemDonDatHang = ({ disabled = false }) => {
                             <Select
                                 disabled={disabled}
                                 onChange={(value) => {
+                                    if (value > -1) {
+                                        form.setFields([
+                                            {
+                                                name: 'discountRate',
+                                                errors: [],
+                                            },
+                                        ]);
+                                    }
                                     const data = productOfDonBanHangs?.map(product => {
                                         return {
                                             ...product,
@@ -747,6 +823,29 @@ const ThemDonDatHang = ({ disabled = false }) => {
                                     })
 
                                     setProductOfDonBanHangs(data);
+
+                                    let totalProduct = donBanHangData?.products?.map(item => item?.count * item?.price)?.reduce((total, currentValue) => {
+                                        return total + currentValue;
+                                    }, 0)
+
+                                    const cktm = cktmCustomerData?.filter(item => item?.discountRate === value);
+
+                                    if (totalProduct < cktm[0]?.minProductValue) {
+                                        form.setFields([
+                                            {
+                                                name: 'discountRate',
+                                                errors: ['Số lượng sản phẩm không phù hợp với CKTM!'],
+                                            },
+                                        ]);
+                                    }
+                                    else {
+                                        form.setFields([
+                                            {
+                                                name: 'discountRate',
+                                                errors: [],
+                                            },
+                                        ]);
+                                    }
                                 }}
                             >
                                 {

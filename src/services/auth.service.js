@@ -15,10 +15,10 @@ const register = (username, address, phoneNumber, password) => {
     });
 };
 
-const login = (phoneNumber, password) => {
+const login = (email, password) => {
   return axios
     .post(`${API_URL}/login`, {
-      phoneNumber, password
+      email, password
     })
     .then((response) => {
       if (response.data.accessToken) {

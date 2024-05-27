@@ -109,6 +109,8 @@ const EditKhachHang = ({ disabled = false }) => {
         message,
         isSuccessUpdateDieuKhoanThanhToan,
         isSuccessUpdateCktm,
+        isSuccessDeleteDieuKhoanThanhToan,
+        isSuccessDeleteCktm
     } = useSelector(doiTuongSelector);
     console.log("customerData", customerData);
 
@@ -175,6 +177,24 @@ const EditKhachHang = ({ disabled = false }) => {
             dispatch(getCustomer({ id: params.id }));
             dispatch(clearState());
         }
+        else if(isSuccessDeleteDieuKhoanThanhToan){
+            api.success({
+                message: 'Xóa dữ liệu thành công!',
+                placement: 'bottomLeft',
+                duration: 2
+            });
+            dispatch(getCustomer({ id: params.id }));
+            dispatch(clearState());
+        }
+        else if(isSuccessDeleteCktm){
+            api.success({
+                message: 'Xóa dữ liệu thành công!',
+                placement: 'bottomLeft',
+                duration: 2
+            });
+            dispatch(getCustomer({ id: params.id }));
+            dispatch(clearState());
+        }
         if (isError) {
             api.error({
                 message: message,
@@ -190,7 +210,9 @@ const EditKhachHang = ({ disabled = false }) => {
         isError,
         message,
         isSuccessUpdateDieuKhoanThanhToan,
-        isSuccessUpdateCktm
+        isSuccessUpdateCktm,
+        isSuccessDeleteDieuKhoanThanhToan,
+        isSuccessDeleteCktm
     ]);
 
     const nameValue = Form.useWatch('name', form);
@@ -208,7 +230,7 @@ const EditKhachHang = ({ disabled = false }) => {
             dataIndex: "id",
             key: "id",
             ellipsis: true,
-            width: '10%',
+            width: '7%',
         },
         {
             title: 'Tên điều khoản thanh toán',
@@ -221,12 +243,14 @@ const EditKhachHang = ({ disabled = false }) => {
             dataIndex: 'paymentPeriod',
             editable: !disabled,
             ellipsis: true,
+            width: '12%',
         },
         {
             title: 'Số lượng SP tối thiểu',
             dataIndex: 'minOrderQuantity',
             editable: !disabled,
             ellipsis: true,
+            width: '12%',
         },
         {
             title: 'Mô tả',
@@ -297,7 +321,7 @@ const EditKhachHang = ({ disabled = false }) => {
             dataIndex: "id",
             key: "id",
             ellipsis: true,
-            width: '10%',
+            width: '7%',
         },
         {
             title: 'Tên chiết khấu',
@@ -311,11 +335,14 @@ const EditKhachHang = ({ disabled = false }) => {
             editable: !disabled,
             ellipsis: true,
             render: (val, record) => VND.format(val),
+            width: '12%',
         },
         {
             title: '% chiết khấu',
             dataIndex: 'discountRate',
             editable: !disabled,
+            width: '12%',
+
         },
         {
             title: 'Mô tả',
@@ -893,7 +920,7 @@ const EditKhachHang = ({ disabled = false }) => {
                                             "id": dataSelected.id
                                         }
                                         console.log("id", dataConvert)
-                                        // dispatch(deleteDieuKhoanThanhToan({ values: dataConvert }));
+                                        dispatch(deleteDieuKhoanThanhToan({ values: dataConvert }));
                                         setDataSelected({});
                                         setOpenDeleteDieuKhoanThanhToan(false);
                                     }}
@@ -937,7 +964,7 @@ const EditKhachHang = ({ disabled = false }) => {
                                             "id": dataSelected.id
                                         }
                                         console.log("id", dataConvert)
-                                        // dispatch(deleteCktm({ values: dataConvert }));
+                                        dispatch(deleteCktm({ values: dataConvert }));
                                         setDataSelected({});
                                         setOpenDeleteChietKhauThuongMai(false);
                                     }}

@@ -47,29 +47,35 @@ const ChartSanpham = () => {
       //     data[item.key - 1]["Doanh thu"] = item["Doanh thu"];
       //   }
       // })
-      for (let i = 0; i < 12; ++i) {
-        if (i < 6) {
-          chartProductData?.forEach(item => {
-            if (item.key - 1 === i) {
-              data[i]["Doanh thu"] = item["Doanh thu"];
-            }
-          })
+      const dataConvertCurrent = chartProductData?.map(product => {
+        return {
+          id: product?.product?.id,
+          name: product?.product?.name,
+          "số lượng": product?.count
         }
-        else {
-          chartProductData?.forEach(item => {
-            if (item.key - 1 === i) {
-              data[i]["Doanh thu"] = 0;
-            }
-          })
-        }
-      }
+      })
 
-      setDataProduct(data);
+      dataConvertCurrent.sort(function (a, b) { return b["số lượng"] - a["số lượng"] })
+
+      setDataProduct(dataConvertCurrent.slice(0, 10));
     }
   }, [chartProductData]);
 
   useEffect(() => {
-    dispatch(getChartProduct());
+    const timeRange = selectTime('thisMonth');
+
+    const dataConvert = {
+      // "startDate": formatDate(values.rangePicker[0].$d),
+      // "endDate": formatDate(values.rangePicker[1].$d),
+      // "startDate": "2020-01-01",
+      // "endDate": "2025-01-01",
+      ...timeRange,
+      // "name": "xxx",
+      // "description": "xxx",
+      // "salespersonIds": []
+    }
+
+    dispatch(getChartProduct({ values: dataConvert }));
 
     // const dataConvert = {
     //   "startDate": "2020-01-01",
@@ -93,10 +99,13 @@ const ChartSanpham = () => {
       // "startDate": "2020-01-01",
       // "endDate": "2025-01-01",
       ...timeRange,
-      "name": "xxx",
-      "description": "xxx",
-      "salespersonIds": []
+      // "name": "xxx",
+      // "description": "xxx",
+      // "salespersonIds": []
     }
+
+    dispatch(getChartProduct({ values: dataConvert }));
+
 
     console.log("dataConvert", dataConvert)
     // dispatch(postReportDTBHRaw({ values: dataConvert }));
@@ -157,7 +166,7 @@ const ChartSanpham = () => {
           },
           {
             value: 'thisYear',
-            label: 'Năm này',
+            label: 'Năm nay',
           },
           {
             value: 'lastYear',
@@ -169,7 +178,7 @@ const ChartSanpham = () => {
         <BarChart
           width={750}
           height={400}
-          data={data}
+          data={dataProduct}
           margin={{
             top: 20,
             right: 30,
@@ -182,8 +191,8 @@ const ChartSanpham = () => {
           <YAxis />
           <Tooltip />
           <Legend />
-          <Bar dataKey="revenue" fill="#ff8042">
-            <LabelList dataKey="revenue" position="top" />
+          <Bar dataKey="số lượng" fill="#ff8042">
+            <LabelList dataKey="số lượng" position="top" />
           </Bar>
         </BarChart>
       </ResponsiveContainer>

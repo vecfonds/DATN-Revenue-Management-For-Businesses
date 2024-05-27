@@ -44,7 +44,7 @@ const Login = () => {
 
     useEffect(() => {
         if (isSuccess) {
-            navigate('/');
+            navigate('/tong-quan');
             dispatch(clearState());
         }
         else if (isError) {
@@ -64,7 +64,7 @@ const Login = () => {
         console.log(data)
         //   const { email, password } = data;
         //   dispatch(loginUser({ email, password }));
-        navigate('/');
+        navigate('/tong-quan');
     };
     return (
         <div className="login-container">

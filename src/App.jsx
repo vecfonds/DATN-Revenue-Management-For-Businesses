@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import "./App.css";
 import Sidebar from "./layout/Sidebar/Sidebar";
 import { useEffect, useState } from "react";
@@ -79,12 +79,12 @@ function App() {
   const [theme, colorMode] = useMode();
   const [toggled, setToggled] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(true);
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
 
   const location = useLocation();
 
   useEffect(() => {
-    if (location.pathname === "/dang-nhap" || location.pathname === "/dang-ky") {
+    if (location.pathname === "/dang-nhap" || location.pathname === "/dang-ky"|| location.pathname === "/") {
       setIsLogin(true);
     }
     else {
@@ -120,9 +120,12 @@ function App() {
                 <FaBars size={20} />
               </div>}
               <Routes>
+                {/* <Redirect exact from="/" to="/dang-nhap" /> */}
+                {/* <Route path="/" element={<Navigate to="/dang-nhap" />} /> */}
+                <Route path="/" element={<Login />} />
                 <Route path="/dang-nhap" element={<Login />} />
                 <Route path="/dang-ky" element={<Signup />} />
-                <Route path="/" element={<TongQuan />} />
+                <Route path="/tong-quan" element={<TongQuan />} />
                 <Route path="doi-tuong" element={<DoiTuong />}>
                   <Route path="nha-cung-cap" element={<NhaCungCap />} />
                   <Route path="nhom-nha-cung-cap" element={<NhomNhaCungCap />} />

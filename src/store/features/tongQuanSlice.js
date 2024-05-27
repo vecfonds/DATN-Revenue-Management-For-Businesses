@@ -3,11 +3,11 @@ import authService from "../../services/auth.service";
 import tongQuanService from './../../services/tongQuan.service';
 import { VND } from "../../utils/func";
 
-export const getChartRevenue = createAsyncThunk(
-    "tongQuan/getChartRevenue",
-    async (thunkAPI) => {
+export const getChartRevenueYear = createAsyncThunk(
+    "tongQuan/getChartRevenueYear",
+    async ({ values }, thunkAPI) => {
         try {
-            const response = await tongQuanService.getChartRevenue();
+            const response = await tongQuanService.getChartRevenueYear({ values });
             console.log("response", response);
             return response.data;
         } catch (error) {
@@ -17,11 +17,40 @@ export const getChartRevenue = createAsyncThunk(
     }
 );
 
+export const getChartRevenueMonth = createAsyncThunk(
+    "tongQuan/getChartRevenueMonth",
+    async ({ values }, thunkAPI) => {
+        try {
+            const response = await tongQuanService.getChartRevenueMonth({ values });
+            console.log("response", response);
+            return response.data;
+        } catch (error) {
+            console.log("error", error);
+            return thunkAPI.rejectWithValue(error.response.data);
+        }
+    }
+);
+
+export const getChartRevenueQuarter = createAsyncThunk(
+    "tongQuan/getChartRevenueQuarter",
+    async ({ values }, thunkAPI) => {
+        try {
+            const response = await tongQuanService.getChartRevenueQuarter({ values });
+            console.log("response", response);
+            return response.data;
+        } catch (error) {
+            console.log("error", error);
+            return thunkAPI.rejectWithValue(error.response.data);
+        }
+    }
+);
+
+
 export const getChartProduct = createAsyncThunk(
     "tongQuan/getChartProduct",
-    async (thunkAPI) => {
+    async ({ values }, thunkAPI) => {
         try {
-            const response = await tongQuanService.getChartProduct();
+            const response = await tongQuanService.getChartProduct({ values });
             console.log("response", response);
             return response.data;
         } catch (error) {
@@ -70,16 +99,15 @@ export const tongQuanSlice = createSlice({
     },
 
     extraReducers: (builder) => {
-        builder.addCase(getChartRevenue.pending, (state) => {
-            console.log("getChartRevenue.pending", state)
+        builder.addCase(getChartRevenueYear.pending, (state) => {
+            console.log("getChartRevenueYear.pending", state)
             state.isFetching = true;
         })
 
-        builder.addCase(getChartRevenue.fulfilled, (state, action) => {
-            console.log("getChartRevenue.fulfilled", action.payload)
+        builder.addCase(getChartRevenueYear.fulfilled, (state, action) => {
+            console.log("getChartRevenueYear.fulfilled", action.payload)
             state.isFetching = false;
             state.isSuccessGetChartRevenue = true;
-
 
             state.chartRevenueData = action.payload.result.data.map(item => {
                 return {
@@ -88,100 +116,43 @@ export const tongQuanSlice = createSlice({
                     key: item.month
                 }
             }
-            ).reverse();
-
-
-            // const data = [
-            //     {
-            //       key: 1,
-            //       name: "Tháng 1",
-            //       "Doanh thu": 1000,
-            //       chiphi: 0,
-            //     },
-            //     {
-            //       key: 2,
-            //       name: "Tháng 2",
-            //       "Doanh thu": 2000,
-            //       chiphi: 0,
-            //     },
-            //     {
-            //       key: 3,
-            //       name: "Tháng 3",
-            //       "Doanh thu": 3000,
-            //       chiphi: 0,
-            //     },
-            //     {
-            //       key: 4,
-            //       name: "Tháng 4",
-            //       "Doanh thu": 4000,
-            //       chiphi: 0,
-            //     },
-            //     {
-            //       key: 5,
-            //       name: "Tháng 5",
-            //       "Doanh thu": 5000,
-            //       chiphi: 0,
-            //     },
-            //     {
-            //       key: 6,
-            //       name: "Tháng 6",
-            //       "Doanh thu": 0,
-            //       chiphi: 0,
-            //     },
-            //     {
-            //       key: 7,
-            //       name: "Tháng 7",
-            //       "Doanh thu": 7000,
-            //       chiphi: 0,
-            //     },
-            //     {
-            //       key: 8,
-            //       name: "Tháng 8",
-            //       "Doanh thu": 0,
-            //       chiphi: 0,
-            //     },
-            //     {
-            //       key: 9,
-            //       name: "Tháng 9",
-            //       "Doanh thu": 8000,
-            //       chiphi: 0,
-            //     },
-            //     {
-            //       key: 10,
-            //       name: "Tháng 10",
-            //       "Doanh thu": 0,
-            //       chiphi: 0,
-            //     },
-            //     {
-            //       key: 11,
-            //       name: "Tháng 11",
-            //       "Doanh thu": 0,
-            //       chiphi: 0,
-            //     },
-            //     {
-            //       key: 12,
-            //       name: "Tháng 12",
-            //       "Doanh thu": 0,
-            //       chiphi: 0,
-            //     },
-            //   ];
-
-            //   state.chartRevenueData = data;
-
-
-
-            // state.chartRevenueData = action.payload.result.data.map(item => {
-            //     return {
-            //         name: `Tháng ${item.month}`,
-            //         "Doanh thu": item.totalProductValue - item.totalDiscountValue,
-            //     }
-            // }
-            // ).reverse();
-            //   state.message = action.payload.message;
+            );
         })
 
-        builder.addCase(getChartRevenue.rejected, (state, action) => {
-            console.log("getChartRevenue.rejected", action)
+        builder.addCase(getChartRevenueYear.rejected, (state, action) => {
+            console.log("getChartRevenueYear.rejected", action)
+            state.isFetching = false;
+            state.isError = true;
+            // state.message = action.payload.message;
+        })
+
+
+        
+
+
+
+        builder.addCase(getChartRevenueMonth.pending, (state) => {
+            console.log("getChartRevenueMonth.pending", state)
+            state.isFetching = true;
+        })
+
+        builder.addCase(getChartRevenueMonth.fulfilled, (state, action) => {
+            console.log("getChartRevenueMonth.fulfilled", action.payload)
+            state.isFetching = false;
+            state.isSuccessGetChartRevenue = true;
+
+            state.chartRevenueData = action.payload.result.data.map(item => {
+                return {
+                    name: `${item.day}`,
+                    "Doanh thu": item.totalProductValue - item.totalDiscountValue,
+                    key: item.day
+                }
+            }
+            );
+        })
+
+        builder.addCase(getChartRevenueMonth.rejected, (state, action) => {
+            console.log("getChartRevenueMonth.rejected", action)
             state.isFetching = false;
             state.isError = true;
             // state.message = action.payload.message;
@@ -189,6 +160,34 @@ export const tongQuanSlice = createSlice({
 
 
 
+
+
+        builder.addCase(getChartRevenueQuarter.pending, (state) => {
+            console.log("getChartRevenueQuarter.pending", state)
+            state.isFetching = true;
+        })
+
+        builder.addCase(getChartRevenueQuarter.fulfilled, (state, action) => {
+            console.log("getChartRevenueQuarter.fulfilled", action.payload)
+            state.isFetching = false;
+            state.isSuccessGetChartRevenue = true;
+
+            state.chartRevenueData = action.payload.result.data.map(item => {
+                return {
+                    name: `Tháng ${item.month}`,
+                    "Doanh thu": item.totalProductValue - item.totalDiscountValue,
+                    key: item.day
+                }
+            }
+            );
+        })
+
+        builder.addCase(getChartRevenueQuarter.rejected, (state, action) => {
+            console.log("getChartRevenueQuarter.rejected", action)
+            state.isFetching = false;
+            state.isError = true;
+            // state.message = action.payload.message;
+        })
 
 
 
@@ -205,15 +204,16 @@ export const tongQuanSlice = createSlice({
             state.isFetching = false;
             state.isSuccessGetChartProduct = true;
 
+            state.chartProductData = action.payload.result.data
 
-            state.chartProductData = action.payload.result.data.map(item => {
-                return {
-                    name: `Tháng ${item.month}`,
-                    "Doanh thu": item.totalProductValue - item.totalDiscountValue,
-                    key: item.month
-                }
-            }
-            ).reverse();
+            // state.chartProductData = action.payload.result.data.map(item => {
+            //     return {
+            //         name: `Tháng ${item.month}`,
+            //         "Doanh thu": item.totalProductValue - item.totalDiscountValue,
+            //         key: item.month
+            //     }
+            // }
+            // ).reverse();
         })
 
         builder.addCase(getChartProduct.rejected, (state, action) => {

@@ -82,6 +82,7 @@ const NhomSanPham = () => {
         placement: 'bottomLeft',
         duration: 2
       });
+      dispatch(getListProductGroup());
 
       // dispatch(getListCustomerGroup());
       dispatch(clearState());
@@ -200,6 +201,8 @@ const NhomSanPham = () => {
       title: "Ghi chú",
       dataIndex: "description",
       key: "description",
+      ellipsis: true,
+
     },
     {
       title: "Chức năng",

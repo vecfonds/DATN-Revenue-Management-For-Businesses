@@ -759,10 +759,12 @@ export const doiTuongSlice = createSlice({
             state.isSuccessGetListDieuKhoanThanhToan = false;
             state.isSuccessPostDieuKhoanThanhToan = false;
             state.isSuccessUpdateDieuKhoanThanhToan = false;
+            state.isSuccessDeleteDieuKhoanThanhToan = false;
 
             state.isSuccessGetListCktm = false;
             state.isSuccessPostCktm = false;
             state.isSuccessUpdateCktm = false;
+            state.isSuccessDeleteCktm = false;
 
             state.isFetching = false;
             state.message = "";

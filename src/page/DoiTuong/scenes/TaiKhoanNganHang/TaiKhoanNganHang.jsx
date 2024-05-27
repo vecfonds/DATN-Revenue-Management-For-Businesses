@@ -78,6 +78,7 @@ const TaiKhoanNganHang = () => {
         placement: 'bottomLeft',
         duration: 2
       });
+      dispatch(getListBankAccount());
 
       // dispatch(getListCustomerGroup());
       dispatch(clearState());
@@ -205,6 +206,8 @@ const TaiKhoanNganHang = () => {
       title: "Ghi chú",
       dataIndex: "note",
       key: "note",
+      ellipsis: true,
+
     },
     {
       title: "Chức năng",

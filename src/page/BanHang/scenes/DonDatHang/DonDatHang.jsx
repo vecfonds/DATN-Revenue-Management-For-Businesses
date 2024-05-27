@@ -94,17 +94,7 @@ const DonDatHang = ({ radio = false }) => {
   };
 
   useEffect(() => {
-    if (isSuccessPostDonBanHang) {
-      api.success({
-        message: "Thêm dữ liệu thành công!",
-        placement: "bottomLeft",
-        duration: 2,
-      });
-
-      dispatch(clearState());
-      dispatch(getListDonBanHang());
-
-    } else if (isSuccessGetListDonBanHang) {
+    if (isSuccessGetListDonBanHang) {
       // messageApi.open({
       //   key: "updatable",
       //   type: "success",
@@ -143,6 +133,16 @@ const DonDatHang = ({ radio = false }) => {
       // console.log("dataConvertCurrent", dataConvertCurrent)
       setDataConvert(dataConvertCurrent);
       setDonbanhang(dataConvertCurrent);
+      if (isSuccessPostDonBanHang) {
+        api.success({
+          message: "Thêm dữ liệu thành công!",
+          placement: "bottomLeft",
+          duration: 2,
+        });
+
+        // dispatch(clearState());
+
+      }
       dispatch(clearState());
     }
     else if (isError) {

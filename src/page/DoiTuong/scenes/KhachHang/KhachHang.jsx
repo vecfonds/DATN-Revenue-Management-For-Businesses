@@ -73,7 +73,7 @@ const KhachHang = () => {
         placement: 'bottomLeft',
         duration: 2
       });
-
+      dispatch(getListCustomer());
       dispatch(clearState());
     }
     else if (isSuccessGetListCustomer) {
@@ -151,18 +151,24 @@ const KhachHang = () => {
       title: "Khách hàng",
       dataIndex: "name",
       sorter: (a, b) => a.name.localeCompare(b.name),
+      ellipsis: true,
+
     },
     {
       title: "Địa chỉ",
       dataIndex: "address",
+      ellipsis: true,
     },
     {
       title: "Số điện thoại",
       dataIndex: "phone",
+      ellipsis: true,
+
     },
     {
       title: "Ghi chú",
       dataIndex: "note",
+      ellipsis: true,
     },
     {
       title: "Chức năng",

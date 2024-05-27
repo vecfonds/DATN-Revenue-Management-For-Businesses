@@ -17,9 +17,9 @@ import { Dropdown, Space, Flex, Progress, Table, Select } from "antd";
 import Countdocument from "../../component/Tongquan/count-document";
 import ChartNhanvien from "../../component/Chart/chartNhanvien";
 import ChartSanpham from "../../component/Chart/chartSanpham";
-import { getChartRevenue, tongQuanSelector } from "../../store/features/tongQuanSlice";
+import { getChartRevenueMonth, getChartRevenueQuarter, getChartRevenueYear, tongQuanSelector } from "../../store/features/tongQuanSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { VND } from "../../utils/func";
+import { VND, selectTime } from "../../utils/func";
 import { congNoSelector, getListCongNo, postReportTHCN, postReportTHCNRaw } from "../../store/features/congNoSlice";
 import TinhHinhTaiChinh from "../../component/Chart/TinhHinhTaiChinh";
 const items = [
@@ -146,29 +146,30 @@ const TongQuan = () => {
       //     data[item.key - 1]["Doanh thu"] = item["Doanh thu"];
       //   }
       // })
-      for (let i = 0; i < 12; ++i) {
-        if (i < 6) {
-          chartRevenueData?.forEach(item => {
-            if (item.key - 1 === i) {
-              data[i]["Doanh thu"] = item["Doanh thu"];
-            }
-          })
-        }
-        else {
-          chartRevenueData?.forEach(item => {
-            if (item.key - 1 === i) {
-              data[i]["Doanh thu"] = 0;
-            }
-          })
-        }
-      }
+      // for (let i = 0; i < 12; ++i) {
+      //   if (i < 6) {
+      //     chartRevenueData?.forEach(item => {
+      //       if (item.key - 1 === i) {
+      //         data[i]["Doanh thu"] = item["Doanh thu"];
+      //       }
+      //     })
+      //   }
+      //   else {
+      //     chartRevenueData?.forEach(item => {
+      //       if (item.key - 1 === i) {
+      //         data[i]["Doanh thu"] = 0;
+      //       }
+      //     })
+      //   }
+      // }
 
-      setDataVenue(data);
+      setDataVenue(chartRevenueData);
     }
   }, [chartRevenueData]);
 
   useEffect(() => {
-    dispatch(getChartRevenue());
+
+    dispatch(getChartRevenueYear({ values: { year: "2024" } }));
 
     const dataConvert = {
       "startDate": "2020-01-01",
@@ -192,113 +193,76 @@ const TongQuan = () => {
   }, [dataVenue]);
 
   const handleChange = (value) => {
-    if (value === 0) {
-      for (let i = 0; i < 12; ++i) {
-        if (i < 6) {
-          chartRevenueData?.forEach(item => {
-            if (item.key - 1 === i) {
-              data[i]["Doanh thu"] = item["Doanh thu"];
-            }
-          })
-        }
-        else {
-          data[i]["Doanh thu"] = 0;
-        }
+    const timeRange = selectTime(value);
+
+    if (value === "thisYear") {
+      const dataConvert = {
+        year: timeRange?.startDate.split('-')[0]
       }
-      setDataVenue(data);
+      dispatch(getChartRevenueYear({ values: dataConvert }));
     }
-
-    else if (value === 1) {
-      // for (let i = 0; i < 12; ++i) {
-      //   if (i >= 6) {
-      //     chartRevenueData?.forEach(item => {
-      //       if (item.key - 1 === i) {
-      //         data[i]["Doanh thu"] = item["Doanh thu"];
-      //       }
-      //     })
-      //   }
-      //   else {
-      //     data[i]["Doanh thu"] = 0;
-      //   }
-      // }
-      setDataVenue([
-        {
-          key: 1,
-          name: "Tháng 1",
-          "Doanh thu": 0,
-          chiphi: 0,
-        },
-        {
-          key: 2,
-          name: "Tháng 2",
-          "Doanh thu": 0,
-          chiphi: 0,
-        },
-        {
-          key: 3,
-          name: "Tháng 3",
-          "Doanh thu": 0,
-          chiphi: 0,
-        },
-        {
-          key: 4,
-          name: "Tháng 4",
-          "Doanh thu": 0,
-          chiphi: 0,
-        },
-        {
-          key: 5,
-          name: "Tháng 5",
-          "Doanh thu": 0,
-          chiphi: 0,
-        },
-        {
-          key: 6,
-          name: "Tháng 6",
-          "Doanh thu": 0,
-          chiphi: 0,
-        },
-        {
-          key: 7,
-          name: "Tháng 7",
-          "Doanh thu": 0,
-          chiphi: 0,
-        },
-        {
-          key: 8,
-          name: "Tháng 8",
-          "Doanh thu": 0,
-          chiphi: 0,
-        },
-        {
-          key: 9,
-          name: "Tháng 9",
-          "Doanh thu": 0,
-          chiphi: 0,
-        },
-        {
-          key: 10,
-          name: "Tháng 10",
-          "Doanh thu": 0,
-          chiphi: 0,
-        },
-        {
-          key: 11,
-          name: "Tháng 11",
-          "Doanh thu": 0,
-          chiphi: 0,
-        },
-        {
-          key: 12,
-          name: "Tháng 12",
-          "Doanh thu": 0,
-          chiphi: 0,
-        },
-      ]);
+    else if (value === "lastYear") {
+      const dataConvert = {
+        year: timeRange?.startDate.split('-')[0]
+      }
+      dispatch(getChartRevenueYear({ values: dataConvert }));
     }
-
-
-    console.log(data)
+    else if (value === "thisMonth") {
+      const dataConvert = {
+        year: timeRange?.startDate.split('-')[0],
+        month: timeRange?.startDate.split('-')[1]
+      }
+      dispatch(getChartRevenueMonth({ values: dataConvert }));
+    }
+    else if (value === "lastMonth") {
+      const dataConvert = {
+        year: timeRange?.startDate.split('-')[0],
+        month: timeRange?.startDate.split('-')[1]
+      }
+      dispatch(getChartRevenueMonth({ values: dataConvert }));
+    }
+    else if (value === "thisQuarter") {
+      const dataConvert = {
+        year: timeRange?.startDate.split('-')[0],
+        quarter: 2
+      }
+      dispatch(getChartRevenueQuarter({ values: dataConvert }));
+    }
+    else if (value === "lastQuarter") {
+      const dataConvert = {
+        year: timeRange?.startDate.split('-')[0],
+        quarter: 1
+      }
+      dispatch(getChartRevenueQuarter({ values: dataConvert }));
+    }
+    else if (value === "Q1") {
+      const dataConvert = {
+        year: timeRange?.startDate.split('-')[0],
+        quarter: 1
+      }
+      dispatch(getChartRevenueQuarter({ values: dataConvert }));
+    }
+    else if (value === "Q2") {
+      const dataConvert = {
+        year: timeRange?.startDate.split('-')[0],
+        quarter: 2
+      }
+      dispatch(getChartRevenueQuarter({ values: dataConvert }));
+    }
+    else if (value === "Q3") {
+      const dataConvert = {
+        year: timeRange?.startDate.split('-')[0],
+        quarter: 3
+      }
+      dispatch(getChartRevenueQuarter({ values: dataConvert }));
+    }
+    else if (value === "Q4") {
+      const dataConvert = {
+        year: timeRange?.startDate.split('-')[0],
+        quarter: 4
+      }
+      dispatch(getChartRevenueQuarter({ values: dataConvert }));
+    }
   };
 
 
@@ -332,7 +296,7 @@ const TongQuan = () => {
           </Dropdown> */}
 
           <Select
-            defaultValue={0}
+            defaultValue={'thisYear'}
             style={{
               width: 120,
 
@@ -341,12 +305,44 @@ const TongQuan = () => {
             onChange={handleChange}
             options={[
               {
-                value: 0,
+                value: 'thisYear',
                 label: 'Năm nay',
               },
               {
-                value: 1,
+                value: 'lastYear',
                 label: 'Năm trước',
+              },
+              {
+                value: 'thisMonth',
+                label: 'Tháng này',
+              },
+              {
+                value: 'lastMonth',
+                label: 'Tháng trước',
+              },
+              {
+                value: 'thisQuarter',
+                label: 'Quý này',
+              },
+              {
+                value: 'lastQuarter',
+                label: 'Quý trước',
+              },
+              {
+                value: 'Q1',
+                label: 'Quý 1',
+              },
+              {
+                value: 'Q2',
+                label: 'Quý 2',
+              },
+              {
+                value: 'Q3',
+                label: 'Quý 3',
+              },
+              {
+                value: 'Q4',
+                label: 'Quý 4',
               },
             ]}
           />

@@ -25,9 +25,9 @@ export const signupUser = createAsyncThunk(
 
 export const loginUser = createAsyncThunk(
   "authentication/login",
-  async ({ phoneNumber, password }, thunkAPI) => {
+  async ({ email, password }, thunkAPI) => {
     try {
-      const data = await authService.login(phoneNumber, password);
+      const data = await authService.login(email, password);
       // console.log(data)
       // thunkAPI.dispatch(setMessage("Đăng nhập thành công!"));
       return { user: data };

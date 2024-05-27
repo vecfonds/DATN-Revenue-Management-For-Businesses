@@ -97,7 +97,7 @@ const ChartNhanvien = () => {
 
       console.log("dataConvertCurrent", dataConvertCurrent)
 
-      dataConvertCurrent.sort(function (a, b) { return b - a })
+      dataConvertCurrent.sort(function (a, b) { return b["Doanh thu"] - a["Doanh thu"] })
 
       setData(dataConvertCurrent.slice(0, 10));
       // setDataConvert(dataConvertCurrent);
@@ -182,7 +182,7 @@ const ChartNhanvien = () => {
           },
           {
             value: 'thisYear',
-            label: 'Năm này',
+            label: 'Năm nay',
           },
           {
             value: 'lastYear',
@@ -196,11 +196,11 @@ const ChartNhanvien = () => {
           width={600}
           height={400}
           data={data}
-          margin={{ top: 20, right: 70, left: 30, bottom: 5 }}
+          margin={{ top: 20, right: 70, left: 20, bottom: 5 }}
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis type="number" unit="đ" />
-          <YAxis type="category" dataKey="name" fontSize={10} />
+          <YAxis type="category" dataKey="name"  />
           <Tooltip />
           <Legend />
           <Bar dataKey="Doanh thu">

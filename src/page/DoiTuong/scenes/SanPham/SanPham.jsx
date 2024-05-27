@@ -80,6 +80,7 @@ const SanPham = () => {
         placement: 'bottomLeft',
         duration: 2
       });
+      dispatch(getListProduct());
 
       // dispatch(getListCustomerGroup());
       dispatch(clearState());
