@@ -407,7 +407,7 @@ const ThemThuTien = ({ disabled = false }) => {
             console.log("dataConvert", dataConvert)
 
             dispatch(postPhieuThuTienGui({ values: dataConvert }));
-            navigate(-2);
+            navigate('/ban-hang/thu-tien-theo-hoa-don');
         }
 
     };

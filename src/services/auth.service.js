@@ -1,12 +1,17 @@
 import axios from "axios";
 import authHeader from "./auth-header";
 
-const API_URL = `${process.env.REACT_APP_SERVER_URL}/auth`;
+const API_URL = `${process.env.REACT_APP_SERVER_URL}`;
 
-const register = (username, address, phoneNumber, password) => {
-  return axios.post(`${API_URL}/register`,
+const register = (username, email, address, phoneNumber, password, avatar) => {
+  return axios.post(`${API_URL}/employee/accountant`,
     {
-      username, address, phoneNumber, password
+      name: username,
+      email,
+      phone: phoneNumber,
+      address,
+      password,
+      avatar
     },
     {
       headers: {
@@ -15,14 +20,15 @@ const register = (username, address, phoneNumber, password) => {
     });
 };
 
+
 const login = (email, password) => {
   return axios
-    .post(`${API_URL}/login`, {
+    .post(`${API_URL}/auth/login`, {
       email, password
     })
     .then((response) => {
-      if (response.data.accessToken) {
-        localStorage.setItem("user", JSON.stringify(response.data));
+      if (response.data.result.data.accessToken) {
+        localStorage.setItem("user", JSON.stringify(response.data.result.data));
       }
 
       return response.data;
@@ -31,7 +37,26 @@ const login = (email, password) => {
 
 const logout = () => {
   return axios.post(`${API_URL}/logout`,
+    {
+    },
+    {
+      headers: authHeader()
+    },
+  );
+};
+
+
+const getProfile = () => {
+  return axios.get(`${API_URL}/auth/me`,
       {
+        headers: authHeader()
+      });
+};
+
+const updateProfile = ({ values }) => {
+  return axios.patch(`${API_URL}/auth/me`,
+      {
+          ...values
       },
       {
           headers: authHeader()
@@ -39,10 +64,14 @@ const logout = () => {
   );
 };
 
+
+
 const authService = {
   register,
   login,
   logout,
+  getProfile,
+  updateProfile,
 };
 
 export default authService;

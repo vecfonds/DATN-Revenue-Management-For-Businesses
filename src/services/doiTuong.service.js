@@ -1,22 +1,19 @@
 import axios from "axios";
+import authHeader from "./auth-header";
 
 const API_URL = `${process.env.REACT_APP_SERVER_URL}`;
 
 const getListSupplier = () => {
     return axios.get(`${API_URL}/supplier`,
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
 const getSupplier = ({ id }) => {
     return axios.get(`${API_URL}/supplier/${id}`,
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
@@ -26,9 +23,7 @@ const postSupplier = ({ values }) => {
             ...values
         },
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
@@ -38,18 +33,14 @@ const postSupplier = ({ values }) => {
 const getListSupplierGroup = () => {
     return axios.get(`${API_URL}/supplier-group`,
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
 const getSupplierGroup = ({ id }) => {
     return axios.get(`${API_URL}/supplier-group/${id}`,
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
@@ -59,9 +50,7 @@ const postSupplierGroup = ({ values }) => {
             ...values
         },
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
@@ -71,18 +60,14 @@ const postSupplierGroup = ({ values }) => {
 const getListCustomerGroup = () => {
     return axios.get(`${API_URL}/customer-group`,
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
 const getCustomerGroup = ({ id }) => {
     return axios.get(`${API_URL}/customer-group/${id}`,
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
@@ -92,9 +77,7 @@ const postCustomerGroup = ({ values }) => {
             ...values
         },
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
@@ -117,18 +100,14 @@ const updateCustomerGroup = ({ values }) => {
 const getListCustomer = () => {
     return axios.get(`${API_URL}/customer`,
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
 const getCustomer = ({ id }) => {
     return axios.get(`${API_URL}/customer/${id}`,
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
@@ -139,9 +118,7 @@ const postCustomer = ({ values }) => {
             "status": "ACTIVE",
         },
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
@@ -167,18 +144,14 @@ const updateCustomer = ({ values }) => {
 const getListProductGroup = () => {
     return axios.get(`${API_URL}/product-group`,
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
 const getProductGroup = ({ id }) => {
     return axios.get(`${API_URL}/product-group/${id}`,
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
@@ -188,9 +161,7 @@ const postProductGroup = ({ values }) => {
             ...values
         },
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
@@ -213,18 +184,14 @@ const updateProductGroup = ({ values }) => {
 const getListProduct = () => {
     return axios.get(`${API_URL}/product`,
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
 const getProduct = ({ id }) => {
     return axios.get(`${API_URL}/product/${id}`,
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
@@ -234,9 +201,7 @@ const postProduct = ({ values }) => {
             ...values
         },
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
@@ -258,18 +223,14 @@ const updateProduct = ({ values }) => {
 const getListBankAccount = () => {
     return axios.get(`${API_URL}/bank-account`,
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
 const getBankAccount = ({ id }) => {
     return axios.get(`${API_URL}/bank-account/${id}`,
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
@@ -279,9 +240,7 @@ const postBankAccount = ({ values }) => {
             ...values
         },
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
@@ -305,9 +264,7 @@ const updateBankAccount = ({ values }) => {
 const getListAccountant = () => {
     return axios.get(`${API_URL}/employee/accountant`,
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
@@ -318,9 +275,7 @@ const getListAccountant = () => {
 const getListSalesperson = () => {
     return axios.get(`${API_URL}/employee/salesperson`,
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
@@ -333,9 +288,7 @@ const getListSalesperson = () => {
 const getDieuKhoanThanhToanCustomer = ({ id }) => {
     return axios.get(`${API_URL}/dieu-khoan/customer/${id}`,
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
@@ -343,18 +296,14 @@ const getDieuKhoanThanhToanCustomer = ({ id }) => {
 const getListDieuKhoanThanhToan = () => {
     return axios.get(`${API_URL}/dieu-khoan`,
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
 const getDieuKhoanThanhToan = ({ id }) => {
     return axios.get(`${API_URL}/dieu-khoan/${id}`,
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
@@ -364,9 +313,7 @@ const postDieuKhoanThanhToan = ({ values }) => {
             ...values
         },
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
@@ -403,27 +350,21 @@ const deleteDieuKhoanThanhToan = ({ values }) => {
 const getCktmCustomer = ({ id }) => {
     return axios.get(`${API_URL}/cktm/customer/${id}`,
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
 const getListCktm = () => {
     return axios.get(`${API_URL}/cktm`,
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
 const getCktm = ({ id }) => {
     return axios.get(`${API_URL}/cktm/${id}`,
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
@@ -433,9 +374,7 @@ const postCktm = ({ values }) => {
             ...values
         },
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 

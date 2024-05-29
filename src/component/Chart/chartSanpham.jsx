@@ -187,7 +187,9 @@ const ChartSanpham = () => {
           }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" interval={0} tick={{ fontSize: 12 }} />
+          <XAxis dataKey="name" interval={0} tick={{ fontSize: 12 }}
+            style={{ display: 'none' }}
+          />
           <YAxis />
           <Tooltip />
           <Legend />

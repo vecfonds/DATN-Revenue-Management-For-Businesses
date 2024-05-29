@@ -219,7 +219,7 @@ const HoaDonBanHang = ({ checkbox = false }) => {
           // navigate(`/ban-hang/thu-tien-theo-hoa-don/timkiem/thutien`, { state: { id: selectedRowKeys } });
           navigate(`/ban-hang/hoa-don-ban-hang/xem/${val}`, { state: { id: val } });
         }}
-        className={`cursor-pointer font-medium text-[#1DA1F2] ${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "DELIVERED" ? "" : ""}`}>{val}</span>,
+        className={`cursor-pointer font-medium text-[#1DA1F2] ${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "PAID" ? "" : ""}`}>{val}</span>,
       sortOrder: sortedInfo.columnKey === "id" ? sortedInfo.order : null,
       ellipsis: true,
     },
@@ -227,7 +227,7 @@ const HoaDonBanHang = ({ checkbox = false }) => {
       title: "Ngày hóa đơn",
       dataIndex: "createdAt",
       key: "createdAt",
-      render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "DELIVERED" ? "text-[#d44950] font-medium" : ""}`}>{new Date(val).toLocaleDateString("vi-VN")}</span>,
+      render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "PAID" ? "text-[#d44950] font-medium" : ""}`}>{new Date(val).toLocaleDateString("vi-VN")}</span>,
       sorter: (a, b) =>
         moment(a.createdAt, "DD-MM-YYYY") - moment(b.createdAt, "DD-MM-YYYY"),
       sortOrder: sortedInfo.columnKey === "createdAt" ? sortedInfo.order : null,
@@ -237,7 +237,7 @@ const HoaDonBanHang = ({ checkbox = false }) => {
       title: "Hạn thanh toán",
       dataIndex: "paymentTerm",
       key: "paymentTerm",
-      render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "DELIVERED" ? "text-[#d44950] font-medium" : ""}`}>{new Date(val).toLocaleDateString("vi-VN")}</span>,
+      render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "PAID" ? "text-[#d44950] font-medium" : ""}`}>{new Date(val).toLocaleDateString("vi-VN")}</span>,
       sorter: (a, b) =>
         moment(a.paymentTerm, "DD-MM-YYYY") - moment(b.paymentTerm, "DD-MM-YYYY"),
       sortOrder: sortedInfo.columnKey === "paymentTerm" ? sortedInfo.order : null,
@@ -248,14 +248,14 @@ const HoaDonBanHang = ({ checkbox = false }) => {
       dataIndex: "idCustomer",
       key: "idCustomer",
       sorter: (a, b) => a.idCustomer - b.idCustomer,
-      render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "DELIVERED" ? "text-[#d44950] font-medium" : ""}`}>{val}</span>,
+      render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "PAID" ? "text-[#d44950] font-medium" : ""}`}>{val}</span>,
       sortOrder: sortedInfo.columnKey === "idCustomer" ? sortedInfo.order : null,
       ellipsis: true,
     },
     {
       title: "Khách hàng",
       dataIndex: "customer",
-      render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "DELIVERED" ? "text-[#d44950] font-medium" : ""}`}>{val}</span>,
+      render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "PAID" ? "text-[#d44950] font-medium" : ""}`}>{val}</span>,
 
       key: "customer",
       ellipsis: true,
@@ -270,7 +270,7 @@ const HoaDonBanHang = ({ checkbox = false }) => {
       title: "Giá trị hóa đơn",
       dataIndex: "tong",
       key: "tong",
-      render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "DELIVERED" ? "text-[#d44950] font-medium" : ""}`}>{VND.format(val)}</span>,
+      render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "PAID" ? "text-[#d44950] font-medium" : ""}`}>{VND.format(val)}</span>,
       sorter: (a, b) => a.tong - b.tong,
       sortOrder: sortedInfo.columnKey === "tong" ? sortedInfo.order : null,
     },
@@ -286,7 +286,7 @@ const HoaDonBanHang = ({ checkbox = false }) => {
       title: "Chưa thu",
       dataIndex: "chuathu",
       key: "chuathu",
-      render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "DELIVERED" ? "text-[#d44950] font-medium" : ""}`}>{VND.format(val)}</span>,
+      render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "PAID" ? "text-[#d44950] font-medium" : ""}`}>{VND.format(val)}</span>,
       sorter: (a, b) => a.chuathu - b.chuathu,
       sortOrder: sortedInfo.columnKey === "chuathu" ? sortedInfo.order : null,
     },
@@ -298,11 +298,11 @@ const HoaDonBanHang = ({ checkbox = false }) => {
       render: (val, record) => {
         switch (val) {
           case "NOT_PAID":
-            return <span className={`${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "DELIVERED" ? "text-[#d44950] font-medium" : ""}`}>{"Chưa thanh toán"}</span>;
+            return <span className={`${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "PAID" ? "text-[#d44950] font-medium" : ""}`}>{"Chưa thanh toán"}</span>;
           case "BEING_PAID":
-            return <span className={`${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "DELIVERED" ? "text-[#d44950] font-medium" : ""}`}>{"Thanh toán 1 phần"}</span>;
+            return <span className={`${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "PAID" ? "text-[#d44950] font-medium" : ""}`}>{"Thanh toán 1 phần"}</span>;
           case "PAID":
-            return <span className={`${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "DELIVERED" ? "text-[#d44950] font-medium" : ""}`}>{"Đã thanh toán"}</span>;
+            return <span className={`${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "PAID" ? "text-[#d44950] font-medium" : ""}`}>{"Đã thanh toán"}</span>;
           default:
             return "Lỗi";
         }

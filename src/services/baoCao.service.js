@@ -1,4 +1,5 @@
 import axios from "axios";
+import authHeader from "./auth-header";
 
 const API_URL = `${process.env.REACT_APP_SERVER_URL}`;
 
@@ -6,18 +7,14 @@ const API_URL = `${process.env.REACT_APP_SERVER_URL}`;
 const getListReportDTBH = () => {
     return axios.get(`${API_URL}/report-dtbh`,
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
 const getReportDTBH = ({ id }) => {
     return axios.get(`${API_URL}/report-dtbh/${id}`,
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
@@ -27,9 +24,7 @@ const postReportDTBH = ({ values }) => {
             ...values
         },
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
@@ -39,9 +34,7 @@ const postReportDTBHRaw = ({ values }) => {
             ...values
         },
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
@@ -50,9 +43,7 @@ const postReportDTBHRaw = ({ values }) => {
 const getListSalesPerson = () => {
     return axios.get(`${API_URL}/employee/salesperson`,
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 

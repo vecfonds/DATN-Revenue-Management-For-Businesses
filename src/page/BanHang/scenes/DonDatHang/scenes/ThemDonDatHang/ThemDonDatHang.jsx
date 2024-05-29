@@ -665,20 +665,20 @@ const ThemDonDatHang = ({ disabled = false }) => {
                         >
                             <Select
                                 disabled={disabled}
-                                onChange={(value) => {
-                                    const dataFilter = listSalespersonData.filter(item => item.id === value);
-                                    console.log("dataFilter", dataFilter)
+                                // onChange={(value) => {
+                                //     const dataFilter = listSalespersonData.filter(item => item.id === value);
+                                //     console.log("dataFilter", dataFilter)
 
-                                    const data = {
-                                        salesperson: dataFilter[0]?.name,
-                                    };
+                                //     const data = {
+                                //         salesperson: dataFilter[0]?.name,
+                                //     };
 
-                                    console.log("dataa", data)
+                                //     console.log("dataa", data)
 
-                                    form.setFieldsValue({
-                                        ...data
-                                    });
-                                }}
+                                //     form.setFieldsValue({
+                                //         ...data
+                                //     });
+                                // }}
                             >
                                 {/* {
                                         listAccountantData.map(item => <Select.Option value={item.id} key={item.id}>{item.name}</Select.Option>)
@@ -767,28 +767,28 @@ const ThemDonDatHang = ({ disabled = false }) => {
                                             },
                                         ]);
                                     }
-                                    let totalProduct = donBanHangData?.products?.map(item => item?.count)?.reduce((total, currentValue) => {
-                                        return total + currentValue;
-                                    }, 0)
+                                    // let totalProduct = donBanHangData?.products?.map(item => item?.count)?.reduce((total, currentValue) => {
+                                    //     return total + currentValue;
+                                    // }, 0)
 
-                                    const dktt = dieuKhoanThanhToanCustomerData?.filter(item => item?.paymentPeriod === value);
+                                    // const dktt = dieuKhoanThanhToanCustomerData?.filter(item => item?.paymentPeriod === value);
 
-                                    if (totalProduct < dktt[0]?.minOrderQuantity) {
-                                        form.setFields([
-                                            {
-                                                name: 'discountRate',
-                                                errors: ['Số lượng sản phẩm không phù hợp với CKTM!'],
-                                            },
-                                        ]);
-                                    }
-                                    else {
-                                        form.setFields([
-                                            {
-                                                name: 'discountRate',
-                                                errors: ['cc'],
-                                            },
-                                        ]);
-                                    }
+                                    // if (totalProduct < dktt[0]?.minOrderQuantity) {
+                                    //     form.setFields([
+                                    //         {
+                                    //             name: 'discountRate',
+                                    //             errors: ['Số lượng sản phẩm không phù hợp với CKTM!'],
+                                    //         },
+                                    //     ]);
+                                    // }
+                                    // else {
+                                    //     form.setFields([
+                                    //         {
+                                    //             name: 'discountRate',
+                                    //             errors: ['cc'],
+                                    //         },
+                                    //     ]);
+                                    // }
                                 }}
                             >
                                 {
@@ -824,28 +824,28 @@ const ThemDonDatHang = ({ disabled = false }) => {
 
                                     setProductOfDonBanHangs(data);
 
-                                    let totalProduct = donBanHangData?.products?.map(item => item?.count * item?.price)?.reduce((total, currentValue) => {
-                                        return total + currentValue;
-                                    }, 0)
+                                    // let totalProduct = donBanHangData?.products?.map(item => item?.count * item?.price)?.reduce((total, currentValue) => {
+                                    //     return total + currentValue;
+                                    // }, 0)
 
-                                    const cktm = cktmCustomerData?.filter(item => item?.discountRate === value);
+                                    // const cktm = cktmCustomerData?.filter(item => item?.discountRate === value);
 
-                                    if (totalProduct < cktm[0]?.minProductValue) {
-                                        form.setFields([
-                                            {
-                                                name: 'discountRate',
-                                                errors: ['Số lượng sản phẩm không phù hợp với CKTM!'],
-                                            },
-                                        ]);
-                                    }
-                                    else {
-                                        form.setFields([
-                                            {
-                                                name: 'discountRate',
-                                                errors: [],
-                                            },
-                                        ]);
-                                    }
+                                    // if (totalProduct < cktm[0]?.minProductValue) {
+                                    //     form.setFields([
+                                    //         {
+                                    //             name: 'discountRate',
+                                    //             errors: ['Số lượng sản phẩm không phù hợp với CKTM!'],
+                                    //         },
+                                    //     ]);
+                                    // }
+                                    // else {
+                                    //     form.setFields([
+                                    //         {
+                                    //             name: 'discountRate',
+                                    //             errors: [],
+                                    //         },
+                                    //     ]);
+                                    // }
                                 }}
                             >
                                 {

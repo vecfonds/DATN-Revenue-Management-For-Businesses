@@ -3,9 +3,9 @@ import authService from "../../services/auth.service";
 
 export const signupUser = createAsyncThunk(
   "authentication/signupUser",
-  async ({ username, address, phoneNumber, password }, thunkAPI) => {
+  async ({ username, email, address, phoneNumber, password, avatar }, thunkAPI) => {
     try {
-      const response = await authService.register(username, address, phoneNumber, password);
+      const response = await authService.register(username, email, address, phoneNumber, password, avatar);
       // thunkAPI.dispatch(setMessage(response.data.message));
       // console.log(response)
       return response.data;
@@ -58,11 +58,43 @@ export const logout = createAsyncThunk(
   }
 );
 
+
+export const getProfile = createAsyncThunk(
+  "authentication/getProfile",
+  async (thunkAPI) => {
+    try {
+      const response = await authService.getProfile();
+      console.log("response", response);
+      return response.data;
+    } catch (error) {
+      console.log("error", error);
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const updateProfile = createAsyncThunk(
+  "doiTuong/updateProfile",
+  async ({ values }, thunkAPI) => {
+    try {
+      const response = await authService.updateProfile({ values });
+      console.log("response", response);
+      return response.data;
+    } catch (error) {
+      console.log("error", error);
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
+
 const initialState = {
   isFetching: false,
   isSuccess: false,
   isError: false,
   message: "",
+  profile: {}
+
 };
 
 export const authenticationSlice = createSlice({
@@ -95,7 +127,7 @@ export const authenticationSlice = createSlice({
       console.log("signupUser.rejected", action)
       state.isFetching = false;
       state.isError = true;
-      state.message = action.payload.message;
+      state.message = action.payload.error;
     })
 
     builder.addCase(loginUser.pending, (state) => {
@@ -131,6 +163,58 @@ export const authenticationSlice = createSlice({
       state.isFetching = false;
       state.isError = true;
       state.message = action.payload.message;
+    })
+
+
+
+
+
+
+    builder.addCase(getProfile.pending, (state) => {
+      console.log("getProfile.pending", state)
+      state.isFetching = true;
+    })
+
+    builder.addCase(getProfile.fulfilled, (state, action) => {
+      console.log("getProfile.fulfilled", action.payload)
+      state.isFetching = false;
+      // state.isSuccessGetDonBanHang = true;
+      state.profile = action.payload.result.data;
+
+      //   state.message = action.payload.message;
+    })
+
+    builder.addCase(getProfile.rejected, (state, action) => {
+      console.log("getProfile.rejected", action)
+      state.isFetching = false;
+      state.isError = true;
+      // state.message = action.payload.message;
+    })
+
+
+
+
+
+
+    builder.addCase(updateProfile.pending, (state) => {
+      console.log("updateProfile.pending", state)
+      state.isFetching = true;
+    })
+
+    builder.addCase(updateProfile.fulfilled, (state, action) => {
+      console.log("updateProfile.fulfilled", action.payload)
+      state.isFetching = false;
+      state.isSuccess = true;
+      // state.profile = action.payload.result.data;
+
+      //   state.message = action.payload.message;
+    })
+
+    builder.addCase(updateProfile.rejected, (state, action) => {
+      console.log("updateProfile.rejected", action)
+      state.isFetching = false;
+      state.isError = true;
+      // state.message = action.payload.message;
     })
   },
 });

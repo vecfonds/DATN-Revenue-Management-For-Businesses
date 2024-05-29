@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ProSidebar, Menu, MenuItem, SidebarFooter } from "react-pro-sidebar";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { Link } from "react-router-dom";
@@ -17,6 +17,9 @@ import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import "./Sidebar.css";
 import { LiaObjectGroup } from "react-icons/lia";
+import { RiLogoutCircleFill } from "react-icons/ri";
+import { useDispatch, useSelector } from "react-redux";
+import { authenticationSelector, getProfile } from "../../store/features/authenticationSlice";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -40,6 +43,16 @@ const Sidebar = ({ toggled, handleToggleSidebar, isCollapsed, handleIsCollapsed 
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [selected, setSelected] = useState("Tổng quan");
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getProfile());
+  }, []);
+
+  const {
+    profile
+
+  } = useSelector(authenticationSelector);
 
   return (
     <Box
@@ -197,9 +210,9 @@ const Sidebar = ({ toggled, handleToggleSidebar, isCollapsed, handleIsCollapsed 
               setSelected={setSelected}
             /> */}
             <Item
-              title="Cài đặt"
-              to="/cai-dat"
-              icon={<SettingsOutlinedIcon size={20} />}
+              title="Đăng xuất"
+              to="/dang-nhap"
+              icon={<RiLogoutCircleFill  size={20} />}
               selected={selected}
               setSelected={setSelected}
             />
@@ -217,14 +230,14 @@ const Sidebar = ({ toggled, handleToggleSidebar, isCollapsed, handleIsCollapsed 
             <Box paddingLeft={isCollapsed ? undefined : "10%"}>
               <div className="side-menu-footer">
                 <div className="avatar">
-                  <img src={"/assets/user.jpg"} alt="user" />
+                  <img src={profile?.avatar} alt="user" />
                 </div>
                 <div className="user-info">
                   <Typography variant="h5" color={colors.grey[100]} hidden={isCollapsed}>
-                    Vecfonds
+                    {profile?.name}
                   </Typography>
                   <Typography variant="h5" color={colors.grey[100]} hidden={isCollapsed}>
-                    vecfonds@gmail.com
+                    {profile?.email}
                   </Typography>
 
                 </div>

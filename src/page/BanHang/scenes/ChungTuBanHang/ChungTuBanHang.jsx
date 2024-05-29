@@ -89,7 +89,7 @@ const ChungTuBanHang = () => {
         placement: "bottomLeft",
         duration: 2,
       });
-
+      dispatch(getListChungTuBan());
       dispatch(clearState());
     } else if (isSuccessGetListChungTuBan) {
       // messageApi.open({
@@ -210,14 +210,14 @@ const ChungTuBanHang = () => {
           // navigate(`/ban-hang/thu-tien-theo-hoa-don/timkiem/thutien`, { state: { id: selectedRowKeys } });
           navigate(`/ban-hang/chung-tu-ban-hang/xem/${val}`, { state: { id: val } });
         }}
-        className={`cursor-pointer font-medium text-[#1DA1F2] ${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "DELIVERED" ? "" : ""}`}>{val}</span>,
+        className={`cursor-pointer font-medium text-[#1DA1F2] ${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "PAID" ? "" : ""}`}>{val}</span>,
       ellipsis: true,
     },
     {
       title: "Ngày hạch toán",
       dataIndex: "createdAt",
       key: "createdAt",
-      render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "DELIVERED" ? "text-[#d44950] font-medium" : ""}`}>{new Date(val).toLocaleDateString("vi-VN")}</span>,
+      render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "PAID" ? "text-[#d44950] font-medium" : ""}`}>{new Date(val).toLocaleDateString("vi-VN")}</span>,
       sorter: (a, b) =>
         moment(a.createdAt, "DD-MM-YYYY") - moment(b.createdAt, "DD-MM-YYYY"),
       sortOrder: sortedInfo.columnKey === "createdAt" ? sortedInfo.order : null,
@@ -227,7 +227,7 @@ const ChungTuBanHang = () => {
       title: "Khách hàng",
       dataIndex: "customer",
       key: "customer",
-      render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "DELIVERED" ? "text-[#d44950] font-medium" : ""}`}>{val}</span>,
+      render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "PAID" ? "text-[#d44950] font-medium" : ""}`}>{val}</span>,
 
       ellipsis: true,
     },
@@ -241,7 +241,7 @@ const ChungTuBanHang = () => {
       title: "Tổng",
       dataIndex: "tong",
       key: "tong",
-      render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "DELIVERED" ? "text-[#d44950] font-medium" : ""}`}>{VND.format(val)}</span>,
+      render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "PAID" ? "text-[#d44950] font-medium" : ""}`}>{VND.format(val)}</span>,
 
       sorter: (a, b) => a.tong - b.tong,
       sortOrder: sortedInfo.columnKey === "tong" ? sortedInfo.order : null,
@@ -258,7 +258,7 @@ const ChungTuBanHang = () => {
       title: "Chưa thu",
       dataIndex: "chuathu",
       key: "chuathu",
-      render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "DELIVERED" ? "text-[#d44950] font-medium" : ""}`}>{VND.format(val)}</span>,
+      render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "PAID" ? "text-[#d44950] font-medium" : ""}`}>{VND.format(val)}</span>,
       sorter: (a, b) => a.chuathu - b.chuathu,
       sortOrder: sortedInfo.columnKey === "chuathu" ? sortedInfo.order : null,
     },
@@ -301,11 +301,11 @@ const ChungTuBanHang = () => {
     //   key: "deliveryStatus",
     //   render: (val, record) => {
     //     switch (val) {
-    //       case "NOT_DELIVERED":
+    //       case "NOT_PAID":
     //         return "Chưa giao";
     //       case "DELIVERING":
     //         return "Đang giao";
-    //       case "DELIVERED":
+    //       case "PAID":
     //         return "Đã giao đủ";
     //       default:
     //         return "Lỗi";
@@ -313,7 +313,7 @@ const ChungTuBanHang = () => {
     //   },
     //   filters: [
     //     {
-    //       value: "NOT_DELIVERED",
+    //       value: "NOT_PAID",
     //       text: "Chưa giao",
     //     },
     //     {
@@ -321,7 +321,7 @@ const ChungTuBanHang = () => {
     //       text: "Đang giao",
     //     },
     //     {
-    //       value: "DELIVERED",
+    //       value: "PAID",
     //       text: "Đã giao đủ",
     //     },
     //   ],
@@ -336,11 +336,11 @@ const ChungTuBanHang = () => {
       render: (val, record) => {
         switch (val) {
           case "NOT_PAID":
-            return <span className={`${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "DELIVERED" ? "text-[#d44950] font-medium" : ""}`}>{"Chưa thanh toán"}</span>;
+            return <span className={`${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "PAID" ? "text-[#d44950] font-medium" : ""}`}>{"Chưa thanh toán"}</span>;
           case "BEING_PAID":
-            return <span className={`${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "DELIVERED" ? "text-[#d44950] font-medium" : ""}`}>{"Thanh toán 1 phần"}</span>;
+            return <span className={`${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "PAID" ? "text-[#d44950] font-medium" : ""}`}>{"Thanh toán 1 phần"}</span>;
           case "PAID":
-            return <span className={`${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "DELIVERED" ? "text-[#d44950] font-medium" : ""}`}>{"Đã thanh toán"}</span>;
+            return <span className={`${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "PAID" ? "text-[#d44950] font-medium" : ""}`}>{"Đã thanh toán"}</span>;
           default:
             return "Lỗi";
         }

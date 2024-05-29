@@ -1,15 +1,16 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { Tabs, Form, Input, Flex, Table, Button, InputNumber, Select, Checkbox, DatePicker, Typography, Upload, Image } from "antd";
+import { Tabs, Form, Input, Flex, Table, Button, InputNumber, Select, Checkbox, DatePicker, Typography, Upload, Image, notification } from "antd";
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import { banHangSelector, clearState, getChungTuBan, postChungTuBan } from '../../store/features/banHangSlice';
+import { banHangSelector, getChungTuBan, postChungTuBan } from '../../store/features/banHangSlice';
 import HoaDon from '../../component/Form/BanHang/HoaDon';
 import { VND } from '../../utils/func';
 import { doiTuongSelector } from '../../store/features/doiTuongSilce';
 import moment from 'moment';
+import { authenticationSelector, getProfile, updateProfile, clearState } from '../../store/features/authenticationSlice';
 
 
 const dateFormat = "YYYY-MM-DD";
@@ -23,70 +24,48 @@ const Profile = ({ disabled = false }) => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
 
-  const {
-    // donBanHangData,
-    // isSuccessGetDonBanHang,
-    listHoaDonSelected
+  const [api, contextHolder] = notification.useNotification();
 
-  } = useSelector(banHangSelector);
-
-  console.log("listHoaDonSelected", listHoaDonSelected);
-
-  const [dataHoaDonSelected, setDataHoaDonSelected] = useState([]);
 
   const {
-    listBankAccountData,
-    listAccountantData,
-    listSalespersonData,
-  } = useSelector(doiTuongSelector);
+    profile,
+    isSuccess
+  } = useSelector(authenticationSelector);
 
   useEffect(() => {
-    // dispatch(getListBankAccount());
-    // dispatch(getListAccountant());
-    // dispatch(getListSalesperson());
+    if(isSuccess){
+      api.success({
+        message: "Cập nhật dữ liệu thành công!",
+        placement: "bottomLeft",
+        duration: 2,
+      });
+      dispatch(clearState());
+    }
+  }, [isSuccess]);
+
+  useEffect(() => {
+    dispatch(getProfile());
   }, []);
 
 
   useEffect(() => {
-
-
-    if (listHoaDonSelected.length !== 0) {
-      const convertData = listHoaDonSelected.map(hoaDon => {
-        return {
-          ...hoaDon,
-          sothanhtoan: hoaDon.chuathu
-        }
-      })
-
-      setDataHoaDonSelected(convertData);
-
-
-
-
-      const data = {
-        // ...listHoaDonSelected[0].donBanHang,
-        // receiver: donBanHangData.namecCustomer,
-        paymentMethod: "CASH",
-        address: listHoaDonSelected[0].donBanHang.customer.address,
-        salespersonID: listHoaDonSelected[0].donBanHang.salesperson.id,
-        submitter: listHoaDonSelected[0].donBanHang.customer.name,
-        bankAccountId: "",
-        createdAt: dayjs(new Date().toISOString().slice(0, 10), dateFormat),
-        receiveDate: dayjs(new Date().toISOString().slice(0, 10), dateFormat),
-        taxCode: listHoaDonSelected[0].donBanHang.customer.taxCode,
-        namecCustomer: listHoaDonSelected[0].donBanHang.customer.name
-        // paymentTerm: dayjs(new Date().toISOString().slice(0, 10), dateFormat),
-        // deliveryDate: dayjs(new Date().toISOString().slice(0, 10), dateFormat)
-      };
-
-
-      console.log("dataa", data)
-
+    if (profile) {
       form.setFieldsValue({
-        ...data
+        ...profile
       });
+
+      setFileList(
+        [
+          {
+            uid: '-1',
+            name: 'image.png',
+            status: 'done',
+            url: profile?.avatar,
+          },
+        ]
+      )
     }
-  }, [listHoaDonSelected]);
+  }, [profile]);
 
 
 
@@ -140,71 +119,11 @@ const Profile = ({ disabled = false }) => {
 
   //End
   const onFinish = (values) => {
-    // values.createdAt = `${values.createdAt.$y}-${values.createdAt.$M + 1}-${values.createdAt.$D}`;
-    // values.deliveryDate = `${values.deliveryDate.$y}-${values.deliveryDate.$M + 1}-${values.deliveryDate.$D}`;
-    console.log('Received values of form: ', values);
-    console.log(dataHoaDonSelected);
-
-    function formatDate(date) {
-      var d = new Date(date),
-        month = '' + (d.getMonth() + 1),
-        day = '' + d.getDate(),
-        year = d.getFullYear();
-
-      if (month.length < 2)
-        month = '0' + month;
-      if (day.length < 2)
-        day = '0' + day;
-
-      return [year, month, day].join('-');
-    }
-
-    if (values.paymentMethod === "CASH") {
-      let dataConvert = {
-        "receiveDate": formatDate(values.receiveDate.$d),
-        "content": "Nội dung",
-        "submitter": values.submitter,
-        "customerId": dataHoaDonSelected[0].donBanHang.customer.id,
-        "salespersonID": values.salespersonID,
-        "chungTuDto": dataHoaDonSelected.map(hoaDon => {
-          return {
-            "money": hoaDon.sothanhtoan,
-            "content": hoaDon.content,
-            "ctbanId": hoaDon.id
-          }
-        })
-      }
-
-      console.log("dataConvert", dataConvert)
-
-      // dispatch(postPhieuThuTienMat({ values: dataConvert }));
-      navigate(-2);
-
-    }
-    else {
-      let dataConvert = {
-        "receiveDate": formatDate(values.receiveDate.$d),
-        "content": "Nội dung",
-        "submitter": values.submitter,
-        "customerId": dataHoaDonSelected[0].donBanHang.customer.id,
-        "salespersonID": values.salespersonID,
-        "chungTuDto": dataHoaDonSelected.map(hoaDon => {
-          return {
-            "money": hoaDon.sothanhtoan,
-            "content": hoaDon.content,
-            "ctbanId": hoaDon.id
-          }
-        }),
-        "bankAccountId": values.bankAccountId
-      }
-
-      console.log("dataConvert", dataConvert)
-
-      // dispatch(postPhieuThuTienGui({ values: dataConvert }));
-      navigate(-2);
-    }
-
+    dispatch(updateProfile({values}));
   };
+
+
+
 
   return (
     <div className="m-6">
@@ -237,6 +156,8 @@ const Profile = ({ disabled = false }) => {
           />
         )}
       </div>
+      {contextHolder}
+
 
       <Form
         form={form}

@@ -1,4 +1,5 @@
 import axios from "axios";
+import authHeader from "./auth-header";
 
 const API_URL = `${process.env.REACT_APP_SERVER_URL}`;
 
@@ -7,9 +8,7 @@ const getChartRevenueYear = ({ values }) => {
 
     return axios.get(`${API_URL}/ctban/report-revenue-of-year/${values?.year}`,
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
@@ -17,9 +16,7 @@ const getChartRevenueMonth = ({ values }) => {
 
     return axios.get(`${API_URL}/ctban/report-revenue-of-month/${values?.year}/${values?.month}`,
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
@@ -27,9 +24,7 @@ const getChartRevenueQuarter = ({ values }) => {
 
     return axios.get(`${API_URL}/ctban/report-revenue-of-quarter/${values?.year}/${values?.quarter}`,
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
@@ -40,9 +35,7 @@ const getChartProduct = ({ values }) => {
             ...values
         },
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 

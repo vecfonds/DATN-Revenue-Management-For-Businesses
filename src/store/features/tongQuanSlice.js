@@ -2,6 +2,8 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import authService from "../../services/auth.service";
 import tongQuanService from './../../services/tongQuan.service';
 import { VND } from "../../utils/func";
+import congNoService from "../../services/congNo.service";
+import baoCaoService from "../../services/baoCao.service";
 
 export const getChartRevenueYear = createAsyncThunk(
     "tongQuan/getChartRevenueYear",
@@ -60,6 +62,41 @@ export const getChartProduct = createAsyncThunk(
     }
 );
 
+export const postReportTHCNRaw = createAsyncThunk(
+    "tongQuan/postReportTHCNRaw",
+    async ({ values }, thunkAPI) => {
+        try {
+            console.log("values", values)
+            const response = await congNoService.postReportTHCNRaw({ values });
+            console.log("response", response);
+            return response.data;
+        } catch (error) {
+            console.log("error", error);
+            return thunkAPI.rejectWithValue(error.response.data);
+        }
+    }
+);
+
+
+
+
+
+
+export const postReportDTBHRaw = createAsyncThunk(
+    "tongQuan/postReportDTBHRaw",
+    async ({ values }, thunkAPI) => {
+        try {
+            console.log("values", values)
+            const response = await baoCaoService.postReportDTBHRaw({ values });
+            console.log("response", response);
+            return response.data;
+        } catch (error) {
+            console.log("error", error);
+            return thunkAPI.rejectWithValue(error.response.data);
+        }
+    }
+);
+
 
 
 const initialState = {
@@ -73,6 +110,12 @@ const initialState = {
 
     chartRevenueData: [],
     chartProductData: [],
+    reportTHCNData: [],
+    isSuccessPostReportTHCNRaw: false,
+
+    reportDTBHData: [],
+    isSuccessPostReportDTBHRaw: false,
+
 };
 
 
@@ -85,6 +128,8 @@ export const tongQuanSlice = createSlice({
 
             state.isSuccessGetChartRevenue = false;
             state.isSuccessGetChartProduct = false;
+            state.isSuccessPostReportTHCNRaw = false;
+            state.isSuccessPostReportDTBHRaw = false;
 
             state.isFetching = false;
             state.message = "";
@@ -127,7 +172,7 @@ export const tongQuanSlice = createSlice({
         })
 
 
-        
+
 
 
 
@@ -222,6 +267,60 @@ export const tongQuanSlice = createSlice({
             state.isError = true;
             // state.message = action.payload.message;
         })
+
+
+
+
+
+
+
+        builder.addCase(postReportTHCNRaw.pending, (state) => {
+            console.log("postReportTHCNRaw.pending", state)
+            state.isFetching = true;
+        })
+
+        builder.addCase(postReportTHCNRaw.fulfilled, (state, action) => {
+            console.log("postReportTHCNRaw.fulfilled", action.payload)
+            state.isFetching = false;
+            state.isSuccessPostReportTHCNRaw = true;
+            state.reportTHCNData = action.payload.result.data;
+            //   state.message = action.payload.message;
+        })
+
+        builder.addCase(postReportTHCNRaw.rejected, (state, action) => {
+            console.log("postReportTHCNRaw.rejected", action)
+            state.isFetching = false;
+            state.isError = true;
+            state.message = action.payload.message;
+        })
+
+
+
+
+
+
+
+
+        builder.addCase(postReportDTBHRaw.pending, (state) => {
+            console.log("postReportDTBHRaw.pending", state)
+            state.isFetching = true;
+        })
+
+        builder.addCase(postReportDTBHRaw.fulfilled, (state, action) => {
+            console.log("postReportDTBHRaw.fulfilled", action.payload)
+            state.isFetching = false;
+            state.isSuccessPostReportDTBHRaw = true;
+            state.reportDTBHData = action.payload.result.data;
+            //   state.message = action.payload.message;
+        })
+
+        builder.addCase(postReportDTBHRaw.rejected, (state, action) => {
+            console.log("postReportDTBHRaw.rejected", action)
+            state.isFetching = false;
+            state.isError = true;
+            state.message = action.payload.message;
+        })
+
 
     }
 });

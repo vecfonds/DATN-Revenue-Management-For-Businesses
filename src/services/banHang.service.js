@@ -1,22 +1,19 @@
 import axios from "axios";
+import authHeader from "./auth-header";
 
 const API_URL = `${process.env.REACT_APP_SERVER_URL}`;
 
 const getListDonBanHang = () => {
     return axios.get(`${API_URL}/don-ban-hang`,
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
 const getDonBanHang = ({ id }) => {
     return axios.get(`${API_URL}/don-ban-hang/${id}`,
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
@@ -26,9 +23,7 @@ const postDonBanHang = ({ values }) => {
             ...values
         },
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
@@ -40,18 +35,14 @@ const postDonBanHang = ({ values }) => {
 const getListChungTuBan = () => {
     return axios.get(`${API_URL}/ctban`,
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
 const getChungTuBan = ({ id }) => {
     return axios.get(`${API_URL}/ctban/${id}`,
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
@@ -61,9 +52,7 @@ const postChungTuBan = ({ values }) => {
             ...values
         },
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
@@ -72,9 +61,7 @@ const postChungTuBan = ({ values }) => {
 const getListEmployeeWarehouseKeeper = () => {
     return axios.get(`${API_URL}/employee/warehouse-keeper`,
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
@@ -90,18 +77,14 @@ const getListEmployeeWarehouseKeeper = () => {
 const getListPhieuThuTienMat = () => {
     return axios.get(`${API_URL}/phieu-thu-tien-mat`,
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
 const getPhieuThuTienMat = ({ id }) => {
     return axios.get(`${API_URL}/phieu-thu-tien-mat/${id}`,
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
@@ -111,9 +94,7 @@ const postPhieuThuTienMat = ({ values }) => {
             ...values
         },
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
@@ -126,18 +107,14 @@ const postPhieuThuTienMat = ({ values }) => {
 const getListPhieuThuTienGui = () => {
     return axios.get(`${API_URL}/phieu-thu-tien-gui`,
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
 const getPhieuThuTienGui = ({ id }) => {
     return axios.get(`${API_URL}/phieu-thu-tien-gui/${id}`,
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 
@@ -147,9 +124,7 @@ const postPhieuThuTienGui = ({ values }) => {
             ...values
         },
         {
-            headers: {
-                "Content-Type": "application/json",
-            }
+            headers: authHeader()
         });
 };
 

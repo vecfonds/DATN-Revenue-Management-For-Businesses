@@ -22,113 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { VND, selectTime } from "../../utils/func";
 import { congNoSelector, getListCongNo, postReportTHCN, postReportTHCNRaw } from "../../store/features/congNoSlice";
 import TinhHinhTaiChinh from "../../component/Chart/TinhHinhTaiChinh";
-const items = [
-  {
-    label: "Năm nay",
-    key: "0",
-  },
-  {
-    label: "Năm trước",
-    key: "1",
-  },
-];
 
-const data = [
-  {
-    key: 1,
-    name: "Tháng 1",
-    "Doanh thu": 0,
-    chiphi: 0,
-  },
-  {
-    key: 2,
-    name: "Tháng 2",
-    "Doanh thu": 0,
-    chiphi: 0,
-  },
-  {
-    key: 3,
-    name: "Tháng 3",
-    "Doanh thu": 0,
-    chiphi: 0,
-  },
-  {
-    key: 4,
-    name: "Tháng 4",
-    "Doanh thu": 0,
-    chiphi: 0,
-  },
-  {
-    key: 5,
-    name: "Tháng 5",
-    "Doanh thu": 0,
-    chiphi: 0,
-  },
-  {
-    key: 6,
-    name: "Tháng 6",
-    "Doanh thu": 0,
-    chiphi: 0,
-  },
-  {
-    key: 7,
-    name: "Tháng 7",
-    "Doanh thu": 0,
-    chiphi: 0,
-  },
-  {
-    key: 8,
-    name: "Tháng 8",
-    "Doanh thu": 0,
-    chiphi: 0,
-  },
-  {
-    key: 9,
-    name: "Tháng 9",
-    "Doanh thu": 0,
-    chiphi: 0,
-  },
-  {
-    key: 10,
-    name: "Tháng 10",
-    "Doanh thu": 0,
-    chiphi: 0,
-  },
-  {
-    key: 11,
-    name: "Tháng 11",
-    "Doanh thu": 0,
-    chiphi: 0,
-  },
-  {
-    key: 12,
-    name: "Tháng 12",
-    "Doanh thu": 0,
-    chiphi: 0,
-  },
-];
-
-const columns = [
-  {
-    title: "Name",
-    dataIndex: "name",
-    key: "name",
-    className: 'bg-[#FFF6D8]',
-    render: (text) => <a>{text}</a>,
-  },
-  {
-    title: "Quanlity",
-    dataIndex: "quanlity",
-    key: "quanlity",
-    className: 'bg-[#FFF6D8]',
-  },
-  {
-    title: "Value",
-    dataIndex: "value",
-    key: "value",
-    className: 'bg-[#FFF6D8]',
-  },
-];
 const TongQuan = () => {
   const dispatch = useDispatch();
 
@@ -141,28 +35,6 @@ const TongQuan = () => {
 
   useEffect(() => {
     if (chartRevenueData) {
-      // chartRevenueData?.forEach(item => {
-      //   if (item.key < 6) {
-      //     data[item.key - 1]["Doanh thu"] = item["Doanh thu"];
-      //   }
-      // })
-      // for (let i = 0; i < 12; ++i) {
-      //   if (i < 6) {
-      //     chartRevenueData?.forEach(item => {
-      //       if (item.key - 1 === i) {
-      //         data[i]["Doanh thu"] = item["Doanh thu"];
-      //       }
-      //     })
-      //   }
-      //   else {
-      //     chartRevenueData?.forEach(item => {
-      //       if (item.key - 1 === i) {
-      //         data[i]["Doanh thu"] = 0;
-      //       }
-      //     })
-      //   }
-      // }
-
       setDataVenue(chartRevenueData);
     }
   }, [chartRevenueData]);

@@ -524,7 +524,7 @@ export const banHangSlice = createSlice({
             state.isFetching = false;
             state.isSuccessGetListPhieuThuTienMat = true;
 
-            state.listPhieuThuTienMatData = action.payload.result.data.map(item => { return { ...item, key: item.id, type: "CASH" } });
+            state.listPhieuThuTienMatData = action.payload.result.data.map(item => { return { ...item, key: `${item.id}CASH`, type: "CASH" } });
             //   state.message = action.payload.message;
         })
 
@@ -603,7 +603,7 @@ export const banHangSlice = createSlice({
             state.isFetching = false;
             state.isSuccessGetListPhieuThuTienGui = true;
 
-            state.listPhieuThuTienGuiData = action.payload.result.data.map(item => { return { ...item, key: item.id, type: "TRANSFER" } });
+            state.listPhieuThuTienGuiData = action.payload.result.data.map(item => { return { ...item, key: `${item.id}TRANSFER`, type: "TRANSFER" } });
             //   state.message = action.payload.message;
         })
 

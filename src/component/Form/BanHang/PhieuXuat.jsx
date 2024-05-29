@@ -208,13 +208,13 @@ const PhieuXuat = ({ components, dataSource, columns, form, disabled, onFinish, 
                             {
                                 chungTuBanData?.phieuThuTienMat?.map(ct => <span
                                     className='px-2 text-[#1DA1F2] font-medium	cursor-pointer'
-                                    onClick={() => navigate(`/ban-hang/thu-tien-theo-hoa-don/xem/${ct.id}`, { state: { id: ct.id } })}
+                                    onClick={() => navigate(`/ban-hang/thu-tien-theo-hoa-don/CASH/${ct.id}`, { state: { id: ct.id } })}
                                 >{ct.id}</span>)
                             }
                             {
                                 chungTuBanData?.phieuThuTienGui?.map(ct => <span
                                     className='px-2 text-[#1DA1F2] font-medium	cursor-pointer'
-                                    onClick={() => navigate(`/ban-hang/thu-tien-theo-hoa-don/xem/${ct.id}`, { state: { id: ct.id } })}
+                                    onClick={() => navigate(`/ban-hang/thu-tien-theo-hoa-don/TRANSFER/${ct.id}`, { state: { id: ct.id } })}
                                 >{ct.id}</span>)
                             }
                         </p>

@@ -4,7 +4,8 @@ import { Select } from 'antd'
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import { useDispatch, useSelector } from 'react-redux';
-import { banHangSelector, clearState, getListPhieuThuTienGui, getListPhieuThuTienMat } from '../../store/features/banHangSlice';
+import { banHangSelector, getListPhieuThuTienGui, getListPhieuThuTienMat } from '../../store/features/banHangSlice';
+import { clearState, postReportDTBHRaw, postReportTHCNRaw, tongQuanSelector } from '../../store/features/tongQuanSlice';
 
 const TinhHinhTaiChinh = () => {
     const dispatch = useDispatch();
@@ -12,6 +13,10 @@ const TinhHinhTaiChinh = () => {
 
     const [bank, setBank] = useState(0);
     const [cash, setCash] = useState(0);
+    const [noPhaiThu, setNoPhaiThu] = useState(0);
+    const [noPhaiThuTrongHan, setNoPhaiThuTrongHan] = useState(0);
+    const [noPhaiThuQuaHan, setNoPhaiThuQuaHan] = useState(0);
+    const [doanhThu, setDoanhThu] = useState(0);
 
     const {
         isSuccessGetListPhieuThuTienMat,
@@ -69,6 +74,98 @@ const TinhHinhTaiChinh = () => {
         isSuccessGetListPhieuThuTienGui,
     ]);
 
+
+    useEffect(() => {
+        const dataConvert = {
+            "startDate": "2020-01-01",
+            "endDate": "2025-01-01",
+            "name": "xxx",
+            "description": "xxx",
+            "customerIds": []
+        }
+
+        dispatch(postReportTHCNRaw({ values: dataConvert }));
+
+        const dataConvert2 = {
+            "startDate": "2020-01-01",
+            "endDate": "2025-01-01",
+            "name": "xxx",
+            "description": "xxx",
+            "salespersonIds": []
+        }
+        dispatch(postReportDTBHRaw({ values: dataConvert2 }));
+
+
+    }, []);
+
+    const {
+        reportTHCNData,
+        isSuccessPostReportTHCNRaw,
+        reportDTBHData,
+        isSuccessPostReportDTBHRaw
+    } = useSelector(tongQuanSelector);
+
+    useEffect(() => {
+        if (isSuccessPostReportTHCNRaw) {
+            let tong = reportTHCNData?.map(pt => pt.inOfDate).reduce((total, currentValue) => {
+                return total + currentValue;
+            }, 0)
+                +
+                reportTHCNData?.map(pt => pt.outOfDate).reduce((total, currentValue) => {
+                    return total + currentValue;
+                }, 0)
+                ;
+
+            let noTrongHan = reportTHCNData?.map(pt => pt.inOfDate).reduce((total, currentValue) => {
+                return total + currentValue;
+            }, 0)
+
+            let noQuaHan = reportTHCNData?.map(pt => pt.outOfDate).reduce((total, currentValue) => {
+                return total + currentValue;
+            }, 0)
+
+
+            setNoPhaiThu(tong);
+            setNoPhaiThuTrongHan(noTrongHan);
+            setNoPhaiThuQuaHan(noQuaHan);
+            dispatch(clearState());
+        }
+    }, [
+        isSuccessPostReportTHCNRaw,
+    ]);
+
+
+    useEffect(() => {
+        if (isSuccessPostReportDTBHRaw) {
+            let doanhThuBanHang = 0;
+
+            const dataConvertCurrent = reportDTBHData?.map(salesperson => {
+                let tong = 0;
+                salesperson.ctbans?.forEach(chungTuBanData => {
+                    console.log("chungTuBanData", chungTuBanData)
+                    tong += chungTuBanData.totalProductValue - chungTuBanData.totalDiscountValue;
+                })
+
+
+                return {
+                    tong
+                }
+            })
+
+            doanhThuBanHang = dataConvertCurrent?.map(item => item?.tong)?.reduce((total, currentValue) => {
+                return total + currentValue;
+            }, 0)
+
+
+            setDoanhThu(doanhThuBanHang);
+            dispatch(clearState());
+        }
+    }, [
+        isSuccessPostReportDTBHRaw,
+    ]);
+
+
+
     const handleChange = (value) => {
         if (value === "current") {
             let cashTotal = 0;
@@ -90,6 +187,28 @@ const TinhHinhTaiChinh = () => {
                 }, 0)
             })
             setBank(bankTotal);
+
+            //nophaithu
+            const dataConvert = {
+                "startDate": "2020-01-01",
+                "endDate": "2025-01-01",
+                "name": "xxx",
+                "description": "xxx",
+                "customerIds": []
+            }
+
+            dispatch(postReportTHCNRaw({ values: dataConvert }));
+
+
+            //doanhthu
+            const dataConvert2 = {
+                "startDate": "2020-01-01",
+                "endDate": "2025-01-01",
+                "name": "xxx",
+                "description": "xxx",
+                "salespersonIds": []
+            }
+            dispatch(postReportDTBHRaw({ values: dataConvert2 }));
         }
         else {
             const timeRange = selectTime(value);
@@ -115,6 +234,30 @@ const TinhHinhTaiChinh = () => {
                 }, 0)
             })
             setBank(bankTotal);
+
+            //nophaithu
+
+            const dataConvert = {
+                ...timeRange,
+                "name": "xxx",
+                "description": "xxx",
+                "customerIds": []
+            }
+
+            dispatch(postReportTHCNRaw({ values: dataConvert }));
+
+
+            //doanhthu
+
+            const dataConvert2 = {
+                ...timeRange,
+                "name": "xxx",
+                "description": "xxx",
+                "salespersonIds": []
+            }
+
+            console.log("dataConvert", dataConvert2)
+            dispatch(postReportDTBHRaw({ values: dataConvert2 }));
         }
     }
     return (
@@ -210,6 +353,50 @@ const TinhHinhTaiChinh = () => {
                         <p className="font-bold">
                             {
                                 VND.format(bank)
+                            }
+                        </p>
+                    </div>
+
+                    <div className='flex justify-between border-b border-zinc-950 my-2'></div>
+
+                    <div className='flex justify-between'>
+                        <p>Nợ phải thu</p>
+                        <p className="font-bold">
+                            {
+                                VND.format(noPhaiThu)
+                            }
+                        </p>
+                    </div>
+
+                    <div className='flex justify-between'>
+                        <p className="pl-8">
+                            Trong hạn
+                        </p>
+                        <p className="font-bold">
+                            {
+                                VND.format(noPhaiThuTrongHan)
+                            }
+                        </p>
+                    </div>
+                    <div className='flex justify-between'>
+                        <p className="pl-8 text-orange-500">
+                            Quá hạn
+                        </p>
+                        <p className="font-bold text-orange-500">
+                            {
+                                VND.format(noPhaiThuQuaHan)
+                            }
+                        </p>
+                    </div>
+
+                    <div className='flex justify-between border-b border-zinc-950 my-2'></div>
+
+
+                    <div className='flex justify-between'>
+                        <p>Doanh thu</p>
+                        <p className="font-bold">
+                            {
+                                VND.format(doanhThu)
                             }
                         </p>
                     </div>

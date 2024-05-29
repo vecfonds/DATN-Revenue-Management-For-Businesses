@@ -96,8 +96,9 @@ const ThuTienTheoHoaDon = () => {
         placement: "bottomLeft",
         duration: 2,
       });
-
       dispatch(clearState());
+      dispatch(getListPhieuThuTienMat());
+      dispatch(getListPhieuThuTienGui());
     }
     else if (isSuccessPostPhieuThuTienGui) {
       api.success({
@@ -107,6 +108,8 @@ const ThuTienTheoHoaDon = () => {
       });
 
       dispatch(clearState());
+      dispatch(getListPhieuThuTienMat());
+      dispatch(getListPhieuThuTienGui());
     }
 
     else if (isSuccessGetListPhieuThuTienMat && isSuccessGetListPhieuThuTienGui) {
@@ -225,7 +228,7 @@ const ThuTienTheoHoaDon = () => {
       setOpen(true);
     } else {
       // navigate(`${e.key}/${record.key}`, { state: { id: record.key } });
-      navigate(`${record.type}/${record.key}`, { state: { id: record.key } });
+      navigate(`${record.type}/${record.id}`, { state: { id: record.id } });
 
     }
   };
@@ -239,14 +242,14 @@ const ThuTienTheoHoaDon = () => {
       title: "ID phiếu thu",
       dataIndex: "id",
       key: "id",
-      sorter: (a, b) => a.id - b.id,
-      sortOrder: sortedInfo.columnKey === "id" ? sortedInfo.order : null,
       render: (val, record) => <span
         onClick={() => {
           // navigate(`/ban-hang/thu-tien-theo-hoa-don/timkiem/thutien`, { state: { id: selectedRowKeys } });
           navigate(`/ban-hang/thu-tien-theo-hoa-don/${record.type}/${val}`, { state: { id: val } });
         }}
         className={`cursor-pointer font-medium text-[#1DA1F2] ${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "DELIVERED" ? "" : ""}`}>{val}</span>,
+      sorter: (a, b) => a.id - b.id,
+      sortOrder: sortedInfo.columnKey === "id" ? sortedInfo.order : null,
       ellipsis: true,
       width: '10%',
     },
@@ -407,8 +410,8 @@ const ThuTienTheoHoaDon = () => {
           >
             <Link
               // to={`xem-phieu-thu-tien-mat/${record.key}`}
-              to={`${record.type}/${record.key}`}
-              state={{ id: record.key }}
+              to={`${record.type}/${record.id}`}
+              state={{ id: record.id }}
               className="!text-black"
             >
               Xem

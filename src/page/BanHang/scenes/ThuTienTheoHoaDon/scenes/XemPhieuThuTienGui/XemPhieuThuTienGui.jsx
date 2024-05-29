@@ -436,7 +436,7 @@ const XemPhieuThuTienGui = ({ disabled = false }) => {
     return (
         <div className="m-6">
             <h1 className="font-bold text-[32px] mb-4">
-                Phiếu thu tiền {Form.useWatch('paymentMethod', form) === "CASH" ? "mặt" : "gửi"} {nameValue || phieuThuTienGuiData.id}
+                Phiếu thu tiền {Form.useWatch('paymentMethod', form) === "CASH" ? "mặt" : "gửi"} {phieuThuTienGuiData?.id}
             </h1>
 
 
