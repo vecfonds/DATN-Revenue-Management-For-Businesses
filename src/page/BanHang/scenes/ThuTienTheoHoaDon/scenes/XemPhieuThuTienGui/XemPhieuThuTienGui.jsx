@@ -743,8 +743,8 @@ const XemPhieuThuTienGui = ({ disabled = false }) => {
                                 {
                                     phieuThuTienGuiData?.chungTuCuaPhieuThu?.map(ct => <span
                                         className='px-2 text-[#1DA1F2] font-medium	cursor-pointer'
-                                        onClick={() => navigate(`/ban-hang/chung-tu-ban-hang/xem/${ct.id}`, { state: { id: ct.id } })}
-                                    >{ct.ctban.id}</span>)
+                                        onClick={() => navigate(`/ban-hang/chung-tu-ban-hang/xem/${ct?.ctban?.id}`, { state: { id: ct?.ctban?.id } })}
+                                    >{ct?.ctban?.id}</span>)
                                 }
                             </p>
                         </div>
@@ -756,8 +756,8 @@ const XemPhieuThuTienGui = ({ disabled = false }) => {
                                 {
                                     phieuThuTienGuiData?.chungTuCuaPhieuThu?.map(ct => <span
                                         className='px-2 text-[#1DA1F2] font-medium	cursor-pointer'
-                                        onClick={() => navigate(`/ban-hang/hoa-don-ban-hang/xem/${ct.id}`, { state: { id: ct.id } })}
-                                    >{ct.ctban.id}</span>)
+                                        onClick={() => navigate(`/ban-hang/hoa-don-ban-hang/xem/${ct?.ctban?.id}`, { state: { id: ct?.ctban?.id } })}
+                                    >{ct?.ctban?.id}</span>)
                                 }
                             </p>
                         </div>

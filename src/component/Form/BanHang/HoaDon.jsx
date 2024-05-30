@@ -333,14 +333,14 @@ const HoaDon = ({ components, dataSource, columns, form, disabled, onFinish, chu
                             {
                                 chungTuBanData?.phieuThuTienMat?.map(ct => <span
                                     className='px-2 text-[#1DA1F2] font-medium	cursor-pointer'
-                                    onClick={() => navigate(`/ban-hang/thu-tien-theo-hoa-don/CASH/${ct.id}`, { state: { id: ct.id } })}
-                                >{ct.id}</span>)
+                                    onClick={() => navigate(`/ban-hang/thu-tien-theo-hoa-don/CASH/${ct?.phieuThuTienMat?.id}`, { state: { id: ct?.phieuThuTienMat?.id } })}
+                                >{ct?.phieuThuTienMat?.id}</span>)
                             }
                             {
                                 chungTuBanData?.phieuThuTienGui?.map(ct => <span
                                     className='px-2 text-[#1DA1F2] font-medium	cursor-pointer'
-                                    onClick={() => navigate(`/ban-hang/thu-tien-theo-hoa-don/TRANSFER/${ct.id}`, { state: { id: ct.id } })}
-                                >{ct.id}</span>)
+                                    onClick={() => navigate(`/ban-hang/thu-tien-theo-hoa-don/TRANSFER/${ct?.phieuThuTienGui?.id}`, { state: { id: ct?.phieuThuTienGui?.id } })}
+                                >{ct?.phieuThuTienGui?.id}</span>)
                             }
                         </p>
                     </div>}

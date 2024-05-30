@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { Tabs, Form, Input, Flex, Table, Button, InputNumber, Select, Checkbox, DatePicker, Typography, Upload, Image, notification } from "antd";
+import { Tabs, Form, Input, Flex, Table, Button, InputNumber, Select, Checkbox, DatePicker, Typography, Upload, Image, notification, Modal } from "antd";
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -11,6 +11,7 @@ import { VND } from '../../utils/func';
 import { doiTuongSelector } from '../../store/features/doiTuongSilce';
 import moment from 'moment';
 import { authenticationSelector, getProfile, updateProfile, clearState } from '../../store/features/authenticationSlice';
+import { Password } from '@mui/icons-material';
 
 
 const dateFormat = "YYYY-MM-DD";
@@ -29,19 +30,33 @@ const Profile = ({ disabled = false }) => {
 
   const {
     profile,
-    isSuccess
+    isSuccess,
+    isError,
+    message
   } = useSelector(authenticationSelector);
 
   useEffect(() => {
-    if(isSuccess){
+    if (isSuccess) {
       api.success({
         message: "Cập nhật dữ liệu thành công!",
         placement: "bottomLeft",
         duration: 2,
       });
+      formAddNhomKhachHang.resetFields();
+      setOpenAddNhomKhachHang(false);
+      
       dispatch(clearState());
     }
-  }, [isSuccess]);
+    else if (isError) {
+      api.error({
+        message: message,
+        placement: 'bottomLeft',
+        duration: 2
+      });
+
+      dispatch(clearState());
+    }
+  }, [isSuccess, isError]);
 
   useEffect(() => {
     dispatch(getProfile());
@@ -94,6 +109,8 @@ const Profile = ({ disabled = false }) => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
     }
+
+    console.log("file", file)
     setPreviewImage(file.url || file.preview);
     setPreviewOpen(true);
   };
@@ -119,10 +136,40 @@ const Profile = ({ disabled = false }) => {
 
   //End
   const onFinish = (values) => {
-    dispatch(updateProfile({values}));
+    dispatch(updateProfile({ values }));
   };
 
+  console.log("previewImage", previewImage)
 
+
+
+  //thay doi mat khau
+  const [formAddNhomKhachHang] = Form.useForm();
+  const [open, setOpen] = useState(false);
+  const [openAddNhomKhachHang, setOpenAddNhomKhachHang] = useState(false);
+
+  const handleCancel = () => {
+    setOpen(false);
+  };
+
+  const handleCancelAddNhomKhachHang = () => {
+    setOpenAddNhomKhachHang(false);
+  }
+
+
+  const onFinishAddNhomKhachHang = (values) => {
+    console.log('Received values of form: ', values);
+
+    const dataConvert = {
+      password: values.password
+    }
+
+    console.log("dataConvert", dataConvert)
+    dispatch(updateProfile({ values: dataConvert }));
+    // formAddNhomKhachHang.resetFields();
+
+    // setOpenAddNhomKhachHang(false)
+  };
 
 
   return (
@@ -134,7 +181,7 @@ const Profile = ({ disabled = false }) => {
 
       <div className='w-[100px] h-[100px] mx-auto my-0 mb-8'>
         <Upload
-          action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+          action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
           listType="picture-card"
           fileList={fileList}
           onPreview={handlePreview}
@@ -157,6 +204,95 @@ const Profile = ({ disabled = false }) => {
         )}
       </div>
       {contextHolder}
+
+
+      <Modal
+        title="THAY ĐỔI MẬT KHẨU"
+        centered
+        open={openAddNhomKhachHang}
+        width={700}
+        footer=''
+        onCancel={handleCancelAddNhomKhachHang}
+      >
+        <Form
+          form={formAddNhomKhachHang}
+          layout='horizontal'
+          onFinish={onFinishAddNhomKhachHang}
+          labelCol={{
+            flex: '200px',
+          }}
+          labelAlign="left"
+          className='mt-4'
+        >
+          <Form.Item
+            label="Mật khẩu cũ"
+            name='oldPassword'
+            rules={[
+              {
+                required: true,
+                message: 'Trường này là bắt buộc!',
+              },
+            ]}
+          >
+            <Input.Password />
+          </Form.Item>
+
+          <Form.Item
+            label="Mật khẩu mới"
+            name='password'
+            rules={[
+              {
+                required: true,
+                message: 'Trường này là bắt buộc!',
+              },
+            ]}
+          >
+            <Input.Password />
+          </Form.Item>
+
+
+          <Form.Item
+            label="Xác nhận mật khẩu mới"
+            name='ConfirmPassword'
+            dependencies={['password']}
+            rules={[
+              {
+                required: true,
+              },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue('password') === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(new Error('Mật khẩu mới bạn nhập không khớp!'));
+                },
+              }),
+            ]}
+          >
+            <Input.Password />
+          </Form.Item>
+
+
+
+          <Form.Item className='flex justify-end gap-2 mt-6 mb-0'>
+
+            <Button
+              className='bg-[#FF7742] font-bold text-white mr-2'
+              htmlType="reset"
+              onClick={() => setOpenAddNhomKhachHang(false)}
+            >
+              Hủy
+            </Button>
+            <Button
+              className='!bg-[#67CDBB] font-bold text-white'
+              htmlType="submit"
+            // onClick={() => setOpenAddNhomKhachHang(false)}
+            >
+              Xác nhận
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
 
 
       <Form
@@ -275,6 +411,14 @@ const Profile = ({ disabled = false }) => {
                 >
                   Hủy
                 </Button> */}
+                <Button
+                  className='mr-4'
+                  type='link'
+                  onClick={() => setOpenAddNhomKhachHang(true)}
+                >
+                  Thay đổi mật khẩu
+                </Button>
+
                 <Button
                   className='!bg-[#67CDBB] font-bold text-white'
                   htmlType="submit"

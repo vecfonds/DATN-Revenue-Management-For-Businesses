@@ -214,7 +214,7 @@ export const authenticationSlice = createSlice({
       console.log("updateProfile.rejected", action)
       state.isFetching = false;
       state.isError = true;
-      // state.message = action.payload.message;
+      state.message = action.payload.error;
     })
   },
 });

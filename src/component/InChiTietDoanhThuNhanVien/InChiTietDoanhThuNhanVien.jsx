@@ -30,7 +30,7 @@ const InChiTietDoanhThuNhanVien = ({ components, dataSource, columns, form, disa
             title: "Ngày hóa đơn",
             dataIndex: "createdAt",
             key: "createdAt",
-            render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() ? "text-[#d44950] font-medium" : ""}`}>{new Date(val).toLocaleDateString("vi-VN")}</span>,
+            render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() ? "text-[#000] " : ""}`}>{new Date(val).toLocaleDateString("vi-VN")}</span>,
 
             // fixed: 'left',
         },
@@ -39,7 +39,7 @@ const InChiTietDoanhThuNhanVien = ({ components, dataSource, columns, form, disa
             title: "Hạn thanh toán",
             dataIndex: "paymentTerm",
             key: "paymentTerm",
-            render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() ? "text-[#d44950] font-medium" : ""}`}>{new Date(val).toLocaleDateString("vi-VN")}</span>,
+            render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() ? "text-[#000] " : ""}`}>{new Date(val).toLocaleDateString("vi-VN")}</span>,
 
             // fixed: 'left',
         },
@@ -54,7 +54,7 @@ const InChiTietDoanhThuNhanVien = ({ components, dataSource, columns, form, disa
             title: "Giá trị hóa đơn",
             dataIndex: "tong",
             key: "tong",
-            render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() ? "text-[#d44950] font-medium" : ""}`}>{VND.format(val)}</span>,
+            render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() ? "text-[#000] " : ""}`}>{VND.format(val)}</span>,
 
 
         },
@@ -62,14 +62,14 @@ const InChiTietDoanhThuNhanVien = ({ components, dataSource, columns, form, disa
             title: "Doanh thu (thuần)",
             dataIndex: "doanhthu",
             key: "doanhthu",
-            render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() ? "text-[#d44950] font-medium" : ""}`}>{VND.format(val)}</span>,
+            render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() ? "text-[#000] " : ""}`}>{VND.format(val)}</span>,
 
         },
         // {
         //   title: "Đã thu",
         //   dataIndex: "dathu",
         //   key: "dathu",
-        //   render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() ? "text-[#d44950] font-medium" : ""}`}>{VND.format(val)}</span>,
+        //   render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() ? "text-[#000] font-medium" : ""}`}>{VND.format(val)}</span>,
 
         //   // render: (val, record) => VND.format(val),
         //   sorter: (a, b) => a.dathu - b.dathu,
@@ -79,7 +79,7 @@ const InChiTietDoanhThuNhanVien = ({ components, dataSource, columns, form, disa
         //   title: "Chưa thu",
         //   dataIndex: "chuathu",
         //   key: "chuathu",
-        //   render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() ? "text-[#d44950] font-medium" : ""}`}>{VND.format(val)}</span>,
+        //   render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() ? "text-[#000] font-medium" : ""}`}>{VND.format(val)}</span>,
 
         //   // render: (val, record) => VND.format(val),
         //   sorter: (a, b) => a.chuathu - b.chuathu,

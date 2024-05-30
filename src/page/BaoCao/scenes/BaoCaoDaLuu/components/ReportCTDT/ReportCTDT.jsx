@@ -695,7 +695,9 @@ const ReportCTDT = ({ checkbox = false }) => {
                         // components={components}
                         dataSource={chungTuBan.filter(ct => ct.length !== 0)}
                         columns={columns}
-                        dates={valueRangepicker || [{ $d: new Date() }, { $d: new Date() }]}
+                        // dates={valueRangepicker || [{ $d: new Date() }, { $d: new Date() }]}
+                        dates={[{ $d: description?.startDate }, { $d: description?.endDate }]}
+
                     // idHoaDon={chungTuBanData?.id}
                     // idCustomer={chungTuBanData?.donBanHang?.salesperson?.id}
                     />
