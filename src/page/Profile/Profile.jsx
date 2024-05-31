@@ -258,6 +258,7 @@ const Profile = ({ disabled = false }) => {
             rules={[
               {
                 required: true,
+                message: 'Trường này là bắt buộc!',
               },
               ({ getFieldValue }) => ({
                 validator(_, value) {

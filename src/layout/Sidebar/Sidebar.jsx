@@ -136,7 +136,7 @@ const Sidebar = ({ toggled, handleToggleSidebar, isCollapsed, handleIsCollapsed 
 
             <Item
               title="Đối tượng"
-              to="/doi-tuong"
+              to="/doi-tuong/nhom-khach-hang"
               icon={<LiaObjectGroup size={20} />}
               selected={selected}
               setSelected={setSelected}
@@ -151,7 +151,7 @@ const Sidebar = ({ toggled, handleToggleSidebar, isCollapsed, handleIsCollapsed 
             /> */}
             <Item
               title="Bán hàng"
-              to="/ban-hang"
+              to="/ban-hang/don-dat-hang"
               icon={<ShoppingCart size={20} />}
               selected={selected}
               setSelected={setSelected}
@@ -174,14 +174,14 @@ const Sidebar = ({ toggled, handleToggleSidebar, isCollapsed, handleIsCollapsed 
 
             <Item
               title="Nợ phải thu"
-              to="/cong-no"
+              to="/cong-no/chi-tiet-no-phai-thu"
               icon={<FaCoins size={20} />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="Báo cáo"
-              to="/bao-cao"
+              to="/bao-cao/chi-tiet-doanh-thu-nhan-vien"
               icon={<AssessmentIcon size={20} />}
               selected={selected}
               setSelected={setSelected}

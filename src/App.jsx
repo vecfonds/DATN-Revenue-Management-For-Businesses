@@ -74,6 +74,7 @@ import BaoCaoDaLuu from "./page/BaoCao/scenes/BaoCaoDaLuu/BaoCaoDaLuu";
 import ReportCTDT from "./page/BaoCao/scenes/BaoCaoDaLuu/components/ReportCTDT/ReportCTDT";
 import ReportTHDT from "./page/BaoCao/scenes/BaoCaoDaLuu/components/ReportTHDT/ReportTHDT";
 import ThemDonDatHang from "./page/BanHang/scenes/DonDatHang/scenes/ThemDonDatHang/ThemDonDatHang";
+import DoanhThuSanPham from "./page/BaoCao/scenes/DoanhThuSanPham/DoanhThuSanPham";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -222,6 +223,7 @@ function App() {
                 <Route path="/bao-cao" element={<BaoCao />}>
                   <Route path="chi-tiet-doanh-thu-nhan-vien" element={<ChiTietDoanhThuNhanVien />} />
                   <Route path="tong-hop-doanh-thu-nhan-vien" element={<TongHopDoanhThuNhanVien />} />
+                  <Route path="doanh-thu-theo-san-pham" element={<DoanhThuSanPham />} />
                   <Route path="bao-cao-da-luu" element={<BaoCaoDaLuu />} />
                   <Route path="bao-cao-da-luu/DTBH/:id" element={<ReportCTDT />} />
                   <Route path="bao-cao-da-luu/THDTBH/:id" element={<ReportTHDT />} />
