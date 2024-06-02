@@ -226,21 +226,23 @@ const XemPhieuThuTienMat = ({ disabled = false }) => {
             key: "id",
             sorter: (a, b) => a.id - b.id,
             render: (val, record) => <span
-              onClick={() => {
-                // navigate(`/ban-hang/thu-tien-theo-hoa-don/timkiem/thutien`, { state: { id: selectedRowKeys } });
-                navigate(`/ban-hang/hoa-don-ban-hang/xem/${val}`, { state: { id: val } });
-              }}
-              className={`cursor-pointer font-medium text-[#1DA1F2] ${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "DELIVERED" ? "" : ""}`}>{val}</span>,
+                onClick={() => {
+                    // navigate(`/ban-hang/thu-tien-theo-hoa-don/timkiem/thutien`, { state: { id: selectedRowKeys } });
+                    navigate(`/ban-hang/hoa-don-ban-hang/xem/${val}`, { state: { id: val } });
+                }}
+                className={`cursor-pointer font-medium text-[#1DA1F2] ${new Date(record.paymentTerm) < new Date() && record.paymentStatus !== "DELIVERED" ? "" : ""}`}>{val}</span>,
             sortOrder: sortedInfo.columnKey === "id" ? sortedInfo.order : null,
             ellipsis: true,
-          },
+        },
         {
             title: "Ngày hóa đơn",
             dataIndex: "createdAt",
             key: "createdAt",
             render: (val, record) => new Date(val).toLocaleDateString("vi-VN"),
             sorter: (a, b) =>
-                moment(a.createdAt, "DD-MM-YYYY") - moment(b.createdAt, "DD-MM-YYYY"),
+                new Date(a.createdAt) - new Date(b.createdAt),
+
+            // moment(a.createdAt, "DD-MM-YYYY") - moment(b.createdAt, "DD-MM-YYYY"),
             sortOrder: sortedInfo.columnKey === "createdAt" ? sortedInfo.order : null,
             // fixed: 'left',
             editable: false,

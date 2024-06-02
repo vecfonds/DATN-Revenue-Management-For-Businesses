@@ -86,6 +86,21 @@ export const postReportDCCNRaw = createAsyncThunk(
     }
 );
 
+export const deleteReportDCCN = createAsyncThunk(
+    "congNo/deleteReportDCCN",
+    async ({ values }, thunkAPI) => {
+        try {
+            console.log("values", values)
+            const response = await congNoService.deleteReportDCCN({ values });
+            console.log("response", response);
+            return response.data;
+        } catch (error) {
+            console.log("error", error);
+            return thunkAPI.rejectWithValue(error.response.data);
+        }
+    }
+);
+
 
 
 
@@ -148,6 +163,22 @@ export const postReportTHCNRaw = createAsyncThunk(
 );
 
 
+export const deleteReportTHCN = createAsyncThunk(
+    "congNo/deleteReportTHCN",
+    async ({ values }, thunkAPI) => {
+        try {
+            console.log("values", values)
+            const response = await congNoService.deleteReportTHCN({ values });
+            console.log("response", response);
+            return response.data;
+        } catch (error) {
+            console.log("error", error);
+            return thunkAPI.rejectWithValue(error.response.data);
+        }
+    }
+);
+
+
 
 
 const initialState = {
@@ -159,11 +190,15 @@ const initialState = {
     isSuccessGetReportDCCN: false,
     isSuccessPostReportDCCN: false,
     isSuccessPostReportDCCNRaw: false,
+    isSuccessDeleteReportDCCN: false,
+
 
     isSuccessGetListReportTHCN: false,
     isSuccessGetReportTHCN: false,
     isSuccessPostReportTHCN: false,
     isSuccessPostReportTHCNRaw: false,
+    isSuccessDeleteReportTHCN: false,
+
 
     isError: false,
     message: "",
@@ -193,11 +228,13 @@ export const congNoSlice = createSlice({
             state.isSuccessGetReportDCCN = false;
             state.isSuccessPostReportDCCN = false;
             state.isSuccessPostReportDCCNRaw = false;
+            state.isSuccessDeleteReportDCCN = false;
 
             state.isSuccessGetListReportTHCN = false;
             state.isSuccessGetReportTHCN = false;
             state.isSuccessPostReportTHCN = false;
             state.isSuccessPostReportTHCNRaw = false;
+            state.isSuccessDeleteReportTHCN = false;
 
             state.isFetching = false;
             state.message = "";
@@ -302,7 +339,7 @@ export const congNoSlice = createSlice({
             state.isFetching = false;
             state.isSuccessGetListReportDCCN = true;
 
-            state.listReportDCCNData = action.payload.result.data.map(item => { return { ...item, key: item.id, type: "DCCN", time: `Từ ${item.startDate} đến ${item.endDate}` } });
+            state.listReportDCCNData = action.payload.result.data.map(item => { return { ...item, key: `${item.id}DCCN`, type: "DCCN", time: `Từ ${item.startDate} đến ${item.endDate}` } });
             //   state.message = action.payload.message;
         })
 
@@ -381,6 +418,26 @@ export const congNoSlice = createSlice({
 
 
 
+        builder.addCase(deleteReportDCCN.pending, (state) => {
+            console.log("deleteReportDCCN.pending", state)
+            state.isFetching = true;
+        })
+
+        builder.addCase(deleteReportDCCN.fulfilled, (state, action) => {
+            console.log("deleteReportDCCN.fulfilled", action.payload)
+            state.isFetching = false;
+            state.isSuccessDeleteReportDCCN = true;
+            // state.customerGroupData = action.payload.result.data;
+            //   state.message = action.payload.message;
+        })
+
+        builder.addCase(deleteReportDCCN.rejected, (state, action) => {
+            console.log("deleteReportDCCN.rejected", action)
+            state.isFetching = false;
+            state.isError = true;
+            state.message = action.payload.message;
+        })
+
 
 
 
@@ -399,7 +456,7 @@ export const congNoSlice = createSlice({
             state.isFetching = false;
             state.isSuccessGetListReportTHCN = true;
 
-            state.listReportTHCNData = action.payload.result.data.map(item => { return { ...item, key: item.id, type: "THCN", time: `Từ ${item.startDate} đến ${item.endDate}` } });
+            state.listReportTHCNData = action.payload.result.data.map(item => { return { ...item, key: `${item.id}THCN`, type: "THCN", time: `Từ ${item.startDate} đến ${item.endDate}` } });
             //   state.message = action.payload.message;
         })
 
@@ -472,6 +529,29 @@ export const congNoSlice = createSlice({
             state.isError = true;
             state.message = action.payload.message;
         })
+
+
+
+        builder.addCase(deleteReportTHCN.pending, (state) => {
+            console.log("deleteReportTHCN.pending", state)
+            state.isFetching = true;
+        })
+
+        builder.addCase(deleteReportTHCN.fulfilled, (state, action) => {
+            console.log("deleteReportTHCN.fulfilled", action.payload)
+            state.isFetching = false;
+            state.isSuccessDeleteReportTHCN = true;
+            // state.customerGroupData = action.payload.result.data;
+            //   state.message = action.payload.message;
+        })
+
+        builder.addCase(deleteReportTHCN.rejected, (state, action) => {
+            console.log("deleteReportTHCN.rejected", action)
+            state.isFetching = false;
+            state.isError = true;
+            state.message = action.payload.message;
+        })
+
 
     }
 });

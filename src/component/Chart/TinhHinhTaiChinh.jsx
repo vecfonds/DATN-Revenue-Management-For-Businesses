@@ -42,16 +42,30 @@ const TinhHinhTaiChinh = () => {
 
     useEffect(() => {
         if (isSuccessGetListPhieuThuTienMat) {
-            let tong = 0;
-            listPhieuThuTienMatData.forEach(phieuThuTienMatData => {
+            // let tong = 0;
+            // listPhieuThuTienMatData.forEach(phieuThuTienMatData => {
+            //     console.log("phieuThuTienMatData", phieuThuTienMatData)
+            //     tong += phieuThuTienMatData?.chungTuCuaPhieuThu?.map(pt => pt.money).reduce((total, currentValue) => {
+            //         return total + currentValue;
+            //     }, 0)
+            // })
+
+            // setCash(tong);
+            // dispatch(clearState());
+
+
+            const timeRange = selectTime('thisMonth');
+
+            const dataCash = listPhieuThuTienMatData?.filter(phieuThuTienMatData => new Date(phieuThuTienMatData?.createdAt) > new Date(timeRange.startDate) && new Date(phieuThuTienMatData?.createdAt) < new Date(timeRange.endDate))
+            let cashTotal = 0;
+            dataCash.forEach(phieuThuTienMatData => {
                 console.log("phieuThuTienMatData", phieuThuTienMatData)
-                tong += phieuThuTienMatData?.chungTuCuaPhieuThu?.map(pt => pt.money).reduce((total, currentValue) => {
+                cashTotal += phieuThuTienMatData?.chungTuCuaPhieuThu?.map(pt => pt.money).reduce((total, currentValue) => {
                     return total + currentValue;
                 }, 0)
             })
 
-            setCash(tong);
-            // dispatch(clearState());
+            setCash(cashTotal);
 
         }
     }, [
@@ -60,15 +74,28 @@ const TinhHinhTaiChinh = () => {
 
     useEffect(() => {
         if (isSuccessGetListPhieuThuTienGui) {
-            let tong = 0;
-            listPhieuThuTienGuiData.forEach(phieuThuTienGuiData => {
+            // let tong = 0;
+            // listPhieuThuTienGuiData.forEach(phieuThuTienGuiData => {
+            //     console.log("phieuThuTienGuiData", phieuThuTienGuiData)
+            //     tong += phieuThuTienGuiData?.chungTuCuaPhieuThu?.map(pt => pt.money).reduce((total, currentValue) => {
+            //         return total + currentValue;
+            //     }, 0)
+            // })
+            // setBank(tong);
+            // dispatch(clearState());
+
+            const timeRange = selectTime('thisMonth');
+
+            const dataBank = listPhieuThuTienGuiData?.filter(phieuThuTienGuiData => new Date(phieuThuTienGuiData?.createdAt) > new Date(timeRange.startDate) && new Date(phieuThuTienGuiData?.createdAt) < new Date(timeRange.endDate))
+
+            let bankTotal = 0;
+            dataBank.forEach(phieuThuTienGuiData => {
                 console.log("phieuThuTienGuiData", phieuThuTienGuiData)
-                tong += phieuThuTienGuiData?.chungTuCuaPhieuThu?.map(pt => pt.money).reduce((total, currentValue) => {
+                bankTotal += phieuThuTienGuiData?.chungTuCuaPhieuThu?.map(pt => pt.money).reduce((total, currentValue) => {
                     return total + currentValue;
                 }, 0)
             })
-            setBank(tong);
-            // dispatch(clearState());
+            setBank(bankTotal);
         }
     }, [
         isSuccessGetListPhieuThuTienGui,
@@ -76,9 +103,10 @@ const TinhHinhTaiChinh = () => {
 
 
     useEffect(() => {
+        const timeRange = selectTime('thisMonth');
+
         const dataConvert = {
-            "startDate": "2020-01-01",
-            "endDate": "2025-01-01",
+            ...timeRange,
             "name": "xxx",
             "description": "xxx",
             "customerIds": []
@@ -87,8 +115,7 @@ const TinhHinhTaiChinh = () => {
         dispatch(postReportTHCNRaw({ values: dataConvert }));
 
         const dataConvert2 = {
-            "startDate": "2020-01-01",
-            "endDate": "2025-01-01",
+            ...timeRange,
             "name": "xxx",
             "description": "xxx",
             "salespersonIds": []
@@ -264,7 +291,7 @@ const TinhHinhTaiChinh = () => {
         <div>
             <p className="font-bold text-xl mt-5">Tình hình tài chính</p>
             <Select
-                defaultValue={'current'}
+                defaultValue={'thisMonth'}
                 style={{
                     width: 120,
 

@@ -64,6 +64,7 @@ const BaoCaoDaLuu = () => {
     const [listProductData, setlistProductData] = useState([]);
 
 
+
     useEffect(() => {
         if (isSuccessGetListReportDTBH) {
             setlistProductData([...listReportDTBHData]);

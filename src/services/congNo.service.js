@@ -50,6 +50,18 @@ const postReportDCCNRaw = ({ values }) => {
 };
 
 
+const deleteReportDCCN = ({ values }) => {
+    let { id, ...newObj } = values;
+    return axios.delete(`${API_URL}/report-dccn/${id}`,
+        {
+            // ...newObj
+        },
+        {
+            // headers: authHeader()
+        },
+    );
+};
+
 
 
 
@@ -88,6 +100,18 @@ const postReportTHCNRaw = ({ values }) => {
         });
 };
 
+const deleteReportTHCN = ({ values }) => {
+    let { id, ...newObj } = values;
+    return axios.delete(`${API_URL}/report-thcn/${id}`,
+        {
+            // ...newObj
+        },
+        {
+            // headers: authHeader()
+        },
+    );
+};
+
 
 const congNoService = {
     getListChungTuBan,
@@ -96,11 +120,13 @@ const congNoService = {
     getReportDCCN,
     postReportDCCN,
     postReportDCCNRaw,
+    deleteReportDCCN,
 
     getListReportTHCN,
     getReportTHCN,
     postReportTHCN,
     postReportTHCNRaw,
+    deleteReportTHCN
 };
 
 export default congNoService;

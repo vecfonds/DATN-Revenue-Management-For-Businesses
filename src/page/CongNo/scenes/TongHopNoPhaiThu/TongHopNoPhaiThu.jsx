@@ -28,12 +28,18 @@ import {
 } from "../../../../store/features/banHangSlice";
 import moment from "moment/moment";
 import { doiTuongSelector, getListCustomer, getListProduct } from "../../../../store/features/doiTuongSilce";
-import { VND, formatDate } from "../../../../utils/func";
+import { VND, formatDate, selectTime } from "../../../../utils/func";
 import { congNoSelector, getListCongNo, getListReportTHCN, postReportTHCN, postReportTHCNRaw, clearState, resetData } from './../../../../store/features/congNoSlice';
 import { useReactToPrint } from "react-to-print";
 import { FaRegFilePdf } from "react-icons/fa6";
 import InTongHopNoPhaiThu from "../../../../component/InTongHopNoPhaiThu/InTongHopNoPhaiThu";
 import { set } from "react-hook-form";
+
+import dayjs from 'dayjs';
+
+const DATE_FORMAT = 'YYYY-MM-DD';
+
+
 const { Text } = Typography;
 
 
@@ -93,8 +99,29 @@ const TongHopNoPhaiThu = ({ checkbox = false }) => {
 
     useEffect(() => {
         dispatch(resetData());
+
+        const timeRange = selectTime("thisMonth");
+
+
+        const dataConvert = {
+            "startDate": timeRange?.startDate,
+            "endDate": timeRange?.endDate,
+            "name": "xxx",
+            "description": "xxx",
+            "customerIds": []
+        }
+
+        form.setFieldsValue({
+            rangePicker: [dayjs(timeRange?.startDate, DATE_FORMAT), dayjs(timeRange?.endDate, DATE_FORMAT)]
+        });
+
+        setValueRangepicker([dayjs(timeRange?.startDate, DATE_FORMAT), dayjs(timeRange?.endDate, DATE_FORMAT)]);
+
+        dispatch(postReportTHCNRaw({ values: dataConvert }));
+        // dispatch(postReportTHCN({ values: dataConvert }));
+
     }, []);
-    
+
 
     console.log("reportTHCNData", reportTHCNData)
 
@@ -681,6 +708,12 @@ const TongHopNoPhaiThu = ({ checkbox = false }) => {
                         <Form.Item
                             label="Mô tả"
                             name='description'
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Trường này là bắt buộc!',
+                                },
+                            ]}
                         >
                             <Input
                             />
@@ -707,7 +740,7 @@ const TongHopNoPhaiThu = ({ checkbox = false }) => {
                 </Modal>
             </div>
 
-            {chungTuBan.length!==0 && <Table
+            {chungTuBan.length !== 0 && <Table
                 columns={columns}
                 dataSource={chungTuBan}
                 onChange={onChange}
@@ -761,8 +794,8 @@ const TongHopNoPhaiThu = ({ checkbox = false }) => {
                         // components={components}
                         dataSource={chungTuBan}
                         columns={columns}
-                        dates={valueRangepicker || [{ $d: new Date() }, { $d: new Date() }]}
-                    // idHoaDon={chungTuBanData?.id}
+                        dates={valueRangepicker || [{ $d: new Date(selectTime("thisMonth")?.startDate) }, { $d: new Date(selectTime("thisMonth")?.endDate) }]}
+                        // idHoaDon={chungTuBanData?.id}
                     // idCustomer={chungTuBanData?.donBanHang?.customer?.id}
                     />
                 </div>

@@ -289,7 +289,9 @@ const ThuTienTheoHoaDon = () => {
       key: "createdAt",
       render: (val, record) => new Date(val).toLocaleDateString("vi-VN"),
       sorter: (a, b) =>
-        moment(a.createdAt, "DD-MM-YYYY") - moment(b.createdAt, "DD-MM-YYYY"),
+        new Date(a.createdAt) - new Date(b.createdAt),
+
+        // moment(a.createdAt, "DD-MM-YYYY") - moment(b.createdAt, "DD-MM-YYYY"),
       sortOrder: sortedInfo.columnKey === "createdAt" ? sortedInfo.order : null,
       // fixed: 'left',
     },

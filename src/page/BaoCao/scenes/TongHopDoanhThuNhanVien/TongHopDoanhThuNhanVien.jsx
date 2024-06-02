@@ -28,13 +28,17 @@ import {
 } from "../../../../store/features/banHangSlice";
 import moment from "moment/moment";
 import { doiTuongSelector, getListCustomer, getListProduct } from "../../../../store/features/doiTuongSilce";
-import { VND, formatDate } from "../../../../utils/func";
+import { VND, formatDate, selectTime } from "../../../../utils/func";
 import { baoCaoSelector, getListCongNo, getListReportDTBH, postReportDTBH, postReportDTBHRaw, clearState, resetData, getListSalesPerson } from './../../../../store/features/baoCaoSlice';
 import { useReactToPrint } from "react-to-print";
 import { FaRegFilePdf } from "react-icons/fa6";
 import InChiTietNoPhaiThu from "../../../../component/InChiTietNoPhaiThu/InChiTietNoPhaiThu";
 import { set } from "react-hook-form";
 import InTongHopDoanhThuNhanVien from "../../../../component/InTongHopDoanhThuNhanVien/InTongHopDoanhThuNhanVien";
+import dayjs from 'dayjs';
+
+const DATE_FORMAT = 'YYYY-MM-DD';
+
 const { Text } = Typography;
 
 
@@ -96,6 +100,27 @@ const TongHopDoanhThuNhanVien = ({ checkbox = false }) => {
 
     useEffect(() => {
         dispatch(resetData());
+
+        const timeRange = selectTime("thisMonth");
+
+
+        const dataConvert = {
+            "startDate": timeRange?.startDate,
+            "endDate": timeRange?.endDate,
+            "name": "xxx",
+            "description": "xxx",
+            "salespersonIds": []
+        }
+
+        form.setFieldsValue({
+            rangePicker: [dayjs(timeRange?.startDate, DATE_FORMAT), dayjs(timeRange?.endDate, DATE_FORMAT)]
+        });
+
+        setValueRangepicker([dayjs(timeRange?.startDate, DATE_FORMAT), dayjs(timeRange?.endDate, DATE_FORMAT)]);
+
+        console.log("dataConvert", dataConvert)
+
+        dispatch(postReportDTBHRaw({ values: dataConvert }));
     }, []);
 
     useEffect(() => {
@@ -579,7 +604,7 @@ const TongHopDoanhThuNhanVien = ({ checkbox = false }) => {
                     />
                 </div>
 
-                <Button
+                {/* <Button
                     className="!bg-[#7A77DF] font-bold text-white flex items-center gap-1"
                     type="link"
                     disabled={chungTuBan.length === 0}
@@ -588,7 +613,7 @@ const TongHopDoanhThuNhanVien = ({ checkbox = false }) => {
                     }}
                 >
                     Lưu báo cáo
-                </Button>
+                </Button> */}
 
                 <Modal
                     title="LƯU BÁO CÁO"
@@ -694,7 +719,7 @@ const TongHopDoanhThuNhanVien = ({ checkbox = false }) => {
                         // components={components}
                         dataSource={chungTuBan}
                         columns={columns}
-                        dates={valueRangepicker || [{ $d: new Date() }, { $d: new Date() }]}
+                        dates={valueRangepicker || [{ $d: new Date(selectTime("thisMonth")?.startDate) }, { $d: new Date(selectTime("thisMonth")?.endDate) }]}
                     // idHoaDon={chungTuBanData?.id}
                     // idCustomer={chungTuBanData?.donBanHang?.salesperson?.id}
                     />

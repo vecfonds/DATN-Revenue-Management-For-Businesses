@@ -19,6 +19,20 @@ export const getChartRevenueYear = createAsyncThunk(
     }
 );
 
+export const getChartRevenueYearOld = createAsyncThunk(
+    "tongQuan/getChartRevenueYearOld",
+    async ({ values }, thunkAPI) => {
+        try {
+            const response = await tongQuanService.getChartRevenueYear({ values });
+            console.log("response", response);
+            return response.data;
+        } catch (error) {
+            console.log("error", error);
+            return thunkAPI.rejectWithValue(error.response.data);
+        }
+    }
+);
+
 export const getChartRevenueMonth = createAsyncThunk(
     "tongQuan/getChartRevenueMonth",
     async ({ values }, thunkAPI) => {
@@ -103,12 +117,15 @@ const initialState = {
     isFetching: false,
 
     isSuccessGetChartRevenue: false,
+    isSuccessGetChartRevenueOld: false,
+
     isSuccessGetChartProduct: false,
 
     isError: false,
     message: "",
 
     chartRevenueData: [],
+    chartRevenueDataOld: [],
     chartProductData: [],
     reportTHCNData: [],
     isSuccessPostReportTHCNRaw: false,
@@ -127,6 +144,7 @@ export const tongQuanSlice = createSlice({
             state.isError = false;
 
             state.isSuccessGetChartRevenue = false;
+            state.isSuccessGetChartRevenueOld = false;
             state.isSuccessGetChartProduct = false;
             state.isSuccessPostReportTHCNRaw = false;
             state.isSuccessPostReportDTBHRaw = false;
@@ -138,6 +156,7 @@ export const tongQuanSlice = createSlice({
 
         resetData: (state, action) => {
             state.chartRevenueData = [];
+            state.chartRevenueDataOld = [];
             state.chartProductData = [];
             return state;
         }

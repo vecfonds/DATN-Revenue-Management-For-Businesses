@@ -28,7 +28,7 @@ import {
 } from "../../../../store/features/banHangSlice";
 import moment from "moment/moment";
 import { doiTuongSelector, getListCustomer, getListProduct } from "../../../../store/features/doiTuongSilce";
-import { VND, formatDate } from "../../../../utils/func";
+import { VND, formatDate, selectTime } from "../../../../utils/func";
 import { baoCaoSelector, getListCongNo, getListReportDTBH, postReportDTBH, postReportDTBHRaw, clearState, getListSalesPerson } from './../../../../store/features/baoCaoSlice';
 import { useReactToPrint } from "react-to-print";
 import { FaRegFilePdf } from "react-icons/fa6";
@@ -37,6 +37,10 @@ import { set } from "react-hook-form";
 import InTongHopDoanhThuNhanVien from "../../../../component/InTongHopDoanhThuNhanVien/InTongHopDoanhThuNhanVien";
 import { getChartProduct, tongQuanSelector, resetData } from "../../../../store/features/tongQuanSlice";
 import InDoanhThuSanPham from "../../../../component/InDoanhThuSanPham/InDoanhThuSanPham";
+import dayjs from 'dayjs';
+
+const DATE_FORMAT = 'YYYY-MM-DD';
+
 const { Text } = Typography;
 
 
@@ -106,7 +110,25 @@ const DoanhThuSanPham = ({ checkbox = false }) => {
     useEffect(() => {
         dispatch(resetData());
 
+        const timeRange = selectTime("thisMonth");
 
+        const dataConvert = {
+            "startDate": timeRange?.startDate,
+            "endDate": timeRange?.endDate,
+            // "name": "xxx",
+            // "description": "xxx",
+            // "salespersonIds": values?.listProductSelected ? [...values?.listProductSelected] : []
+        }
+
+        form.setFieldsValue({
+            rangePicker: [dayjs(timeRange?.startDate, DATE_FORMAT), dayjs(timeRange?.endDate, DATE_FORMAT)]
+        });
+
+        setValueRangepicker([dayjs(timeRange?.startDate, DATE_FORMAT), dayjs(timeRange?.endDate, DATE_FORMAT)]);
+
+        console.log("dataConvert", dataConvert)
+
+        dispatch(getChartProduct({ values: dataConvert }));
     }, []);
 
     useEffect(() => {
@@ -288,7 +310,7 @@ const DoanhThuSanPham = ({ checkbox = false }) => {
             "endDate": formatDate(values.rangePicker[1].$d),
             // "name": "xxx",
             // "description": "xxx",
-            // "salespersonIds": values?.listSalesperson ? [...values?.listSalesperson] : []
+            // "salespersonIds": values?.listProductSelected ? [...values?.listProductSelected] : []
         }
 
         console.log("dataConvert", dataConvert)
@@ -319,7 +341,7 @@ const DoanhThuSanPham = ({ checkbox = false }) => {
     });
 
 
-    //select salesperson
+    //select product
     const {
         listProductData,
     } = useSelector(doiTuongSelector);
@@ -332,15 +354,13 @@ const DoanhThuSanPham = ({ checkbox = false }) => {
     const options = [];
     useEffect(() => {
         if (listProductData.length !== 0) {
-            listProductData.forEach(salesperson => {
+            listProductData.forEach(product => {
                 options.push({
-                    key: salesperson.id,
-                    value: salesperson.id,
-                    label: salesperson.name,
+                    key: product.id,
+                    value: product.id,
+                    label: product.name,
                 });
             })
-
-
         }
     }, [listProductData]);
 
@@ -358,7 +378,7 @@ const DoanhThuSanPham = ({ checkbox = false }) => {
 
     //add report
 
-    const [listSalesperson, setListSalesperson] = useState([]);
+    const [listProductSelected, setListProductSelected] = useState([]);
 
     const onFinishAddReport = (values) => {
         console.log('Received values of form: ', values);
@@ -369,7 +389,7 @@ const DoanhThuSanPham = ({ checkbox = false }) => {
             "endDate": formatDate(valueRangepicker[1].$d),
             "name": values.name,
             "description": values.description,
-            "salespersonIds": listSalesperson ? [...listSalesperson] : []
+            "salespersonIds": listProductSelected ? [...listProductSelected] : []
         }
 
         console.log("dataConvert", dataConvert)
@@ -410,13 +430,25 @@ const DoanhThuSanPham = ({ checkbox = false }) => {
 
             dataConvertCurrent.sort(function (a, b) { return b["count"] - a["count"] })
 
+            if (listProductSelected.length !== 0) {
+                const dataConvertCurrentFilter = dataConvertCurrent.filter(item => listProductSelected.includes(item?.id));
 
-            console.log("dataConvertCurrent", dataConvertCurrent)
-            setDataConvert(dataConvertCurrent);
-            setChungTuBan(dataConvertCurrent);
+                setDataConvert(dataConvertCurrentFilter);
+                setChungTuBan(dataConvertCurrentFilter);
+            }
+            else {
+                console.log("dataConvertCurrent", dataConvertCurrent)
+                setDataConvert(dataConvertCurrent);
+                setChungTuBan(dataConvertCurrent);
+            }
+
+
             dispatch(clearState());
         }
     }, [chartProductData, listProductData]);
+
+
+
 
     return (
         <div className="m-4">
@@ -442,7 +474,7 @@ const DoanhThuSanPham = ({ checkbox = false }) => {
                             />
 
                         </Form.Item>
-                        <Form.Item name="listSalesperson" className="w-[300px] !me-0">
+                        <Form.Item name="listProductSelected" className="w-[300px] !me-0">
                             {/* <Input
                 className="rounded-tr-none rounded-br-none"
                 placeholder="Nhập tên khách hàng"
@@ -457,7 +489,7 @@ const DoanhThuSanPham = ({ checkbox = false }) => {
                                 }}
                                 {...sharedProps}
                                 tokenSeparators={[',']}
-                                onChange={(values) => setListSalesperson(values)}
+                                onChange={(values) => setListProductSelected(values)}
                             >
                                 {
                                     listProductData.map(item => <Select.Option value={item.id} key={item.id}>{item.name}</Select.Option>)
@@ -504,7 +536,7 @@ const DoanhThuSanPham = ({ checkbox = false }) => {
                     />
                 </div>
 
-                <Button
+                {/* <Button
                     className="!bg-[#7A77DF] font-bold text-white flex items-center gap-1"
                     type="link"
                     disabled={chungTuBan.length === 0}
@@ -513,7 +545,7 @@ const DoanhThuSanPham = ({ checkbox = false }) => {
                     }}
                 >
                     Lưu báo cáo
-                </Button>
+                </Button> */}
 
                 <Modal
                     title="LƯU BÁO CÁO"
@@ -630,7 +662,7 @@ const DoanhThuSanPham = ({ checkbox = false }) => {
                         // components={components}
                         dataSource={chungTuBan}
                         columns={columns}
-                        dates={valueRangepicker || [{ $d: new Date() }, { $d: new Date() }]}
+                        dates={valueRangepicker || [{ $d: new Date(selectTime("thisMonth")?.startDate) }, { $d: new Date(selectTime("thisMonth")?.endDate) }]}
                     // idHoaDon={chungTuBanData?.id}
                     // idCustomer={chungTuBanData?.donBanHang?.salesperson?.id}
                     />

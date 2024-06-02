@@ -228,7 +228,8 @@ const DonDatHang = ({ radio = false }) => {
       key: "saleDate",
       render: (val, record) => <span className={`${new Date(record.deliveryTerm) < new Date() && record.deliveryStatus !== "DELIVERED" ? "text-[#d44950] font-medium" : ""}`}>{new Date(val).toLocaleDateString("vi-VN")}</span>,
       sorter: (a, b) =>
-        moment(a.saleDate, "DD-MM-YYYY") - moment(b.saleDate, "DD-MM-YYYY"),
+        new Date(a.saleDate) - new Date(b.saleDate),
+        // moment(a.saleDate, "DD-MM-YYYY") - moment(b.saleDate, "DD-MM-YYYY"),
       sortOrder: sortedInfo.columnKey === "saleDate" ? sortedInfo.order : null,
       fixed: 'left',
     },
@@ -238,7 +239,8 @@ const DonDatHang = ({ radio = false }) => {
       key: "deliveryTerm",
       render: (val, record) => <span className={`${new Date(record.deliveryTerm) < new Date() && record.deliveryStatus !== "DELIVERED" ? "text-[#d44950] font-medium" : ""}`}>{new Date(val).toLocaleDateString("vi-VN")}</span>,
       sorter: (a, b) =>
-        moment(a.deliveryTerm, "DD-MM-YYYY") - moment(b.deliveryTerm, "DD-MM-YYYY"),
+        new Date(a.deliveryTerm) - new Date(b.deliveryTerm),
+        // moment(a.deliveryTerm, "DD-MM-YYYY") - moment(b.deliveryTerm, "DD-MM-YYYY"),
       sortOrder: sortedInfo.columnKey === "deliveryTerm" ? sortedInfo.order : null,
       fixed: 'left',
     },

@@ -29,13 +29,17 @@ import {
 } from "../../../../store/features/banHangSlice";
 import moment from "moment/moment";
 import { doiTuongSelector, getListCustomer, getListProduct } from "../../../../store/features/doiTuongSilce";
-import { VND, formatDate } from "../../../../utils/func";
+import { VND, formatDate, selectTime } from "../../../../utils/func";
 import { baoCaoSelector, getListCongNo, getListReportDTBH, postReportDTBH, postReportDTBHRaw, clearState, resetData, getListSalesPerson } from './../../../../store/features/baoCaoSlice';
 import { useReactToPrint } from "react-to-print";
 import { FaRegFilePdf } from "react-icons/fa6";
 import InChiTietNoPhaiThu from "../../../../component/InChiTietNoPhaiThu/InChiTietNoPhaiThu";
 import { set } from "react-hook-form";
 import InChiTietDoanhThuNhanVien from "../../../../component/InChiTietDoanhThuNhanVien/InChiTietDoanhThuNhanVien";
+import dayjs from 'dayjs';
+
+const DATE_FORMAT = 'YYYY-MM-DD';
+
 const { Text } = Typography;
 
 
@@ -97,6 +101,28 @@ const ChiTietDoanhThuNhanVien = ({ checkbox = false }) => {
 
   useEffect(() => {
     dispatch(resetData());
+
+    const timeRange = selectTime("thisMonth");
+
+
+    const dataConvert = {
+      "startDate": timeRange?.startDate,
+      "endDate": timeRange?.endDate,
+      "name": "xxx",
+      "description": "xxx",
+      "salespersonIds": []
+    }
+
+    form.setFieldsValue({
+      rangePicker: [dayjs(timeRange?.startDate, DATE_FORMAT), dayjs(timeRange?.endDate, DATE_FORMAT)]
+    });
+
+    setValueRangepicker([dayjs(timeRange?.startDate, DATE_FORMAT), dayjs(timeRange?.endDate, DATE_FORMAT)]);
+
+    console.log("dataConvert", dataConvert)
+
+    dispatch(postReportDTBHRaw({ values: dataConvert }));
+
   }, []);
 
   useEffect(() => {
@@ -242,7 +268,9 @@ const ChiTietDoanhThuNhanVien = ({ checkbox = false }) => {
       key: "createdAt",
       render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() ? "text-[#000]" : ""}`}>{new Date(val).toLocaleDateString("vi-VN")}</span>,
       sorter: (a, b) =>
-        moment(a.createdAt, "DD-MM-YYYY") - moment(b.createdAt, "DD-MM-YYYY"),
+        new Date(a.createdAt) - new Date(b.createdAt),
+
+        // moment(a.createdAt, "DD-MM-YYYY") - moment(b.createdAt, "DD-MM-YYYY"),
       sortOrder: sortedInfo.columnKey === "createdAt" ? sortedInfo.order : null,
       // fixed: 'left',
     },
@@ -253,7 +281,9 @@ const ChiTietDoanhThuNhanVien = ({ checkbox = false }) => {
       key: "paymentTerm",
       render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() ? "text-[#000]" : ""}`}>{new Date(val).toLocaleDateString("vi-VN")}</span>,
       sorter: (a, b) =>
-        moment(a.paymentTerm, "DD-MM-YYYY") - moment(b.paymentTerm, "DD-MM-YYYY"),
+        new Date(a.paymentTerm) - new Date(b.paymentTerm),
+
+        // moment(a.paymentTerm, "DD-MM-YYYY") - moment(b.paymentTerm, "DD-MM-YYYY"),
       sortOrder: sortedInfo.columnKey === "paymentTerm" ? sortedInfo.order : null,
       // fixed: 'left',
     },
@@ -632,7 +662,7 @@ const ChiTietDoanhThuNhanVien = ({ checkbox = false }) => {
           />
         </div>
 
-        <Button
+        {/* <Button
           className="!bg-[#7A77DF] font-bold text-white flex items-center gap-1"
           type="link"
           disabled={chungTuBan.length === 0}
@@ -641,7 +671,7 @@ const ChiTietDoanhThuNhanVien = ({ checkbox = false }) => {
           }}
         >
           Lưu báo cáo
-        </Button>
+        </Button> */}
 
         <Modal
           title="LƯU BÁO CÁO"
@@ -753,7 +783,7 @@ const ChiTietDoanhThuNhanVien = ({ checkbox = false }) => {
             // components={components}
             dataSource={chungTuBan.filter(ct => ct.length !== 0)}
             columns={columns}
-            dates={valueRangepicker || [{ $d: new Date() }, { $d: new Date() }]}
+            dates={valueRangepicker || [{ $d: new Date(selectTime("thisMonth")?.startDate) }, { $d: new Date(selectTime("thisMonth")?.endDate) }]}
           // idHoaDon={chungTuBanData?.id}
           // idCustomer={chungTuBanData?.donBanHang?.salesperson?.id}
           />

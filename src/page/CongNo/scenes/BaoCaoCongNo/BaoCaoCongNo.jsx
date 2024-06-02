@@ -18,7 +18,7 @@ import { TfiReload } from "react-icons/tfi";
 import { Add } from "@mui/icons-material";
 import { MdOutlineSearch } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import { congNoSelector, getListReportDCCN, getListReportTHCN, clearState, resetData } from "../../../../store/features/congNoSlice";
+import { congNoSelector, getListReportDCCN, getListReportTHCN, clearState, resetData, deleteReportDCCN, deleteReportTHCN } from "../../../../store/features/congNoSlice";
 
 const BaoCaoCongNo = () => {
   const dispatch = useDispatch();
@@ -55,6 +55,8 @@ const BaoCaoCongNo = () => {
     isSuccessGetListReportDCCN,
     listReportTHCNData,
     isSuccessGetListReportTHCN,
+    isSuccessDeleteReportDCCN,
+    isSuccessDeleteReportTHCN
   } = useSelector(congNoSelector);
 
   useEffect(() => {
@@ -64,6 +66,30 @@ const BaoCaoCongNo = () => {
   }, []);
 
   const [listProductData, setlistProductData] = useState([]);
+
+
+  useEffect(() => {
+    if (isSuccessDeleteReportDCCN) {
+      api.success({
+        message: 'Xóa dữ liệu thành công!',
+        placement: 'bottomLeft',
+        duration: 2
+      });
+      dispatch(clearState());
+      dispatch(getListReportDCCN());
+      dispatch(getListReportTHCN());
+    }
+    else if (isSuccessDeleteReportTHCN) {
+      api.success({
+        message: 'Xóa dữ liệu thành công!',
+        placement: 'bottomLeft',
+        duration: 2
+      });
+      dispatch(clearState());
+      dispatch(getListReportDCCN());
+      dispatch(getListReportTHCN());
+    }
+  }, [isSuccessDeleteReportDCCN, isSuccessDeleteReportTHCN]);
 
 
   useEffect(() => {
@@ -108,10 +134,10 @@ const BaoCaoCongNo = () => {
     //   key: "chinh-sua",
     //   label: <Link className="!text-black">Chỉnh sửa</Link>,
     // },
-    // {
-    //   key: "xoa",
-    //   label: <Link className="!text-black">Xóa</Link>,
-    // },
+    {
+      key: "xoa",
+      label: <Link className="!text-black">Xóa</Link>,
+    },
   ];
 
   const handleDropdownItemClick = (e, record) => {
@@ -316,7 +342,7 @@ const BaoCaoCongNo = () => {
           onCancel={handleCancel}
         >
           <div className="m-8 mt-10 text-center">
-            Bạn muốn xóa khách hàng
+            Bạn muốn xóa
             <br /> <strong>"{dataSelected.name}"</strong>?
           </div>
 
@@ -333,7 +359,16 @@ const BaoCaoCongNo = () => {
             <Button
               className="!bg-[#67CDBB] font-bold text-white"
               onClick={() => {
+                const dataConvert = {
+                  "id": dataSelected.id
+                }
                 //dispatch(deleteNhaCungCap({id:dataSelected.key}));
+                if (dataSelected?.type === "DCCN") {
+                  dispatch(deleteReportDCCN({ values: dataConvert }));
+                }
+                else {
+                  dispatch(deleteReportTHCN({ values: dataConvert }));
+                }
                 setDataSelected({});
                 setOpen(false);
               }}

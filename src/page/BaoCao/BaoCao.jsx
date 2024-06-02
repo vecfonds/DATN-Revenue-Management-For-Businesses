@@ -21,10 +21,10 @@ const BaoCao = () => {
         url: 'doanh-thu-theo-san-pham',
         content: "Doanh thu theo sản phẩm"
       },
-      {
-        url: 'bao-cao-da-luu',
-        content: "Báo cáo đã lưu"
-      },
+      // {
+      //   url: 'bao-cao-da-luu',
+      //   content: "Báo cáo đã lưu"
+      // },
     ]
   return (
     <div>

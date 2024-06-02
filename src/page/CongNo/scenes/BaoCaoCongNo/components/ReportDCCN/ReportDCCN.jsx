@@ -231,7 +231,9 @@ const ReportDCCN = ({ checkbox = false }) => {
             key: "createdAt",
             render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() ? "text-[#d44950] font-medium" : ""}`}>{new Date(val).toLocaleDateString("vi-VN")}</span>,
             sorter: (a, b) =>
-                moment(a.createdAt, "DD-MM-YYYY") - moment(b.createdAt, "DD-MM-YYYY"),
+        new Date(a.createdAt) - new Date(b.createdAt),
+
+                // moment(a.createdAt, "DD-MM-YYYY") - moment(b.createdAt, "DD-MM-YYYY"),
             sortOrder: sortedInfo.columnKey === "createdAt" ? sortedInfo.order : null,
             // fixed: 'left',
         },
@@ -242,7 +244,9 @@ const ReportDCCN = ({ checkbox = false }) => {
             key: "paymentTerm",
             render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() ? "text-[#d44950] font-medium" : ""}`}>{new Date(val).toLocaleDateString("vi-VN")}</span>,
             sorter: (a, b) =>
-                moment(a.paymentTerm, "DD-MM-YYYY") - moment(b.paymentTerm, "DD-MM-YYYY"),
+        new Date(a.paymentTerm) - new Date(b.paymentTerm),
+
+                // moment(a.paymentTerm, "DD-MM-YYYY") - moment(b.paymentTerm, "DD-MM-YYYY"),
             sortOrder: sortedInfo.columnKey === "paymentTerm" ? sortedInfo.order : null,
             // fixed: 'left',
         },

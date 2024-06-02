@@ -34,6 +34,10 @@ import { useReactToPrint } from "react-to-print";
 import { FaRegFilePdf } from "react-icons/fa6";
 import InChiTietNoPhaiThu from "../../../../component/InChiTietNoPhaiThu/InChiTietNoPhaiThu";
 import { set } from "react-hook-form";
+import dayjs from 'dayjs';
+
+const DATE_FORMAT = 'YYYY-MM-DD';
+
 const { Text } = Typography;
 
 
@@ -95,6 +99,26 @@ const ChiTietNoPhaiThu = ({ checkbox = false }) => {
 
   useEffect(() => {
     dispatch(resetData());
+
+    const timeRange = selectTime("thisMonth");
+
+
+    const dataConvert = {
+      "startDate": timeRange?.startDate,
+      "endDate": timeRange?.endDate,
+      "name": "xxx",
+      "description": "xxx",
+      "customerIds": []
+    }
+
+    form.setFieldsValue({
+      rangePicker: [dayjs(timeRange?.startDate, DATE_FORMAT), dayjs(timeRange?.endDate, DATE_FORMAT)]
+    });
+
+    setValueRangepicker([dayjs(timeRange?.startDate, DATE_FORMAT), dayjs(timeRange?.endDate, DATE_FORMAT)]);
+
+    console.log("dataConvert", dataConvert)
+    dispatch(postReportDCCNRaw({ values: dataConvert }));
   }, []);
 
   useEffect(() => {
@@ -235,7 +259,9 @@ const ChiTietNoPhaiThu = ({ checkbox = false }) => {
       key: "createdAt",
       render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() ? "text-[#d44950] font-medium" : ""}`}>{new Date(val).toLocaleDateString("vi-VN")}</span>,
       sorter: (a, b) =>
-        moment(a.createdAt, "DD-MM-YYYY") - moment(b.createdAt, "DD-MM-YYYY"),
+        new Date(a.createdAt) - new Date(b.createdAt),
+
+        // moment(a.createdAt, "DD-MM-YYYY") - moment(b.createdAt, "DD-MM-YYYY"),
       sortOrder: sortedInfo.columnKey === "createdAt" ? sortedInfo.order : null,
       // fixed: 'left',
     },
@@ -246,7 +272,9 @@ const ChiTietNoPhaiThu = ({ checkbox = false }) => {
       key: "paymentTerm",
       render: (val, record) => <span className={`${new Date(record.paymentTerm) < new Date() ? "text-[#d44950] font-medium" : ""}`}>{new Date(val).toLocaleDateString("vi-VN")}</span>,
       sorter: (a, b) =>
-        moment(a.paymentTerm, "DD-MM-YYYY") - moment(b.paymentTerm, "DD-MM-YYYY"),
+        new Date(a.paymentTerm) - new Date(b.paymentTerm),
+
+        // moment(a.paymentTerm, "DD-MM-YYYY") - moment(b.paymentTerm, "DD-MM-YYYY"),
       sortOrder: sortedInfo.columnKey === "paymentTerm" ? sortedInfo.order : null,
       // fixed: 'left',
     },
@@ -513,9 +541,14 @@ const ChiTietNoPhaiThu = ({ checkbox = false }) => {
     console.log('Received values of form: ', values);
     // dispatch(postReportDCCN({ values }));
 
+    // const valueTime = Form.useWatch('rangePicker', form);
+
+    const timeRange = selectTime("thisMonth");
+
+
     const dataConvert = {
-      "startDate": formatDate(valueRangepicker[0].$d),
-      "endDate": formatDate(valueRangepicker[1].$d),
+      "startDate": formatDate(valueRangepicker[0].$d || timeRange?.startDate),
+      "endDate": formatDate(valueRangepicker[1].$d || timeRange?.endDate),
       "name": values.name,
       "description": values.description,
       "customerIds": listCustomer ? [...listCustomer] : []
@@ -523,7 +556,7 @@ const ChiTietNoPhaiThu = ({ checkbox = false }) => {
 
     console.log("dataConvert", dataConvert)
 
-    dispatch(postReportDCCN({ values: dataConvert }));
+    // dispatch(postReportDCCN({ values: dataConvert }));
     // formAddReport.resetFields();
   };
 
@@ -635,7 +668,6 @@ const ChiTietNoPhaiThu = ({ checkbox = false }) => {
               /> */}
               <RangePicker
                 onChange={(dates) => handleFilterday(dates)}
-
               />
 
             </Form.Item>
@@ -747,6 +779,12 @@ const ChiTietNoPhaiThu = ({ checkbox = false }) => {
             <Form.Item
               label="Mô tả"
               name='description'
+              rules={[
+                {
+                  required: true,
+                  message: 'Trường này là bắt buộc!',
+                },
+              ]}
             >
               <Input
               />
@@ -824,7 +862,7 @@ const ChiTietNoPhaiThu = ({ checkbox = false }) => {
             // components={components}
             dataSource={chungTuBan}
             columns={columns}
-            dates={valueRangepicker || [{ $d: new Date() }, { $d: new Date() }]}
+            dates={valueRangepicker || [{ $d: new Date(selectTime("thisMonth")?.startDate) }, { $d: new Date(selectTime("thisMonth")?.endDate) }]}
           // idHoaDon={chungTuBanData?.id}
           // idCustomer={chungTuBanData?.donBanHang?.customer?.id}
           />
