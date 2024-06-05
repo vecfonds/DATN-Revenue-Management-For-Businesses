@@ -100,7 +100,7 @@ const ChiTietNoPhaiThu = ({ checkbox = false }) => {
   useEffect(() => {
     dispatch(resetData());
 
-    const timeRange = selectTime("thisMonth");
+    const timeRange = selectTime("lastMonth");
 
 
     const dataConvert = {
@@ -556,7 +556,7 @@ const ChiTietNoPhaiThu = ({ checkbox = false }) => {
 
     console.log("dataConvert", dataConvert)
 
-    // dispatch(postReportDCCN({ values: dataConvert }));
+    dispatch(postReportDCCN({ values: dataConvert }));
     // formAddReport.resetFields();
   };
 

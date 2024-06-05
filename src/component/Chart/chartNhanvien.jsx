@@ -128,6 +128,23 @@ const ChartNhanvien = () => {
   };
 
 
+  const DataFormater = (number) => {
+    // if(number > 1000000000){
+    //   return (number/1000000000).toString() + 'B';
+    // }else if(number > 1000000){
+    //   return (number/1000000).toString() + 'M';
+    // }else 
+    if (number >= 1000000000) {
+      return (number / 1000000000).toString() + 'Tỷ';
+    }
+    if (number > 1000000) {
+      return (number / 1000000).toString() + 'Triệu';
+    } else {
+      return number.toString();
+    }
+  }
+
+
   return (
     <div>
       <p className="font-bold text-xl mt-5">Biều đồ top 10 nhân viên có doanh thu cao nhất</p>
@@ -193,13 +210,13 @@ const ChartNhanvien = () => {
       <ResponsiveContainer width={600} height={400} className={"border border-gray-300 shadow-xl rounded-lg"}>
         <BarChart
           layout="vertical"
-          width={600}
+          width={500}
           height={400}
           data={data}
           margin={{ top: 20, right: 70, left: 20, bottom: 5 }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis type="number" unit="đ" />
+          <XAxis type="number"  tickFormatter={DataFormater} />
           <YAxis type="category" dataKey="name"  />
           <Tooltip />
           <Legend />

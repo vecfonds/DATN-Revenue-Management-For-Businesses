@@ -20,6 +20,9 @@ import { LiaObjectGroup } from "react-icons/lia";
 import { RiLogoutCircleFill } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import { authenticationSelector, getProfile } from "../../store/features/authenticationSlice";
+import { Badge } from "antd";
+import { notification } from "../../services/notification.service";
+import { setNoti, tongQuanSelector } from "../../store/features/tongQuanSlice";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -53,6 +56,40 @@ const Sidebar = ({ toggled, handleToggleSidebar, isCollapsed, handleIsCollapsed 
     profile
 
   } = useSelector(authenticationSelector);
+
+
+
+  const {
+    noti
+
+  } = useSelector(tongQuanSelector);
+
+
+  const [notificationAll2, setNotificationAll] = useState([]);
+  const [type2, setType2] = useState(null);
+  const [isResolved2, setIsResolved2] = useState(false);
+  const [isRead2, setIsRead2] = useState(null);
+  const getAllNotification2 = async () => {
+    try {
+      const params = {
+        ...(type2 !== null && { type: type2 }),
+        ...(isResolved2 !== null && { isResolved: isResolved2 }),
+        ...(isRead2 !== null && { isRead: isRead2 }),
+      };
+      const res = await notification.getAll(params);
+      if (res.data) {
+        console.log(res.data?.result?.data);
+        setNotificationAll(res.data?.result?.data);
+        dispatch(setNoti(res.data?.result?.data?.filter(item => item?.isRead === false || item?.isResolved === false)?.length));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    getAllNotification2();
+  }, [type2, isResolved2, isRead2]);
 
   return (
     <Box
@@ -197,7 +234,7 @@ const Sidebar = ({ toggled, handleToggleSidebar, isCollapsed, handleIsCollapsed 
             <Item
               title="Thông báo"
               to="/thong-bao"
-              icon={<IoMdNotificationsOutline size={20} />}
+              icon={<Badge size="small" count={noti}><IoMdNotificationsOutline size={20} /> </Badge>}
               selected={selected}
               setSelected={setSelected}
             />
@@ -212,7 +249,7 @@ const Sidebar = ({ toggled, handleToggleSidebar, isCollapsed, handleIsCollapsed 
             <Item
               title="Đăng xuất"
               to="/dang-nhap"
-              icon={<RiLogoutCircleFill  size={20} />}
+              icon={<RiLogoutCircleFill size={20} />}
               selected={selected}
               setSelected={setSelected}
             />

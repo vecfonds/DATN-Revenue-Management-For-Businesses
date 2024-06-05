@@ -176,7 +176,7 @@ const ChartSanpham = () => {
       />
       <ResponsiveContainer width={750} height={400} className={"border border-gray-300 shadow-xl rounded-lg ml-10"}>
         <BarChart
-          width={750}
+          width={500}
           height={400}
           data={dataProduct}
           margin={{

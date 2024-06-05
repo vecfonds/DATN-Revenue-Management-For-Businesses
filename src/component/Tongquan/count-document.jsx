@@ -77,9 +77,9 @@ function Countdocument() {
       const timeRange = selectTime('thisMonth');
       const data1 = listPhieuThuTienMatData?.filter(phieuThuTienMatData => new Date(phieuThuTienMatData?.createdAt) > new Date(timeRange.startDate) && new Date(phieuThuTienMatData?.createdAt) < new Date(timeRange.endDate))
       const data2 = listPhieuThuTienGuiData?.filter(phieuThuTienMatData => new Date(phieuThuTienMatData?.createdAt) > new Date(timeRange.startDate) && new Date(phieuThuTienMatData?.createdAt) < new Date(timeRange.endDate))
-      
-      
-      setSoPhieuThu(data1.length+data2.length);
+
+
+      setSoPhieuThu(data1.length + data2.length);
     }
   }, [isSuccessGetListPhieuThuTienMat, isSuccessGetListPhieuThuTienGui]);
 
@@ -103,11 +103,11 @@ function Countdocument() {
 
   const handleChangeSoChungTu = (value) => {
     if (value === "current") {
-      setSoChungTu(listDonBanHangData.length);
+      setSoChungTu(listChungTuBanData.length);
     }
     else {
       const timeRange = selectTime(value);
-      const data = listDonBanHangData?.filter(phieuThuTienMatData => new Date(phieuThuTienMatData?.createdAt) > new Date(timeRange.startDate) && new Date(phieuThuTienMatData?.createdAt) < new Date(timeRange.endDate))
+      const data = listChungTuBanData?.filter(phieuThuTienMatData => new Date(phieuThuTienMatData?.createdAt) > new Date(timeRange.startDate) && new Date(phieuThuTienMatData?.createdAt) < new Date(timeRange.endDate))
       setSoChungTu(data.length);
     }
 
@@ -115,12 +115,16 @@ function Countdocument() {
 
   const handleChangeSoPhieuThu = (value) => {
     if (value === "current") {
-      setSoPhieuThu(listDonBanHangData.length);
+      setSoPhieuThu(listPhieuThuTienMatData.length + listPhieuThuTienGuiData.length);
     }
     else {
       const timeRange = selectTime(value);
-      const data = listDonBanHangData?.filter(phieuThuTienMatData => new Date(phieuThuTienMatData?.createdAt) > new Date(timeRange.startDate) && new Date(phieuThuTienMatData?.createdAt) < new Date(timeRange.endDate))
-      setSoPhieuThu(data.length);
+
+      const data1 = listPhieuThuTienMatData?.filter(phieuThuTienMatData => new Date(phieuThuTienMatData?.createdAt) > new Date(timeRange.startDate) && new Date(phieuThuTienMatData?.createdAt) < new Date(timeRange.endDate))
+      const data2 = listPhieuThuTienGuiData?.filter(phieuThuTienMatData => new Date(phieuThuTienMatData?.createdAt) > new Date(timeRange.startDate) && new Date(phieuThuTienMatData?.createdAt) < new Date(timeRange.endDate))
+
+
+      setSoPhieuThu(data1.length + data2.length);
     }
 
   }

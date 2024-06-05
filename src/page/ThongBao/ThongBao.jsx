@@ -2,8 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Flex, Select } from "antd";
 import Notification from "../../component/notification";
 import { notification } from "./../../services/notification.service";
+import { setNoti } from "../../store/features/tongQuanSlice";
+import { useDispatch } from "react-redux";
 
 const ThongBao = () => {
+  const dispatch = useDispatch();
+
   const [notificationAll, setNotificationAll] = useState([]);
   const [type, setType] = useState(null);
   const [isResolved, setIsResolved] = useState(false);
@@ -19,6 +23,7 @@ const ThongBao = () => {
       if (res.data) {
         console.log(res.data?.result?.data);
         setNotificationAll(res.data?.result?.data);
+        dispatch(setNoti(res.data?.result?.data?.filter(item => item?.isRead === false || item?.isResolved === false)?.length));
       }
     } catch (err) {
       console.error(err);
@@ -27,6 +32,8 @@ const ThongBao = () => {
   useEffect(() => {
     getAllNotification();
   }, [type, isResolved, isRead]);
+
+
   return (
     <div className="ml-5 mt-5">
       <h1 className="font-bold text-3xl mb-3">Thông báo</h1>

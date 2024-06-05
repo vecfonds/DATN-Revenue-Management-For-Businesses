@@ -147,7 +147,7 @@ const BaoCaoCongNo = () => {
       setDataSelected(record);
       setOpen(true);
     } else {
-      navigate(`${record.type}/${record.key}`, { state: { id: record.key } });
+      navigate(`${record.type}/${record.id}`, { state: { id: record.id } });
     }
   };
 
@@ -238,8 +238,8 @@ const BaoCaoCongNo = () => {
             }}
           >
             <Link
-              to={`${record.type}/${record.key}`}
-              state={{ id: record.key }}
+              to={`${record.type}/${record.id}`}
+              state={{ id: record.id }}
               className="!text-black"
             >
               Xem

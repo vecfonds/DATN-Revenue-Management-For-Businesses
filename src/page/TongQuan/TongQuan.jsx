@@ -18,7 +18,7 @@ import { Dropdown, Space, Flex, Progress, Table, Select } from "antd";
 import Countdocument from "../../component/Tongquan/count-document";
 import ChartNhanvien from "../../component/Chart/chartNhanvien";
 import ChartSanpham from "../../component/Chart/chartSanpham";
-import { getChartRevenueMonth, getChartRevenueQuarter, getChartRevenueYear, tongQuanSelector } from "../../store/features/tongQuanSlice";
+import { clearState, getChartRevenueMonth, getChartRevenueMonthOld, getChartRevenueQuarter, getChartRevenueQuarterOld, getChartRevenueYear, getChartRevenueYearOld, tongQuanSelector } from "../../store/features/tongQuanSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { VND, selectTime } from "../../utils/func";
 import { congNoSelector, getListCongNo, postReportTHCN, postReportTHCNRaw } from "../../store/features/congNoSlice";
@@ -29,20 +29,49 @@ const TongQuan = () => {
 
   const {
     isSuccessGetChartRevenue,
+    isSuccessGetChartRevenueOld,
     isSuccessGetChartProduct,
     chartRevenueData,
+    chartRevenueDataOld,
     chartProductData,
+
   } = useSelector(tongQuanSelector);
 
+  // useEffect(() => {
+  //   if (chartRevenueData) {
+  //     setDataVenue(chartRevenueData);
+  //   }
+  // }, [chartRevenueData]);
+
   useEffect(() => {
-    if (chartRevenueData) {
-      setDataVenue(chartRevenueData);
+    if (isSuccessGetChartRevenue && isSuccessGetChartRevenueOld) {
+      const dataConvert = [];
+
+      for (let i = 0; i < chartRevenueDataOld.length; ++i) {
+        dataConvert.push({
+          "name": chartRevenueDataOld[i].name,
+          "Doanh thu năm nay": chartRevenueData[i]["Doanh thu năm nay"],
+          "Doanh thu năm trước": chartRevenueDataOld[i]["Doanh thu năm trước"]
+          // "amt": 2400
+        })
+
+      }
+
+      console.log("dataConvertdataConvertdataConvert", dataConvert)
+
+      setDataVenue(dataConvert);
+      dispatch(clearState());
+
+      // chartRevenueDataOld.map()
+
+      // chartRevenueData
     }
-  }, [chartRevenueData]);
+  }, [isSuccessGetChartRevenue, isSuccessGetChartRevenueOld]);
 
   useEffect(() => {
 
     dispatch(getChartRevenueYear({ values: { year: "2024" } }));
+    dispatch(getChartRevenueYearOld({ values: { year: "2023" } }));
 
     const dataConvert = {
       "startDate": "2020-01-01",
@@ -68,38 +97,57 @@ const TongQuan = () => {
   const handleChange = (value) => {
     const timeRange = selectTime(value);
 
-    if (value === "thisYear") {
+    if (value === "thisYear" || value === "lastYear") {
       const dataConvert = {
         year: timeRange?.startDate.split('-')[0]
       }
       dispatch(getChartRevenueYear({ values: dataConvert }));
-    }
-    else if (value === "lastYear") {
-      const dataConvert = {
-        year: timeRange?.startDate.split('-')[0]
+
+      const dataConvert2 = {
+        year: timeRange?.startDate.split('-')[0] - 1
       }
-      dispatch(getChartRevenueYear({ values: dataConvert }));
+      dispatch(getChartRevenueYearOld({ values: dataConvert2 }));
     }
-    else if (value === "thisMonth") {
+    // else if (value === "lastYear") {
+    //   const dataConvert = {
+    //     year: timeRange?.startDate.split('-')[0]
+    //   }
+    //   dispatch(getChartRevenueYear({ values: dataConvert }));
+    // }
+    else if (value === "thisMonth" || value === "lastMonth") {
       const dataConvert = {
         year: timeRange?.startDate.split('-')[0],
         month: timeRange?.startDate.split('-')[1]
       }
       dispatch(getChartRevenueMonth({ values: dataConvert }));
-    }
-    else if (value === "lastMonth") {
-      const dataConvert = {
-        year: timeRange?.startDate.split('-')[0],
+
+      const dataConvert2 = {
+        year: timeRange?.startDate.split('-')[0] - 1,
         month: timeRange?.startDate.split('-')[1]
       }
-      dispatch(getChartRevenueMonth({ values: dataConvert }));
+      dispatch(getChartRevenueMonthOld({ values: dataConvert2 }));
+
     }
+    // else if (value === "lastMonth") {
+    //   const dataConvert = {
+    //     year: timeRange?.startDate.split('-')[0],
+    //     month: timeRange?.startDate.split('-')[1]
+    //   }
+    //   dispatch(getChartRevenueMonth({ values: dataConvert }));
+    // }
     else if (value === "thisQuarter") {
       const dataConvert = {
         year: timeRange?.startDate.split('-')[0],
         quarter: 2
       }
       dispatch(getChartRevenueQuarter({ values: dataConvert }));
+
+
+      const dataConvert2 = {
+        year: timeRange?.startDate.split('-')[0] - 1,
+        quarter: 2
+      }
+      dispatch(getChartRevenueQuarterOld({ values: dataConvert2 }));
     }
     else if (value === "lastQuarter") {
       const dataConvert = {
@@ -107,6 +155,12 @@ const TongQuan = () => {
         quarter: 1
       }
       dispatch(getChartRevenueQuarter({ values: dataConvert }));
+
+      const dataConvert2 = {
+        year: timeRange?.startDate.split('-')[0] - 1,
+        quarter: 1
+      }
+      dispatch(getChartRevenueQuarterOld({ values: dataConvert2 }));
     }
     else if (value === "Q1") {
       const dataConvert = {
@@ -114,6 +168,12 @@ const TongQuan = () => {
         quarter: 1
       }
       dispatch(getChartRevenueQuarter({ values: dataConvert }));
+
+      const dataConvert2 = {
+        year: timeRange?.startDate.split('-')[0] - 1,
+        quarter: 1
+      }
+      dispatch(getChartRevenueQuarterOld({ values: dataConvert2 }));
     }
     else if (value === "Q2") {
       const dataConvert = {
@@ -121,6 +181,12 @@ const TongQuan = () => {
         quarter: 2
       }
       dispatch(getChartRevenueQuarter({ values: dataConvert }));
+
+      const dataConvert2 = {
+        year: timeRange?.startDate.split('-')[0] - 1,
+        quarter: 2
+      }
+      dispatch(getChartRevenueQuarterOld({ values: dataConvert2 }));
     }
     else if (value === "Q3") {
       const dataConvert = {
@@ -128,6 +194,12 @@ const TongQuan = () => {
         quarter: 3
       }
       dispatch(getChartRevenueQuarter({ values: dataConvert }));
+
+      const dataConvert2 = {
+        year: timeRange?.startDate.split('-')[0] - 1,
+        quarter: 3
+      }
+      dispatch(getChartRevenueQuarterOld({ values: dataConvert2 }));
     }
     else if (value === "Q4") {
       const dataConvert = {
@@ -135,6 +207,12 @@ const TongQuan = () => {
         quarter: 4
       }
       dispatch(getChartRevenueQuarter({ values: dataConvert }));
+
+      const dataConvert2 = {
+        year: timeRange?.startDate.split('-')[0] - 1,
+        quarter: 4
+      }
+      dispatch(getChartRevenueQuarterOld({ values: dataConvert2 }));
     }
   };
 
@@ -185,40 +263,29 @@ const TongQuan = () => {
     }
   ]
 
+  const DataFormater = (number) => {
+    // if(number > 1000000000){
+    //   return (number/1000000000).toString() + 'B';
+    // }else if(number > 1000000){
+    //   return (number/1000000).toString() + 'M';
+    // }else 
+    if (number >= 1000000000) {
+      return (number / 1000000000).toString() + 'Tỷ';
+    }
+    if (number > 1000000) {
+      return (number / 1000000).toString() + 'Triệu';
+    } else {
+      return number.toString();
+    }
+  }
 
   return (
     <div className="ml-5 mb-5 mt-5">
       <h1 className="font-bold text-3xl mb-5">Tổng quan</h1>
 
-      <div>
-        <ResponsiveContainer className="!w-[900px] !h-[300px] border border-gray-300 shadow-xl rounded-lg p-5">
-        <ResponsiveContainer width="100%" height="100%">
-        <LineChart
-          // layout="vertical"
-          width={500}
-          height={300}
-          data={dataVenue}
-          margin={{
-            top: 20,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" type="category" />
-          <YAxis dataKey="Doanh thu" unit="đ" activeDot={{ r: 8 }} />
-          <Tooltip />
-          <Legend />
-          <Line dataKey="pv" stroke="#FF0000" />
-          <Line dataKey="Doanh thu" stroke="#4B8AF1" />
-        </LineChart>
-      </ResponsiveContainer>
-        </ResponsiveContainer>
-      </div>
-
-
       <Countdocument />
+
+
       <Flex gap={50} className='mt-5 w-full'>
         <div>
           {/* <p className="text-xl">Doanh thu</p> */}
@@ -294,7 +361,34 @@ const TongQuan = () => {
             ]}
           />
 
+
           <ResponsiveContainer className="!w-[900px] !h-[300px] border border-gray-300 shadow-xl rounded-lg p-5">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart
+                // layout="vertical"
+                width={500}
+                height={300}
+                data={dataVenue}
+                margin={{
+                  top: 5,
+                  right: 30,
+                  left: 30,
+                  bottom: 5,
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" type="category" />
+                <YAxis type="number" domain={[0, 2000000000]} tickFormatter={DataFormater} />
+                <Tooltip />
+                <Legend />
+                <Line dataKey="Doanh thu năm nay" stroke="#4B8AF1" activeDot={{ r: 8 }} />
+                <Line dataKey="Doanh thu năm trước" stroke="#FF0000" />
+              </LineChart>
+            </ResponsiveContainer>
+          </ResponsiveContainer>
+
+
+          {/* <ResponsiveContainer className="!w-[900px] !h-[300px] border border-gray-300 shadow-xl rounded-lg p-5">
             <BarChart
               width={700}
               height={300}
@@ -308,22 +402,17 @@ const TongQuan = () => {
             >
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" />
-              <YAxis dataKey="Doanh thu" unit="đ" />
+              <YAxis dataKey="Doanh thu năm nay" unit="đ" />
               <Tooltip />
               <Legend />
               <Bar
-                dataKey="Doanh thu"
+                dataKey="Doanh thu năm nay"
                 fill="#8884d8"
                 activeBar={<Rectangle fill="pink" stroke="blue" />}
               />
-              {/* <Bar
-            dataKey="uv"
-            fill="#82ca9d"
-            activeBar={<Rectangle fill="gold" stroke="purple" />}
-          /> */}
 
             </BarChart>
-          </ResponsiveContainer>
+          </ResponsiveContainer> */}
         </div>
 
 

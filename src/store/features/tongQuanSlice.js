@@ -47,6 +47,22 @@ export const getChartRevenueMonth = createAsyncThunk(
     }
 );
 
+
+export const getChartRevenueMonthOld = createAsyncThunk(
+    "tongQuan/getChartRevenueMonthOld",
+    async ({ values }, thunkAPI) => {
+        try {
+            const response = await tongQuanService.getChartRevenueMonth({ values });
+            console.log("response", response);
+            return response.data;
+        } catch (error) {
+            console.log("error", error);
+            return thunkAPI.rejectWithValue(error.response.data);
+        }
+    }
+);
+
+
 export const getChartRevenueQuarter = createAsyncThunk(
     "tongQuan/getChartRevenueQuarter",
     async ({ values }, thunkAPI) => {
@@ -60,6 +76,21 @@ export const getChartRevenueQuarter = createAsyncThunk(
         }
     }
 );
+
+export const getChartRevenueQuarterOld = createAsyncThunk(
+    "tongQuan/getChartRevenueQuarterOld",
+    async ({ values }, thunkAPI) => {
+        try {
+            const response = await tongQuanService.getChartRevenueQuarter({ values });
+            console.log("response", response);
+            return response.data;
+        } catch (error) {
+            console.log("error", error);
+            return thunkAPI.rejectWithValue(error.response.data);
+        }
+    }
+);
+
 
 
 export const getChartProduct = createAsyncThunk(
@@ -133,6 +164,8 @@ const initialState = {
     reportDTBHData: [],
     isSuccessPostReportDTBHRaw: false,
 
+
+    noti: 0,
 };
 
 
@@ -159,6 +192,12 @@ export const tongQuanSlice = createSlice({
             state.chartRevenueDataOld = [];
             state.chartProductData = [];
             return state;
+        },
+
+        setNoti: (state, action) => {
+            state.noti = action.payload;
+            console.log("xxx", action)
+            return state;
         }
     },
 
@@ -176,7 +215,7 @@ export const tongQuanSlice = createSlice({
             state.chartRevenueData = action.payload.result.data.map(item => {
                 return {
                     name: `Tháng ${item.month}`,
-                    "Doanh thu": item.totalProductValue - item.totalDiscountValue,
+                    "Doanh thu năm nay": item.totalProductValue - item.totalDiscountValue,
                     key: item.month
                 }
             }
@@ -189,6 +228,41 @@ export const tongQuanSlice = createSlice({
             state.isError = true;
             // state.message = action.payload.message;
         })
+
+
+
+
+
+
+
+        builder.addCase(getChartRevenueYearOld.pending, (state) => {
+            console.log("getChartRevenueYearOld.pending", state)
+            state.isFetching = true;
+        })
+
+        builder.addCase(getChartRevenueYearOld.fulfilled, (state, action) => {
+            console.log("getChartRevenueYearOld.fulfilled", action.payload)
+            state.isFetching = false;
+            state.isSuccessGetChartRevenueOld = true;
+
+            state.chartRevenueDataOld = action.payload.result.data.map(item => {
+                return {
+                    name: `Tháng ${item.month}`,
+                    "Doanh thu năm trước": item.totalProductValue - item.totalDiscountValue,
+                    key: item.month
+                }
+            }
+            );
+        })
+
+        builder.addCase(getChartRevenueYearOld.rejected, (state, action) => {
+            console.log("getChartRevenueYearOld.rejected", action)
+            state.isFetching = false;
+            state.isError = true;
+            // state.message = action.payload.message;
+        })
+
+
 
 
 
@@ -208,7 +282,7 @@ export const tongQuanSlice = createSlice({
             state.chartRevenueData = action.payload.result.data.map(item => {
                 return {
                     name: `${item.day}`,
-                    "Doanh thu": item.totalProductValue - item.totalDiscountValue,
+                    "Doanh thu năm nay": item.totalProductValue - item.totalDiscountValue,
                     key: item.day
                 }
             }
@@ -217,6 +291,37 @@ export const tongQuanSlice = createSlice({
 
         builder.addCase(getChartRevenueMonth.rejected, (state, action) => {
             console.log("getChartRevenueMonth.rejected", action)
+            state.isFetching = false;
+            state.isError = true;
+            // state.message = action.payload.message;
+        })
+
+
+
+
+
+        builder.addCase(getChartRevenueMonthOld.pending, (state) => {
+            console.log("getChartRevenueMonthOld.pending", state)
+            state.isFetching = true;
+        })
+
+        builder.addCase(getChartRevenueMonthOld.fulfilled, (state, action) => {
+            console.log("getChartRevenueMonthOld.fulfilled", action.payload)
+            state.isFetching = false;
+            state.isSuccessGetChartRevenueOld = true;
+
+            state.chartRevenueDataOld = action.payload.result.data.map(item => {
+                return {
+                    name: `${item.day}`,
+                    "Doanh thu năm trước": item.totalProductValue - item.totalDiscountValue,
+                    key: item.day
+                }
+            }
+            );
+        })
+
+        builder.addCase(getChartRevenueMonthOld.rejected, (state, action) => {
+            console.log("getChartRevenueMonthOld.rejected", action)
             state.isFetching = false;
             state.isError = true;
             // state.message = action.payload.message;
@@ -239,7 +344,7 @@ export const tongQuanSlice = createSlice({
             state.chartRevenueData = action.payload.result.data.map(item => {
                 return {
                     name: `Tháng ${item.month}`,
-                    "Doanh thu": item.totalProductValue - item.totalDiscountValue,
+                    "Doanh thu năm nay": item.totalProductValue - item.totalDiscountValue,
                     key: item.day
                 }
             }
@@ -253,6 +358,38 @@ export const tongQuanSlice = createSlice({
             // state.message = action.payload.message;
         })
 
+
+
+
+
+
+
+        builder.addCase(getChartRevenueQuarterOld.pending, (state) => {
+            console.log("getChartRevenueQuarterOld.pending", state)
+            state.isFetching = true;
+        })
+
+        builder.addCase(getChartRevenueQuarterOld.fulfilled, (state, action) => {
+            console.log("getChartRevenueQuarterOld.fulfilled", action.payload)
+            state.isFetching = false;
+            state.isSuccessGetChartRevenueOld = true;
+
+            state.chartRevenueDataOld = action.payload.result.data.map(item => {
+                return {
+                    name: `Tháng ${item.month}`,
+                    "Doanh thu năm trước": item.totalProductValue - item.totalDiscountValue,
+                    key: item.day
+                }
+            }
+            );
+        })
+
+        builder.addCase(getChartRevenueQuarterOld.rejected, (state, action) => {
+            console.log("getChartRevenueQuarterOld.rejected", action)
+            state.isFetching = false;
+            state.isError = true;
+            // state.message = action.payload.message;
+        })
 
 
 
@@ -273,7 +410,7 @@ export const tongQuanSlice = createSlice({
             // state.chartProductData = action.payload.result.data.map(item => {
             //     return {
             //         name: `Tháng ${item.month}`,
-            //         "Doanh thu": item.totalProductValue - item.totalDiscountValue,
+            //         "Doanh thu năm nay": item.totalProductValue - item.totalDiscountValue,
             //         key: item.month
             //     }
             // }
@@ -344,6 +481,6 @@ export const tongQuanSlice = createSlice({
     }
 });
 
-export const { clearState, resetData } = tongQuanSlice.actions;
+export const { clearState, resetData, setNoti } = tongQuanSlice.actions;
 
 export const tongQuanSelector = (state) => state.tongQuan;

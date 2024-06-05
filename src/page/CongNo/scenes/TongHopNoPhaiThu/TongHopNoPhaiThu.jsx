@@ -100,7 +100,7 @@ const TongHopNoPhaiThu = ({ checkbox = false }) => {
     useEffect(() => {
         dispatch(resetData());
 
-        const timeRange = selectTime("thisMonth");
+        const timeRange = selectTime("lastMonth");
 
 
         const dataConvert = {
